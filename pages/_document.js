@@ -14,7 +14,7 @@ export default function Document() {
         />
       </Head>
       <body className='bg-slate-400 flex justify-center font-mono'>
-        <div className='text-gray-700 bg-white min-h-screen p-8 max-w-screen-xl'>
+        <div className='text-gray-700 bg-white min-h-screen p-8 max-w-screen-xl w-screen'>
           <Main />
           <NextScript />
         </div>

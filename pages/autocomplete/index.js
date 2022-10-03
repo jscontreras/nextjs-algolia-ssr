@@ -55,7 +55,15 @@ function Autocomplete() {
 
   // ...CUSTOM RENDERER
   return (
+
     <div className="aa-Autocomplete" {...autocomplete.getRootProps({})}>
+      <div className="mb-8 mt-4">
+        See{' '}
+        <a className='underline' href="https://github.com/jscontreras/nextjs-algolia-ssr/tree/main/pages">
+          source code
+        </a>{' '}
+        on GitHub
+      </div>
       <input className="aa-Input" {...autocomplete.getInputProps({})} />
       <div className="aa-Panel" {...autocomplete.getPanelProps({})}>
         {autocompleteState.isOpen &&
@@ -84,6 +92,8 @@ function Autocomplete() {
             );
           })}
       </div>
+      <footer>
+      </footer>
     </div>
   );
 }
@@ -92,9 +102,9 @@ function Autocomplete() {
 function AutocompletePage() {
   return <>
 
-  <div>Algolia - Autocomplete</div>
+    <div>Algolia - Autocomplete</div>
     <h2 className="text-2xl font-bold underline">
-    Autocomplete Isomorphic Renderer using algolia-core
+      Autocomplete Isomorphic Renderer using algolia-core
     </h2>
     <Autocomplete />
   </>

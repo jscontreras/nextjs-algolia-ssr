@@ -53,7 +53,7 @@ export function App(props) {
         <Pagination />
         <div>
           See{' '}
-          <a className='underline' href="https://github.com/algolia/react-instantsearch/tree/master/examples/next">
+          <a className='underline' href="https://github.com/jscontreras/nextjs-algolia-ssr/tree/main/pages">
             source code
           </a>{' '}
           on GitHub
