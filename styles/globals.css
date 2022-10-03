@@ -1,3 +1,7 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
 html,
 body {
   padding: 0;
@@ -19,8 +23,94 @@ a {
   html {
     color-scheme: dark;
   }
+
   body {
     color: white;
     background: black;
   }
+}
+
+main {
+  display: flex;
+  margin: 25px 0;
+}
+
+.menu {
+  flex: 2;
+}
+
+footer {
+  text-align: center;
+}
+
+.ais-Pagination {
+  margin-bottom: 25px;
+}
+
+.results {
+  flex: 6;
+}
+
+.hit {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  justify-content: space-evenly;
+}
+
+.hit-actions {
+  display: flex;
+}
+
+.hit-content {
+  padding: 0px 10px;
+  flex-basis: 70%;
+}
+
+.hit-picture {
+  position: relative;
+  display: block;
+  background-color: #efefef;
+}
+
+.hit-picture img {
+  width: auto;
+  height: auto;
+}
+
+.hit-type {
+  color: #888888;
+  font-size: 13px;
+}
+
+.hit-description span {
+  font-size: .75rem;
+}
+
+.ais-RefinementList-labelText, .ais-RefinementList-count {
+  font-size: .75rem;
+}
+
+.ais-RefinementList-checkbox {
+  margin-right: 10px;
+}
+
+.aa-Input {
+  border: 1px solid gray;
+  padding: 5px;
+}
+
+.ais-Hits-list {
+  flex-flow: wrap;
+  flex-grow: 0;
+  flex-shrink: 2;
+  display: flex;
+  justify-content: left;
+  align-items: flex-start;
+  flex-direction: row;
+}
+
+.ais-Hits-item {
+  flex: 50 0 100%;
+  padding: 2px;
 }

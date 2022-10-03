@@ -3,18 +3,30 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev ",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@algolia/autocomplete-core": "^1.7.1",
+    "@algolia/autocomplete-preset-algolia": "^1.7.1",
+    "algoliasearch": "4.11.0",
     "next": "12.3.1",
+    "qs": "6.8.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-instantsearch-hooks-server": "^6.35.0",
+    "react-instantsearch-hooks-web": "^6.35.0",
+    "sharp": "^0.31.1"
   },
   "devDependencies": {
+    "autoprefixer": "^10.4.12",
     "eslint": "8.24.0",
-    "eslint-config-next": "12.3.1"
+    "eslint-config-next": "12.3.1",
+    "postcss": "^8.4.17",
+    "postcss-nested": "^5.0.6",
+    "tailwind": "^4.0.0",
+    "tailwindcss": "^3.1.8"
   }
 }

@@ -1,0 +1,64 @@
+import React from 'react';
+import Image from 'next/future/image';
+import {
+  RefinementList,
+  SearchBox,
+  Hits,
+  Configure,
+  Highlight,
+  Pagination,
+  InstantSearch,
+} from 'react-instantsearch-hooks-web';
+
+const HitComponent = ({ hit }) => (
+  <div className="hit">
+    <div className="hit-picture">
+      {/* <img src={`${hit.image}`} alt={hit.name}/> */}
+      <Image src={`${hit.image}`} alt={hit.name} layout='fill' width={150} height={150}/>
+    </div>
+    <div className="hit-content">
+      <div>
+        <Highlight attribute="name" hit={hit} />
+        <span> - ${hit.price}</span>
+        <span> - {hit.rating} stars</span>
+      </div>
+      <div className="hit-type">
+        <Highlight attribute="type" hit={hit} />
+      </div>
+      <div className="hit-description">
+        <Highlight attribute="description" hit={hit} />
+      </div>
+    </div>
+  </div>
+);
+
+export function App(props) {
+  return (
+    <InstantSearch {...props}>
+      <Configure hitsPerPage={12} />
+      <header>
+        <h1 className="text-2xl font-bold mb-4">
+        React InstantSearch + Next.js</h1>
+        <SearchBox />
+      </header>
+      <main>
+        <div className="menu">
+          <RefinementList attribute="categories" />
+        </div>
+        <div className="results">
+          <Hits hitComponent={HitComponent} />
+        </div>
+      </main>
+      <footer>
+        <Pagination />
+        <div>
+          See{' '}
+          <a className='underline' href="https://github.com/algolia/react-instantsearch/tree/master/examples/next">
+            source code
+          </a>{' '}
+          on GitHub
+        </div>
+      </footer>
+    </InstantSearch>
+  );
+}
