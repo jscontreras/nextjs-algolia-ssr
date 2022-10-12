@@ -2,6 +2,7 @@ import React from 'react';
 import algoliasearch from 'algoliasearch/lite';
 import { createAutocomplete } from '@algolia/autocomplete-core';
 import { getAlgoliaResults } from '@algolia/autocomplete-preset-algolia';
+import Link from 'next/link';
 
 const searchClient = algoliasearch(
   'latency',
@@ -57,13 +58,6 @@ function Autocomplete() {
   return (
 
     <div className="aa-Autocomplete" {...autocomplete.getRootProps({})}>
-      <div className="mb-8 mt-4">
-        See{' '}
-        <a className='underline' href="https://github.com/jscontreras/nextjs-algolia-ssr/tree/main/pages">
-          source code
-        </a>{' '}
-        on GitHub
-      </div>
       <input className="aa-Input" {...autocomplete.getInputProps({})} />
       <div className="aa-Panel" {...autocomplete.getPanelProps({})}>
         {autocompleteState.isOpen &&
@@ -93,6 +87,13 @@ function Autocomplete() {
           })}
       </div>
       <footer>
+        <div className="mb-8 mt-4">
+          See{' '}
+          <a className='underline' href="https://github.com/jscontreras/nextjs-algolia-ssr/tree/main/pages">
+            source code
+          </a>{' '}
+          on GitHub
+        </div>
       </footer>
     </div>
   );
@@ -101,11 +102,11 @@ function Autocomplete() {
 
 function AutocompletePage() {
   return <>
-
-    <div>Algolia - Autocomplete</div>
-    <h2 className="text-2xl font-bold underline">
-      Autocomplete Isomorphic Renderer using algolia-core
-    </h2>
+    <Link href={'/'}><a className="text-blue-700">&larr; Home</a></Link>
+    <h1 className="mt-4 text-2xl font-bold mb-4">
+      Autocomplete Isomorphic Rendering using algolia-core
+    </h1>
+    <p className='mb-4 mt-2'>Test Server Side Rendering by running this page with Javascript disabled!</p>
     <Autocomplete />
   </>
 }

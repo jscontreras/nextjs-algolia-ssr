@@ -39,6 +39,7 @@ export function App(props) {
       <header>
         <h1 className="text-2xl font-bold mb-4">
         React InstantSearch + Next.js</h1>
+        <p className='mb-4 mt-2'>Test Server Side Rendering by running this page with Javascript disabled!</p>
         <SearchBox />
       </header>
       <main>

@@ -1,13 +1,12 @@
 // @refresh reset
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import qs from 'qs';
+import React from 'react';
 import algoliasearch from 'algoliasearch/lite';
 // import { findResultsState } from 'react-instantsearch-dom/server';
 import { getServerState } from 'react-instantsearch-hooks-server';
 import { InstantSearchSSRProvider } from 'react-instantsearch-hooks-web';
 import { App } from '../../components';
 import { history } from 'instantsearch.js/es/lib/routers/index.js';
+import Link from 'next/link';
 
 const searchClient = algoliasearch(
   'latency',
@@ -20,6 +19,7 @@ const indexName = "instant_search";
 export default function SearchPage({ serverState, serverUrl }) {
   return (
     <InstantSearchSSRProvider {...serverState}>
+      <Link href={'/'}><a className="text-blue-700">&larr; Home</a></Link>
       <App
         searchClient={searchClient}
         indexName={indexName}
