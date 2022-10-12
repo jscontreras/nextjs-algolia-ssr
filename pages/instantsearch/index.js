@@ -1,7 +1,5 @@
-// @refresh reset
 import React from 'react';
 import algoliasearch from 'algoliasearch/lite';
-// import { findResultsState } from 'react-instantsearch-dom/server';
 import { getServerState } from 'react-instantsearch-hooks-server';
 import { InstantSearchSSRProvider } from 'react-instantsearch-hooks-web';
 import { App } from '../../components';
