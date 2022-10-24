@@ -1,14 +1,22 @@
 import React from 'react';
 import algoliasearch from 'algoliasearch/lite';
+import { createFetchRequester } from '@algolia/requester-fetch';
 import { getServerState } from 'react-instantsearch-hooks-server';
 import { InstantSearchSSRProvider } from 'react-instantsearch-hooks-web';
+import { createNullCache } from '@algolia/cache-common';
+
 import { ArticlesApp } from '../../components';
 import { history } from 'instantsearch.js/es/lib/routers/index.js';
 import Link from 'next/link';
 
 const searchClient = algoliasearch(
   'testing78Z9OD0TCK',
-  'd18844ce6e75f713f36a0fbe3262f9fa'
+  'd18844ce6e75f713f36a0fbe3262f9fa',
+  {
+    requester: createFetchRequester(),
+    responsesCache: createNullCache(),
+    requestsCache: createNullCache({ serializable: false })
+  }
 );
 
 const indexName = "sit_escape_content";
@@ -39,7 +47,6 @@ export async function getServerSideProps({ req }) {
   const protocol = req.headers.referer?.split('://')[0] || 'https';
   const serverUrl = `${protocol}://${req.headers.host}${req.url}`;
   const serverState = await getServerState(<SearchPage serverUrl={serverUrl} />);
-
   return {
     props: {
       serverState,

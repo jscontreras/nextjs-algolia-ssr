@@ -11,6 +11,8 @@
   "dependencies": {
     "@algolia/autocomplete-core": "^1.7.1",
     "@algolia/autocomplete-preset-algolia": "^1.7.1",
+    "@algolia/cache-common": "^4.14.2",
+    "@algolia/requester-fetch": "^4.14.2",
     "algoliasearch": "4.11.0",
     "next": "12.3.1",
     "qs": "6.8.0",
