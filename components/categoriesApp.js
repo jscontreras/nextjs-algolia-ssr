@@ -12,8 +12,16 @@ import {
 } from 'react-instantsearch-hooks-web';
 import { BreadCrumbs } from './breadcrumbs';
 import { CategoriesMenu } from './categoriesMenu';
+import Link from 'next/link';
 
-
+const Instructions = () => (
+  <div className='mb-4 mt-2 text-sm'>
+    <>Use the <span className='font-bold'>Nav Hierarchy Facets</span> widget to refine the search using URL  parameters <span className='italic'>(facets, facetsFilters)</span>.</>
+    <> Alternatively, the <span className='font-bold'>Nav Category Links</span> menu provides URLs to the corresponding categories landing pages via
+    <span className='italic'> filters</span>.</>
+    <p className='mt-2'>Open the <Link href='/debug'><a target="_blank" className="text-blue-600 underline" >Debug's tab</a></Link> to see the parameters sent to Algolia in real time.</p>
+  </div>
+)
 
 const HitComponent = ({ hit }) => (
   <div className="hit">
@@ -45,21 +53,21 @@ export function CategoriesApp(props) {
     <InstantSearch {...props}>
       {props.filters ? <Configure filters={`${props.filters}`} hitsPerPage={12} /> : !props.filters && <Configure hitsPerPage={12} />}
       <header>
-        <h1 className="text-2xl font-bold mb-4 mt-4">{props.title? `${props.title} Landing Page` : 'Dynamic Routes (Categories) + Next.js'}</h1>
-        <p className='mb-4 mt-2'>Test Server Side Rendering by running this page with Javascript disabled!</p>
+        <h1 className="text-2xl font-bold mb-4 mt-4">{props.title ? `${props.title} Landing Page` : 'Dynamic Routes (Categories) + Next.js'}</h1>
+        <Instructions />
         <SearchBox />
       </header>
       <BreadCrumbs items={props.navItems || []} />
       <main>
         {!props.filters && (
-          <div className="menu">
-            <h2 className='font-bold mb-2'>Nav Hierarchy Filter</h2>
+          <div className="menu text-sm">
+            <h2 className='font-bold mb-2'>Nav Hierarchy Facets</h2>
             <HierarchicalMenu attributes={[
               'hierarchicalCategories.lvl0',
               'hierarchicalCategories.lvl1',
               'hierarchicalCategories.lvl2',
               'hierarchicalCategories.lvl3',
-            ]} separator=' > ' />
+            ]} separator=' > '/>
             <h2 className='font-bold mb-2 mt-8'>Nav Category Links</h2>
             <CategoriesMenu attributes={[
               'hierarchicalCategories.lvl0',

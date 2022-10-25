@@ -1,5 +1,6 @@
+import Link from "next/link";
 import { useContext } from "react"
-import { AlgoliaFetchContext } from "../_app";
+import { AlgoliaFetchContext } from "./_app";
 
 const hiddenKeys = ['highlightPostTag', 'highlightPreTag'];
 const mandatoryKeys = ['query', 'filters'];
@@ -53,15 +54,16 @@ export default function DebugPage() {
   const { payloads, channel } = useContext(AlgoliaFetchContext);
   const EmptyUrls = () => (
     <div>
-      <h2>Interceptor ready...</h2>
-      <p>
-        Algolia queries will be inspected on real time.
+      <h2 className="font-bold">Interceptor ready (via Service Worker)...</h2>
+      <p className="text-sm">
+        Whenever any of the prototypes executes an Algolia callback, the debugger inspects the associated request and displays specific attributes below.
       </p>
     </div>
   )
   return (
     <>
-      <h1>Debugging Algolia URLs!!</h1>
+      <Link href={'/'}><a className="text-blue-700">&larr; Home</a></Link>
+      <h1 className="text-2xl font-bold mb-4 mt-4">Debugging Algolia URLs!!</h1>
       {payloads.length === 0 ? <EmptyUrls /> : <AlgoliaUrlsInspector payloads={payloads} channel={channel} />}
     </>
   )

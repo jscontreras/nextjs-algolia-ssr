@@ -3,7 +3,7 @@ import React from 'react';
 import { useHierarchicalMenu } from 'react-instantsearch-hooks-web';
 
 function friendlyURL(value) {
-  return value;
+  return value.replaceAll(' ', '-');
 }
 
 function renderItem(item, path, key, level=2) {
@@ -11,14 +11,14 @@ function renderItem(item, path, key, level=2) {
     return (
       <li key={key}>
         <Link href={friendlyURL(`${path}/${item.label}`)}>
-          <a className={item.isRefined ? 'font-bold text-amber-600' : ''}>{item.label}</a>
+          <a className={item.isRefined ? 'font-bold text-amber-600 underline' : 'text-blue-600 underline'}>{item.label}</a>
         </Link>
       </li>
     )
   } else {
     return (<li key={key}>
       <Link href={friendlyURL(`${path}/${item.label}`)}>
-        <a className={item.isRefined ? 'font-bold text-amber-600' : ''}>{item.label}</a>
+        <a className={item.isRefined ? 'font-bold text-amber-600 underline' : 'text-blue-600 underline'}>{item.label}</a>
       </Link>
       <ul className={`ml-${level}`}>
         {item.data.map((child, keyChild) => (

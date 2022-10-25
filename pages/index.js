@@ -42,6 +42,12 @@ export default function Home() {
               <p>Hierarchy Facets and Category landing Pages.</p>
             </a>
           </Link>
+          <Link href={'/debug'}>
+            <a className={styles.card}>
+              <h2>Debugger &rarr;</h2>
+              <p>See Algolia requests parameters in real time.</p>
+            </a>
+          </Link>
         </div>
       </main>
 

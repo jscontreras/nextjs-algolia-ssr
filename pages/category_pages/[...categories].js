@@ -47,27 +47,26 @@ export async function getServerSideProps({ req, query }) {
   const protocol = req.headers.referer?.split('://')[0] || 'https';
   const serverUrl = `${protocol}://${req.headers.host}${req.url}`;
   const serverState = await getServerState(<SearchPage serverUrl={serverUrl} />);
-  let filters = `hierarchicalCategories.lvl${query.categories.length - 1}:'${query.categories.join(' > ')}'`;
+  let filters = `hierarchicalCategories.lvl${query.categories.length - 1}:'${query.categories.join(' > ').replaceAll('-', ' ')}'`;
   const navItems = [{
     url: '/category_pages',
     title: 'Category pages'
   }];
   let url = '';
   query.categories.forEach((element, key) => {
-    url+=`/${element}`
+    url += `/${element}`
     navItems.push({
       url: `/category_pages${url}`,
-      title: element
-    });
-  });
-
+      title: `${element.replaceAll('-', ' ')}`
+    })
+  })
   return {
     props: {
       serverState,
       serverUrl,
       navItems: navItems,
       filters,
-      title: query.categories.pop()
+      title: query.categories.pop().replaceAll('-', ' ')
     },
   };
 }
