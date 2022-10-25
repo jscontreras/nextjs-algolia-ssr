@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/future/image';
 import {
-  RefinementList,
+  HierarchicalMenu,
   SearchBox,
   Hits,
   Configure,
@@ -44,7 +44,12 @@ export function App(props) {
       </header>
       <main>
         <div className="menu">
-          <RefinementList attribute="categories" />
+          <HierarchicalMenu attributes={[
+            'hierarchicalCategories.lvl0',
+            'hierarchicalCategories.lvl1',
+            'hierarchicalCategories.lvl2',
+            'hierarchicalCategories.lvl3',
+          ]} separator=' > ' showMore={true}/>
         </div>
         <div className="results">
           <Hits hitComponent={HitComponent} />

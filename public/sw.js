@@ -22,7 +22,7 @@ self.addEventListener('update', function (event) {
 const extractPayload = async(request) => {
   const body = await request.json()
   const url = request.url
-  payloads.push({url, body});
+  payloads.push({url, body, timestamp: Date.now()});
   channel.postMessage({ action: 'algolia', payload: { payloads, url } });
 }
 

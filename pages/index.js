@@ -36,6 +36,12 @@ export default function Home() {
                 <p>Server Side rendering using Algolia Autocomplete core Lib.</p>
               </a>
           </Link>
+          <Link href={'/category_pages'}>
+            <a className={styles.card}>
+              <h2>Category Pages &rarr;</h2>
+              <p>Hierarchy Facets and Category landing Pages.</p>
+            </a>
+          </Link>
         </div>
       </main>
 

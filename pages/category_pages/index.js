@@ -5,13 +5,13 @@ import { getServerState } from 'react-instantsearch-hooks-server';
 import { InstantSearchSSRProvider } from 'react-instantsearch-hooks-web';
 import { createNullCache } from '@algolia/cache-common';
 
-import { ArticlesApp } from '../../components';
+import { CategoriesApp } from '../../components';
 import { history } from 'instantsearch.js/es/lib/routers/index.js';
 import Link from 'next/link';
 
 const searchClient = algoliasearch(
-  'testing78Z9OD0TCK',
-  'd18844ce6e75f713f36a0fbe3262f9fa',
+  'latency',
+  '6be0576ff61c053d5f9a3225e2a90f76',
   {
     requester: createFetchRequester(),
     responsesCache: createNullCache(),
@@ -19,14 +19,14 @@ const searchClient = algoliasearch(
   }
 );
 
-const indexName = "sit_escape_content";
+const indexName = "instant_search";
 
 
 export default function SearchPage({ serverState, serverUrl, navItems }) {
   return (
     <InstantSearchSSRProvider {...serverState}>
       <Link href={'/'}><a className="text-blue-700">&larr; Home</a></Link>
-      <ArticlesApp
+      <CategoriesApp
         hideMenu={false}
         filters={false}
         searchClient={searchClient}
