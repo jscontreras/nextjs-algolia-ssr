@@ -42,7 +42,7 @@ const HitComponent = ({ hit }) => (
         <Snippet attribute="description" hit={hit} />...
       </div>
       <div className="hit-categories mt-2 pl-2">
-        {Object.keys(hit.hierarchicalCategories).map((key, index) => (<p className="text-xs	mb-1 text-amber-500" key={index}>{`${key}:${hit.hierarchicalCategories[key]}`}</p>))}
+        {Object.keys(hit.hierarchicalCategories).map((key, index) => (<p className="text-xs	mb-1 text-amber-500" key={index}>{`"${key}:${hit.hierarchicalCategories[key]}"`}</p>))}
       </div>
     </div>
   </div>
