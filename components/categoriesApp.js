@@ -16,9 +16,9 @@ import Link from 'next/link';
 
 const Instructions = () => (
   <div className='mb-4 mt-2 text-sm'>
-    <>Use the <span className='font-bold'>Nav Hierarchy Facets</span> widget to refine the search using URL  parameters <span className='italic'>(facets, facetsFilters)</span>.</>
-    <> Alternatively, the <span className='font-bold'>Nav Category Links</span> menu provides URLs to the corresponding categories landing pages via
-    <span className='italic'> filters</span>.</>
+    <>Use the <span className='font-bold'>Nav Hierarchy Facets</span> widget to refine the search using URL  parameters (<span className="text-amber-600 italic">facets, facetsFilters</span>).</>
+    <> Alternatively, the <span className='font-bold'>Nav Category Links</span> menu provides URLs to the corresponding categories landing pages via the
+      (<span className='italic text-amber-600'>filters</span>) parameter.</>
     <p className='mt-2'>Open the <Link href='/debug'><a target="_blank" className="text-blue-600 underline" >Debug's tab</a></Link> to see the parameters sent to Algolia in real time.</p>
   </div>
 )
