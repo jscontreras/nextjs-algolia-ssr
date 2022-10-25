@@ -23,6 +23,7 @@ function Autocomplete() {
   const autocomplete = React.useMemo(
     () =>
       createAutocomplete({
+        placeholder:'Search for Products',
         onStateChange({ state }) {
           // (2) Synchronize the Autocomplete state with the React state.
           setAutocompleteState(state);
