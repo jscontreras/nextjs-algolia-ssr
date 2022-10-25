@@ -1,10 +1,11 @@
 import React from 'react';
 import algoliasearch from 'algoliasearch/lite';
+import { createFetchRequester } from '@algolia/requester-fetch';
 import { getServerState } from 'react-instantsearch-hooks-server';
 import { InstantSearchSSRProvider } from 'react-instantsearch-hooks-web';
-import { createFetchRequester } from '@algolia/requester-fetch';
 import { createNullCache } from '@algolia/cache-common';
-import { App } from '../../components';
+
+import { CategoriesApp } from '../../components';
 import { history } from 'instantsearch.js/es/lib/routers/index.js';
 import Link from 'next/link';
 
@@ -21,13 +22,16 @@ const searchClient = algoliasearch(
 const indexName = "instant_search";
 
 
-export default function SearchPage({ serverState, serverUrl }) {
+export default function SearchPage({ serverState, serverUrl, navItems }) {
   return (
     <InstantSearchSSRProvider {...serverState}>
       <Link href={'/'}><a className="text-blue-700">&larr; Home</a></Link>
-      <App
+      <CategoriesApp
+        hideMenu={false}
+        filters={false}
         searchClient={searchClient}
         indexName={indexName}
+        navItems={navItems}
         routing={{
           router: history({
             getLocation: () =>
@@ -43,11 +47,11 @@ export async function getServerSideProps({ req }) {
   const protocol = req.headers.referer?.split('://')[0] || 'https';
   const serverUrl = `${protocol}://${req.headers.host}${req.url}`;
   const serverState = await getServerState(<SearchPage serverUrl={serverUrl} />);
-
   return {
     props: {
       serverState,
       serverUrl,
+      navItems: [{ url: 'category_pages', title: 'Category pages' }]
     },
   };
 }

@@ -114,3 +114,11 @@ footer {
   flex: 50 0 100%;
   padding: 2px;
 }
+
+.ais-HierarchicalMenu-item, .ais-HierarchicalMenu-link, .ais-HierarchicalMenu-label {
+  font-size: .95em;
+}
+
+.ais-HierarchicalMenu-count {
+  font-size: .75em;
+}
