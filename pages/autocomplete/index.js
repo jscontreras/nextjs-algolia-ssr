@@ -6,6 +6,7 @@ import { getAlgoliaResults, parseAlgoliaHitHighlight } from '@algolia/autocomple
 import { createFetchRequester } from '@algolia/requester-fetch';
 import { createNullCache } from '@algolia/cache-common';
 import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions'
+import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches';
 
 import Link from 'next/link';
 
@@ -44,7 +45,11 @@ const querySuggestionsPlugin = createQuerySuggestionsPlugin({
   indexName: 'instant_search_demo_query_suggestions',
 });
 
-function QuerySuggestionItem({ item }) {
+const recentSearchesPlugin = createLocalStorageRecentSearchesPlugin({
+  key: 'navbar',
+});
+
+function QuerySuggestionItem({ item, autocomplete }) {
   return (
     <div className="aa-ItemWrapper">
       <div className="aa-ItemContent">
@@ -59,6 +64,71 @@ function QuerySuggestionItem({ item }) {
         <button
           className="aa-ItemActionButton"
           title={`Fill query with "${item.query}"`}
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            autocomplete.setQuery(item.query);
+            autocomplete.refresh();
+          }}
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 17v-7.586l8.293 8.293c0.391 0.391 1.024 0.391 1.414 0s0.391-1.024 0-1.414l-8.293-8.293h7.586c0.552 0 1-0.448 1-1s-0.448-1-1-1h-10c-0.552 0-1 0.448-1 1v10c0 0.552 0.448 1 1 1s1-0.448 1-1z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function PastQueryItem({ item, autocomplete }) {
+  function onRemove(id) {
+    recentSearchesPlugin.data.removeItem(id);
+    autocomplete.refresh();
+  }
+
+  function onTapAhead(item) {
+    autocomplete.setQuery(item.label);
+    autocomplete.refresh();
+  }
+  return (
+    <div className="aa-ItemWrapper">
+      <div className="aa-ItemContent">
+        <div className="aa-ItemIcon aa-ItemIcon--noBorder">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12.516 6.984v5.25l4.5 2.672-0.75 1.266-5.25-3.188v-6h1.5zM12 20.016q3.281 0 5.648-2.367t2.367-5.648-2.367-5.648-5.648-2.367-5.648 2.367-2.367 5.648 2.367 5.648 5.648 2.367zM12 2.016q4.125 0 7.055 2.93t2.93 7.055-2.93 7.055-7.055 2.93-7.055-2.93-2.93-7.055 2.93-7.055 7.055-2.93z" />
+          </svg>
+        </div>
+        <div className="aa-ItemContentBody">
+          <div className="aa-ItemContentTitle">
+            <Highlight hit={item} attribute="label" />
+            {item.category && (
+              <span className="aa-ItemContentSubtitle aa-ItemContentSubtitle--inline">
+                <span className="aa-ItemContentSubtitleIcon" /> in{' '}
+                <span className="aa-ItemContentSubtitleCategory">
+                  {item.category}
+                </span>
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="aa-ItemActions">
+        <button
+          className="aa-ItemActionButton"
+          title="Remove this search"
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            onRemove(item.id);
+          }}
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18 7v13c0 0.276-0.111 0.525-0.293 0.707s-0.431 0.293-0.707 0.293h-10c-0.276 0-0.525-0.111-0.707-0.293s-0.293-0.431-0.293-0.707v-13zM17 5v-1c0-0.828-0.337-1.58-0.879-2.121s-1.293-0.879-2.121-0.879h-4c-0.828 0-1.58 0.337-2.121 0.879s-0.879 1.293-0.879 2.121v1h-4c-0.552 0-1 0.448-1 1s0.448 1 1 1h1v13c0 0.828 0.337 1.58 0.879 2.121s1.293 0.879 2.121 0.879h10c0.828 0 1.58-0.337 2.121-0.879s0.879-1.293 0.879-2.121v-13h1c0.552 0 1-0.448 1-1s-0.448-1-1-1zM9 5v-1c0-0.276 0.111-0.525 0.293-0.707s0.431-0.293 0.707-0.293h4c0.276 0 0.525 0.111 0.707 0.293s0.293 0.431 0.293 0.707v1zM9 11v6c0 0.552 0.448 1 1 1s1-0.448 1-1v-6c0-0.552-0.448-1-1-1s-1 0.448-1 1zM13 11v6c0 0.552 0.448 1 1 1s1-0.448 1-1v-6c0-0.552-0.448-1-1-1s-1 0.448-1 1z" />
+          </svg>
+        </button>
+        <button
+          className="aa-ItemActionButton"
+          title={`Fill query with "${item.label}"`}
           onClick={(event) => {
             event.preventDefault();
             event.stopPropagation();
@@ -81,7 +151,7 @@ function Autocomplete() {
     () =>
       createAutocomplete({
         placeholder: 'Search for Products',
-        plugins: [querySuggestionsPlugin],
+        plugins: [querySuggestionsPlugin, recentSearchesPlugin],
         onStateChange({ state }) {
           // (2) Synchronize the Autocomplete state with the React state.
           setAutocompleteState(state);
@@ -111,7 +181,7 @@ function Autocomplete() {
                 });
               },
               getItemUrl({ item }) {
-                return `https://google.com?q=${item.query}`;
+                return `/?query=${item.name}`;
               },
             },
           ];
@@ -130,11 +200,11 @@ function Autocomplete() {
           autocompleteState.collections.map((collection, index) => {
             const { source, items } = collection;
             // Rendering of Query Suggestions
-            if (collection.source.sourceId === 'querySuggestionsPlugin') {
+            if (['querySuggestionsPlugin', 'recentSearchesPlugin'].includes(collection.source.sourceId)) {
               return (
                 <div key={`source-${index}`} className="aa-Source">
                   <ul className="aa-List" {...autocomplete.getListProps()}>
-                    {items.map((item) => (
+                    {items.map((item, key) => (
                       <li
                         key={item.objectID}
                         className="aa-Item"
@@ -143,7 +213,14 @@ function Autocomplete() {
                           source,
                         })}
                       >
-                        <QuerySuggestionItem item={item} />
+                        {collection.source.sourceId === 'querySuggestionsPlugin' && <QuerySuggestionItem key={key} item={item} autocomplete={autocomplete} {...autocomplete.getItemProps({
+                          item,
+                          source,
+                        })} />}
+                        {collection.source.sourceId === 'recentSearchesPlugin' && <PastQueryItem key={key} item={item} autocomplete={autocomplete} {...autocomplete.getItemProps({
+                          item,
+                          source,
+                        })} />}
                       </li>))}
                   </ul>
                 </div>
