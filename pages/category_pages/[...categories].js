@@ -47,7 +47,9 @@ export async function getServerSideProps({ req, query }) {
   const protocol = req.headers.referer?.split('://')[0] || 'https';
   const serverUrl = `${protocol}://${req.headers.host}${req.url}`;
   const serverState = await getServerState(<SearchPage serverUrl={serverUrl} />);
-  let filters = `hierarchicalCategories.lvl${query.categories.length - 1}:'${query.categories.join(' > ').replaceAll('-', ' ')}'`;
+  let filters = query.categories.map((category) => {
+   return `categories:${category.replaceAll('-', ' ')}`
+  })
   const navItems = [{
     url: '/category_pages',
     title: 'Category pages'
