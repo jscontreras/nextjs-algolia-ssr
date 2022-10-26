@@ -54,7 +54,7 @@ const HitComponent = ({ hit }) => (
 export function CategoriesApp(props) {
   return (
     <InstantSearch {...props}>
-      {props.filters ? <Configure filters={`${props.filters}`} hitsPerPage={12} /> : !props.filters && <Configure hitsPerPage={12} />}
+      {props.filters ? <Configure filters={props.filters} hitsPerPage={12} /> : !props.filters && <Configure hitsPerPage={12} />}
       <header>
         <h1 className="text-2xl font-bold mb-4 mt-4">{props.title ? `${props.title} Landing Page` : 'Dynamic Routes (Categories) + Next.js'}</h1>
         <Instructions />
