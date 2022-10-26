@@ -48,7 +48,7 @@ export async function getServerSideProps({ req, query }) {
   const serverUrl = `${protocol}://${req.headers.host}${req.url}`;
   const serverState = await getServerState(<SearchPage serverUrl={serverUrl} />);
   let filters = query.categories.map((category) => {
-   return `categories:${category.replaceAll('-', ' ')}`
+   return `categories:"${category.replaceAll('-', ' ')}"`
   })
   const navItems = [{
     url: '/category_pages',
