@@ -31,13 +31,13 @@ const AlgoliaUrlsInspector = ({ payloads, channel }) => {
           if (body.requests[0].query) {
             queryString.append('query', body.requests[0].query);
           }
-          const renderValues = [<span className='text-xs absolute right-2 text-slate-400' key='date'>{dateString}</span>];
+          const renderValues = [<span className='text-xs absolute right-4 text-slate-400' key='date'>{dateString}</span>];
           for (const key of queryString.keys()) {
             if (!hiddenKeys.includes(key) && (mandatoryKeys.includes(key) || queryString.get(key))) {
-              renderValues.push(<p key={key}><span className="font-bold">{key}:</span>{queryString.get(key)}</p>)
+              renderValues.push(<p key={key} className={`break-all ${renderValues.length == 1 ? 'pt-4 mt-1': 'pt-0'}`}><span className="font-bold">{key}:</span>{queryString.get(key)}</p>)
             }
           }
-          return(<li className="mt-4 w-full p-4 bg-slate-100 relative" key={index}>
+          return(<li className="mt-4 w-full p-4 bg-slate-100 relative " key={index}>
           {renderValues}
           </li>);
         })}
