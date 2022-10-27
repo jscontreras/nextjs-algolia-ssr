@@ -46,7 +46,6 @@ export default function SearchPage({ serverState, serverUrl, navItems, filters, 
 export async function getServerSideProps({ req, query }) {
   const protocol = req.headers.referer?.split('://')[0] || 'https';
   const serverUrl = `${protocol}://${req.headers.host}${req.url}`;
-  const serverState = await getServerState(<SearchPage serverUrl={serverUrl} />);
   let filters = query.categories.map((category) => {
     const separator = '"'
     return `categories:${separator}${category.replaceAll('-', ' ')}${separator}`
@@ -65,13 +64,17 @@ export async function getServerSideProps({ req, query }) {
       title: `${element.replaceAll('-', ' ')}`
     })
   })
+  const title = query.categories.pop().replaceAll('-', ' ');
+
+  const serverState = await getServerState(<SearchPage serverUrl={serverUrl} {...{navItems, filters, title}} />);
+
   return {
     props: {
       serverState,
       serverUrl,
       navItems: navItems,
       filters: filters,
-      title: query.categories.pop().replaceAll('-', ' ')
+      title
     },
   };
 }
