@@ -3,7 +3,6 @@
 }
 
 .main {
-  min-height: 100vh;
   padding: 4rem 0;
   flex: 1;
   display: flex;
@@ -69,7 +68,7 @@
   margin-top: 100px;
   display: flex;
   align-items: flex-start;
-  justify-content: stretch;
+  justify-content: center;
   flex-wrap: wrap;
   max-width: 880px;
   flex-grow: 2;
