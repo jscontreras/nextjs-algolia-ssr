@@ -26,15 +26,21 @@ export default function Home() {
           <Link href={'/instantsearch'} >
             <a className={styles.card}>
               <h2>InstantSearch &rarr;</h2>
-              <p>Server Side rendering using Algolia Hooks InstantSearch Lib.</p>
+              <p>Server Side rendering using <span className='font-bold'>Algolia Hooks InstantSearch</span> Lib.</p>
             </a>
           </Link>
 
-          <Link href={'/autocomplete'}>
+          <Link href={'/autocomplete-core'}>
               <a className={styles.card}>
-                <h2>Autocomplete &rarr;</h2>
-                <p>Server Side rendering using Algolia Autocomplete core Lib.</p>
+                <h2>Autocomplete Core &rarr;</h2>
+              <p>Server Side rendering using Algolia <span className='font-bold'>autocomplete-core</span> Lib.</p>
               </a>
+          </Link>
+          <Link href={'/autocomplete-js'}>
+            <a className={styles.card}>
+              <h2>Autocomplete JS &rarr;</h2>
+              <p>Server Side rendering using Algolia <span className='font-bold'>autocomplete-js</span> Lib.</p>
+            </a>
           </Link>
           <Link href={'/category_pages'}>
             <a className={styles.card}>
@@ -45,7 +51,7 @@ export default function Home() {
           <Link href={'/debug'}>
             <a className={styles.card}>
               <h2>Debugger &rarr;</h2>
-              <p>See Algolia requests parameters in real time.</p>
+              <p>See Algolia requests parameters from any of the previously listed examples in real time.</p>
             </a>
           </Link>
         </div>
