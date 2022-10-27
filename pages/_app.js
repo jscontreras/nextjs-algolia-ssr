@@ -20,7 +20,7 @@ function MyApp(props) {
 
       // Check if there is already one working otherwise register and reload
       if (!navigator.serviceWorker.controller) {
-        navigator.serviceWorker.register("/sw.js", {
+        navigator.serviceWorker.register("/sw-algolia.js", {
           scope: '/'
         }).then(
           function (registration) {
