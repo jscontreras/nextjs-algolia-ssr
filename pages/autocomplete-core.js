@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import algoliasearch from 'algoliasearch/lite';
 import { createAutocomplete } from '@algolia/autocomplete-core';
 import { createElement, Fragment } from 'react';
@@ -9,6 +9,7 @@ import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query
 import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches';
 
 import Link from 'next/link';
+import { AutocomplteSSR } from '../components/autocompleteSSR';
 
 const searchClient = algoliasearch(
   'latency',
@@ -173,6 +174,7 @@ function Autocomplete() {
                       query,
                       params: {
                         hitsPerPage: 4,
+                        clickAnalytics: true,
                         // highlightPreTag: '<mark>',
                         // highlightPostTag: '</mark>',
                       },
@@ -192,7 +194,6 @@ function Autocomplete() {
 
   // ...CUSTOM RENDERER
   return (
-
     <div className="aa-Autocomplete" {...autocomplete.getRootProps({})}>
       <input className="aa-Input" {...autocomplete.getInputProps({})} />
       <div className="aa-Panel" {...autocomplete.getPanelProps({})}>
@@ -204,20 +205,20 @@ function Autocomplete() {
               return (
                 <div key={`source-${index}`} className="aa-Source">
                   <ul className="aa-List" {...autocomplete.getListProps()}>
-                    {items.map((item, key) => (
+                    {items.map((item, index) => (
                       <li
-                        key={item.objectID}
+                        key={`${item.objectID ? item.objectID : index }-${collection.source.sourceId}`}
                         className="aa-Item"
                         {...autocomplete.getItemProps({
                           item,
                           source,
                         })}
                       >
-                        {collection.source.sourceId === 'querySuggestionsPlugin' && <QuerySuggestionItem key={key} item={item} autocomplete={autocomplete} {...autocomplete.getItemProps({
+                        {collection.source.sourceId === 'querySuggestionsPlugin' && <QuerySuggestionItem item={item} autocomplete={autocomplete} {...autocomplete.getItemProps({
                           item,
                           source,
                         })} />}
-                        {collection.source.sourceId === 'recentSearchesPlugin' && <PastQueryItem key={key} item={item} autocomplete={autocomplete} {...autocomplete.getItemProps({
+                        {collection.source.sourceId === 'recentSearchesPlugin' && <PastQueryItem item={item} autocomplete={autocomplete} {...autocomplete.getItemProps({
                           item,
                           source,
                         })} />}
@@ -233,7 +234,7 @@ function Autocomplete() {
                   <ul className="aa-List" {...autocomplete.getListProps()}>
                     {items.map((item) => (
                       <li
-                        key={item.objectID}
+                         key={item.objectID}
                         className="aa-Item"
                         {...autocomplete.getItemProps({
                           item,
@@ -268,13 +269,21 @@ function Autocomplete() {
 
 
 function AutocompletePage() {
+  const [clientRendered, setClientRendered] = useState(false);
+  useEffect(()=> {
+    setClientRendered(true);
+  } ,[clientRendered]);
   return <>
+
     <Link href={'/'}><a className="text-blue-700">&larr; Home</a></Link>
     <h1 className="mt-4 text-2xl font-bold mb-4">
-      Autocomplete Isomorphic Rendering using algolia-core
+      Autocomplete Server Rendering using <span className='text-amber-600'>autocomplete-core</span>
     </h1>
+    <p className='mb-4 mt-2'>There is not Isomorphic Rendering for <span className='text-amber-600'>autocomplete-core</span>. However, a default
+    rendering can be provided using <a className="underline" href="https://nextjs.org/docs/messages/react-hydration-error">useEffect</a> before the client rendering is executed.</p>
     <p className='mb-4 mt-2'>Test Server Side Rendering by running this page with Javascript disabled!</p>
-    <Autocomplete />
+    {clientRendered &&<Autocomplete />}
+    {!clientRendered && <AutocomplteSSR />}
   </>
 }
 

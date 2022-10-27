@@ -16,7 +16,7 @@
   dependencies:
     "@algolia/autocomplete-shared" "1.7.1"
 
-"@algolia/autocomplete-js@1.7.2":
+"@algolia/autocomplete-js@1.7.2", "@algolia/autocomplete-js@^1.7.2":
   version "1.7.2"
   resolved "https://registry.yarnpkg.com/@algolia/autocomplete-js/-/autocomplete-js-1.7.2.tgz#6104b6547e47232a591baa7aae770714caff88be"
   integrity sha512-/x0r0510yEHtTt9+JIhWa9CIvS2s95n5eSyKrCXA6QF8DYKJV+LQpGCpHnO4gEHJFEe0itVdmws3DzOZrBGa9Q==
@@ -2821,7 +2821,7 @@ rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-dom@18.2.0:
+react-dom@^18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-18.2.0.tgz#22aaf38708db2674ed9ada224ca4aa708d821e3d"
   integrity sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==
