@@ -33,13 +33,13 @@ export default function Home() {
           <Link href={'/autocomplete-core'}>
               <a className={styles.card}>
                 <h2>Autocomplete Core &rarr;</h2>
-              <p>Server Side rendering using Algolia <span className='font-bold'>autocomplete-core</span> Lib.</p>
+              <p>Isomprohic rendering using Algolia <span className='font-bold'>autocomplete-core</span> Lib.</p>
               </a>
           </Link>
           <Link href={'/autocomplete-js'}>
             <a className={styles.card}>
               <h2>Autocomplete JS &rarr;</h2>
-              <p>Server Side rendering using Algolia <span className='font-bold'>autocomplete-js</span> Lib.</p>
+              <p>Server Side conditional rendering using Algolia <span className='font-bold'>autocomplete-js</span> Lib.</p>
             </a>
           </Link>
           <Link href={'/category_pages'}>

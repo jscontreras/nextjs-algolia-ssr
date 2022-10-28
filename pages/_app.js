@@ -26,7 +26,7 @@ function MyApp(props) {
           function (registration) {
             if (initController) {
               initController = false;
-              console.log("Service Worker registration successful with scope: ", registration.scope);
+              console.log("Interceptor Service Worker registration successful with scope: ", registration.scope);
               location.reload();
             }
           },
@@ -70,19 +70,6 @@ function MyApp(props) {
                 payload
             })}
           })
-          // setInterval(()=>{
-          //   try {
-          //     navigator.serviceWorker.controller.postMessage({
-          //       action: 'echo',
-          //       message: 'test'
-          //     }, [messageChannel.port2]);
-          //   } catch {
-          //     navigator.serviceWorker.controller.postMessage({
-          //       action: 'echo',
-          //       message: 'test'
-          //     });
-          //   }
-          // }, 3000);
         }
       }
     }

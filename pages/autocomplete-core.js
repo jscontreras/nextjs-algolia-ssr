@@ -9,8 +9,6 @@ import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query
 import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches';
 
 import Link from 'next/link';
-import { AutocomplteSSR } from '../components/autocompleteSSR';
-
 const searchClient = algoliasearch(
   'latency',
   '6be0576ff61c053d5f9a3225e2a90f76',
@@ -149,8 +147,8 @@ function Autocomplete() {
   // (1) Create a React state.
   const [autocompleteState, setAutocompleteState] = React.useState({});
   const autocomplete = React.useMemo(
-    () =>
-      createAutocomplete({
+    () => {
+      return createAutocomplete({
         placeholder: 'Search for Products',
         plugins: [querySuggestionsPlugin, recentSearchesPlugin],
         onStateChange({ state }) {
@@ -188,15 +186,30 @@ function Autocomplete() {
             },
           ];
         },
-      }),
+      });
+    },
     []
   );
 
+  const autoCompleteLabel = 'autocomplete-1-label';
+  const autoCompleteId = 'autocomplete-1-input';
+
+  // Makes SSR consistent on aria aspects
+  const containerProps = autocomplete.getRootProps({});
+  const inputProps = autocomplete.getInputProps({});
+  const panelProps = autocomplete.getPanelProps({});
+
+  inputProps.id = autoCompleteId;
+  containerProps['aria-labelledby'] = autoCompleteLabel;
+  inputProps['aria-labelledby'] = autoCompleteLabel;
+  panelProps['aria-labelledby'] = autoCompleteLabel;
+
+
   // ...CUSTOM RENDERER
   return (
-    <div className="aa-Autocomplete" {...autocomplete.getRootProps({})}>
-      <input className="aa-Input" {...autocomplete.getInputProps({})} />
-      <div className="aa-Panel" {...autocomplete.getPanelProps({})}>
+    <div className="aa-Autocomplete" {...containerProps} >
+      <input className="aa-Input" {...inputProps} />
+      <div className="aa-Panel" {...autocomplete.getPanelProps({})} >
         {autocompleteState.isOpen &&
           autocompleteState.collections.map((collection, index) => {
             const { source, items } = collection;
@@ -269,21 +282,15 @@ function Autocomplete() {
 
 
 function AutocompletePage() {
-  const [clientRendered, setClientRendered] = useState(false);
-  useEffect(()=> {
-    setClientRendered(true);
-  } ,[clientRendered]);
   return <>
 
     <Link href={'/'}><a className="text-blue-700">&larr; Home</a></Link>
     <h1 className="mt-4 text-2xl font-bold mb-4">
       Autocomplete Server Rendering using <span className='text-amber-600'>autocomplete-core</span>
     </h1>
-    <p className='mb-4 mt-2'>There is not Isomorphic Rendering for <span className='text-amber-600'>autocomplete-core</span>. However, a default
-    rendering can be provided using <a className="underline" href="https://nextjs.org/docs/messages/react-hydration-error">useEffect</a> before the client rendering is executed.</p>
-    <p className='mb-4 mt-2'>Test Server Side Rendering by running this page with Javascript disabled!</p>
-    {clientRendered &&<Autocomplete />}
-    {!clientRendered && <AutocomplteSSR />}
+    <p className='mb-4 mt-2'>By using <span className='text-amber-600'>autocomplete-core</span> it is possible to get isomorphic rendering work using a custom renderer.</p>    <p className='mb-4 mt-2'>Test Server Side Rendering by running this page with Javascript disabled!</p>
+    <Autocomplete />
+
   </>
 }
 
