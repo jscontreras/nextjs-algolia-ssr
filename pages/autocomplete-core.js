@@ -159,7 +159,6 @@ function Autocomplete() {
         plugins: [querySuggestionsPlugin, recentSearchesPlugin],
         onStateChange({ state }) {
           // (2) Synchronize the Autocomplete state with the React state.
-          console.log('Is it changed??', autocomplete)
           setAutocompleteState(state);
         },
         getSources() {
