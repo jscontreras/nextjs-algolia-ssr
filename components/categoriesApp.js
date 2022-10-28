@@ -137,7 +137,7 @@ export function CategoriesApp(props) {
 
   return (
     <InstantSearch {...props}>
-      {filter ? <Configure filters={filter} hitsPerPage={12} /> : <Configure hitsPerPage={12} />}
+      {filter ? <Configure filters={filter} hitsPerPage={12} analyticsTags={['browse']} /> : <Configure hitsPerPage={12} />}
       <header>
         <h1 className="text-2xl font-bold mb-4 mt-4">{props.title ? `${props.title} Landing Page` : 'Dynamic Routes (Categories) + Next.js'}</h1>
         <Instructions categoryPage={!props.filters} url={url} filterName={!props.filters ? 'Nav Hierarchy Facets' : props.filters.customFilterLabel}/>
