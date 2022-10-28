@@ -56,14 +56,14 @@ export async function getServerSideProps({ req, query, res }) {
   const protocol = req.headers.referer?.split('://')[0] || 'https';
   const serverUrl = `${protocol}://${req.headers.host}${req.url}`;
 
-  // Using categories (filter)
+  // Using category (filter)
   filters['defaultFilter'] = query.categories.map((category) => {
     const separator = '"'
     return `list_categories:${separator}${category.replaceAll('-', ' ')}${separator}`
   }).join(' AND ')
 
   if (query.categories.length > 0) {
-    // Category ID (filter)
+    // category_page_id
     filters['defaultFilter'] = `category_page_id:'${query.categories.join(' > ').replaceAll('-', ' ')}'`;
   }
 
