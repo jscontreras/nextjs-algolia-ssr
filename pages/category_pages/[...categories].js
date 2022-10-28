@@ -61,18 +61,18 @@ export async function getServerSideProps({ req, query, res }) {
   // Using category (filter)
   filters['list_categories'] = query.categories.map((category) => {
     const separator = '"';
-    return `list_categories:${separator}${category.replaceAll('-', ' ')}${separator}`
+    return `list_categories:${separator}${category}${separator}`
   }).join(' AND ')
   filters['list_categoriesLabel'] = 'list_categories';
 
   // category_page_id
-  filters['category_page_id'] = `category_page_id:'${query.categories.join(' > ').replaceAll('-', ' ')}'`;
+  filters['category_page_id'] = `category_page_id:'${query.categories.join(' > ')}'`;
   filters['category_page_idLabel'] = 'list_categories';
 
   // OR using hierarchical_categories (filter)
-  filters['customFilter'] = `hierarchical_categories.lvl${query.categories.length - 1}:'${query.categories.join(' > ').replaceAll('-', ' ')}'`;
+  filters['customFilter'] = `hierarchical_categories.lvl${query.categories.length - 1}:'${query.categories.join(' > ')}'`;
   filters['customFilterLabel'] = 'hierarchical_categories';
-  filters['hierarchical_categories'] = `hierarchical_categories.lvl${query.categories.length - 1}:'${query.categories.join(' > ').replaceAll('-', ' ')}'`;
+  filters['hierarchical_categories'] = `hierarchical_categories.lvl${query.categories.length - 1}:'${query.categories.join(' > ')}'`;
   filters['hierarchical_categoriesLabel'] = 'hierarchical_categories';
 
   // Base element for custom Breadcrumbs
@@ -87,7 +87,7 @@ export async function getServerSideProps({ req, query, res }) {
     url += `/${element}`
     navItems.push({
       url: `/category_pages${url}`,
-      title: `${element.replaceAll('-', ' ')}`
+      title: `${element}`
     })
   })
 
@@ -98,7 +98,7 @@ export async function getServerSideProps({ req, query, res }) {
   }
 
   // Getting Category page custom title.
-  const title = query.categories.pop().replaceAll('-', ' ');
+  const title = query.categories.pop();
   // Getting Server State for hydration.
   const serverState = await getServerState(<SearchPage serverUrl={serverUrl} {...{ navItems, filters, title }} />);
   return {

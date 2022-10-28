@@ -3,7 +3,7 @@ import React from 'react';
 import { useHierarchicalMenu } from 'react-instantsearch-hooks-web';
 
 function friendlyURL(value) {
-  return value.replaceAll(' ', '-');
+  return value;
 }
 
 function renderItem(item, path, key, level=2) {
