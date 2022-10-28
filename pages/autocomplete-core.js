@@ -187,7 +187,7 @@ function Autocomplete() {
                 });
               },
               getItemUrl({ item }) {
-                return `https://www.google.com/?query=${item.name}`;
+                return `/?query=${item.name}`;
               },
             },
           ];
