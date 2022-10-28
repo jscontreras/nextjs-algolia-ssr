@@ -150,6 +150,8 @@ function PastQueryItem({ item, autocomplete }) {
 function Autocomplete() {
   // (1) Create a React state.
   const [autocompleteState, setAutocompleteState] = React.useState({});
+  const inputRef = React.useRef(null);
+
   const autocomplete = React.useMemo(
     () => {
       return createAutocomplete({
@@ -157,6 +159,7 @@ function Autocomplete() {
         plugins: [querySuggestionsPlugin, recentSearchesPlugin],
         onStateChange({ state }) {
           // (2) Synchronize the Autocomplete state with the React state.
+          console.log('Is it changed??', autocomplete)
           setAutocompleteState(state);
         },
         getSources() {
@@ -185,7 +188,7 @@ function Autocomplete() {
                 });
               },
               getItemUrl({ item }) {
-                return `/?query=${item.name}`;
+                return `https://www.google.com/?query=${item.name}`;
               },
             },
           ];
@@ -208,11 +211,15 @@ function Autocomplete() {
   inputProps['aria-labelledby'] = autoCompleteLabel;
   panelProps['aria-labelledby'] = autoCompleteLabel;
 
-
   // ...CUSTOM RENDERER
   return (
     <div className="aa-Autocomplete" {...containerProps} >
-      <input className="aa-Input" {...inputProps} />
+      <form
+        className="aa-Form"
+        {...autocomplete.getFormProps({ inputElement: inputRef.current })}
+      >
+      <input ref={inputRef} className="aa-Input" {...inputProps} />
+      </form>
       <div className="aa-Panel" {...autocomplete.getPanelProps({})} >
         {autocompleteState.isOpen &&
           autocompleteState.collections.map((collection, index) => {
