@@ -15,9 +15,9 @@ import { BreadCrumbs } from './breadcrumbs';
 import { CategoriesMenu } from './categoriesMenu';
 import Link from 'next/link';
 
-const Instructions = ({ categoryPage, url }) => (
+const Instructions = ({ categoryPage, url, filterName }) => (
   <>{categoryPage ? (<div className='mb-4 mt-2 text-sm'>
-    <>Use the <span className='font-bold'>Nav Hierarchy Facets</span> widget to refine the search using URL  parameters (<span className="text-amber-600 italic">facets, facetsFilters</span>).</>
+    <>Use the <span className='font-bold'>{filterName}</span> widget to refine the search using URL  parameters (<span className="text-amber-600 italic">facets, facetsFilters</span>).</>
     <> Alternatively, the <span className='font-bold'>Nav Category Links</span> menu provides URLs to the corresponding categories landing pages via the
       (<span className='italic text-amber-600'>filters</span>) parameter.</>
     <p className='mt-2'>Open the <Link href='/debug'><a target="_blank" className="text-blue-600 underline" >Debug&#39;s tab</a></Link> to see the parameters sent to Algolia in real time.</p>
@@ -48,7 +48,7 @@ const FilterToggle = ({ enabled, setEnabled }) => {
           }}
           className="w-11 h-6 bg-gray-200 rounded-full peer  peer-focus:ring-green-300  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"
         ></div>
-        <span className='ml-2'>Use <span className="font-medium text-amber-500">hierarchicalCategories</span> attribute as filter.</span>
+        <span className='ml-2'>Use <span className="font-medium text-amber-500">hierarchical_categories</span> attribute as filter.</span>
 
       </label>
     </>
@@ -59,12 +59,12 @@ const HitComponent = ({ hit }) => (
   <div className="hit">
     <div className="hit-picture">
       {/* <img src={`${hit.image}`} alt={hit.name}/> */}
-      <Image src={`${hit.image}`} alt={hit.name} layout='fill' width={150} height={150} />
+      <Image src={`${hit.image_urls[0]}`} alt={hit.name} layout='fill' width={120} height={120} />
     </div>
     <div className="hit-content">
       <div>
         <Highlight attribute="name" hit={hit} />
-        <span> - ${hit.price}</span>
+        <span> - ${hit.price.value}</span>
         <span> - {hit.rating} stars</span>
       </div>
       <div className="hit-type">
@@ -73,13 +73,29 @@ const HitComponent = ({ hit }) => (
       <div className="hit-description">
         <Snippet attribute="description" hit={hit} />...
       </div>
-      <div className="hit-categories mt-2 pl-2">
-        <h4 className='text-xs mb-2 font-bold'>hierarchicalCategories (Attribute)</h4>
-        {Object.keys(hit.hierarchicalCategories).map((key, index) => (<p className="text-xs	mb-1 text-amber-500" key={index}>{`"${key}:${hit.hierarchicalCategories[key]}"`}</p>))}
+      <div className='flex'>
+        <div className="hit-categories mt-2 pl-2 text-xs">
+        <h4 className='text-xs mb-2 font-bold'>hierarchical_categories (Facet)</h4>
+        <ul className='pl-1'>
+        [{Object.keys(hit.hierarchical_categories).map((key, index) => (
+          <li className='pl-4' key={index}>
+          <span className="mb-1 text-amber-500" >{`"${key}:${hit.hierarchical_categories[key]}"`}</span>
+          <span>,</span>
+          </li>
+          ))}]
+          </ul>
+        </div>
+        <div className="hit-categories mt-2 pl-2 text-xs border-solid">
+        <span className='text-xs mb-2 font-bold'>category_page_id (Facet):</span>
+          <ul className='pl-1'>
+        [{Object.keys(hit.category_page_id).map((key, index) => (
+          <li className='pl-4' key={index}>
+            <span className="mb-1 text-emerald-500" >{`"${hit.category_page_id[key]}"`}</span>
+            <span>,</span>
+          </li>
+        ))}]
+          </ul>
       </div>
-      <div className="hit-categories mt-2 pl-2">
-        <h4 className='text-xs mb-2 font-bold'>categories (Attribute)</h4>
-        {Object.keys(hit.categories).map((key, index) => (<p className="text-xs	mb-1 text-emerald-500" key={index}>{`"${hit.categories[key]}"`}</p>))}
       </div>
     </div>
   </div>
@@ -108,7 +124,7 @@ export function CategoriesApp(props) {
         setFilter(props.filters.defaultFilter);
       }
     } else {
-      setCookie('filterMode', 'hierarchicalCategories');
+      setCookie('filterMode', 'hierarchical_categories');
       if (props.filters) {
         setFilter(props.filters.customFilter);
       }
@@ -124,7 +140,7 @@ export function CategoriesApp(props) {
       {filter ? <Configure filters={filter} hitsPerPage={12} /> : <Configure hitsPerPage={12} />}
       <header>
         <h1 className="text-2xl font-bold mb-4 mt-4">{props.title ? `${props.title} Landing Page` : 'Dynamic Routes (Categories) + Next.js'}</h1>
-        <Instructions categoryPage={!props.filters} url={url}/>
+        <Instructions categoryPage={!props.filters} url={url} filterName={!props.filters ? 'Nav Hierarchy Facets' : props.filters.customFilterLabel}/>
         <SearchBox />
       </header>
       <BreadCrumbs items={props.navItems || []} />
@@ -134,17 +150,17 @@ export function CategoriesApp(props) {
           <div className="menu text-sm">
             <h2 className='font-bold mb-2'>Nav Hierarchy Facets</h2>
             <HierarchicalMenu attributes={[
-              'hierarchicalCategories.lvl0',
-              'hierarchicalCategories.lvl1',
-              'hierarchicalCategories.lvl2',
-              'hierarchicalCategories.lvl3',
+              'hierarchical_categories.lvl0',
+              'hierarchical_categories.lvl1',
+              'hierarchical_categories.lvl2',
+              'hierarchical_categories.lvl3',
             ]} separator=' > ' />
             <h2 className='font-bold mb-2 mt-8'>Nav Category Links</h2>
             <CategoriesMenu attributes={[
-              'hierarchicalCategories.lvl0',
-              'hierarchicalCategories.lvl1',
-              'hierarchicalCategories.lvl2',
-              'hierarchicalCategories.lvl3',
+              'hierarchical_categories.lvl0',
+              'hierarchical_categories.lvl1',
+              'hierarchical_categories.lvl2',
+              'hierarchical_categories.lvl3',
             ]} separator=' > ' />
 
           </div>)}

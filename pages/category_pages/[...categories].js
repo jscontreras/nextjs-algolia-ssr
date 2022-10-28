@@ -10,8 +10,8 @@ import { history } from 'instantsearch.js/es/lib/routers/index.js';
 import Link from 'next/link';
 
 const searchClient = algoliasearch(
-  'latency',
-  '6be0576ff61c053d5f9a3225e2a90f76',
+  'U9UXVSI686',
+  '341cf4d4310a13c8c6e6c9a069959cd5',
   {
     requester: createFetchRequester(),
     responsesCache: createNullCache(),
@@ -19,7 +19,7 @@ const searchClient = algoliasearch(
   }
 );
 
-const indexName = "instant_search";
+const indexName = "prod_ECOM";
 
 
 export default function SearchPage({ serverState, serverUrl, navItems, filters, title, defaultFilterSelected }) {
@@ -58,14 +58,18 @@ export async function getServerSideProps({ req, query, res }) {
 
   // Using categories (filter)
   filters['defaultFilter'] = query.categories.map((category) => {
-      const separator = '"'
-      return `categories:${separator}${category.replaceAll('-', ' ')}${separator}`
-    }).join(' AND ')
+    const separator = '"'
+    return `list_categories:${separator}${category.replaceAll('-', ' ')}${separator}`
+  }).join(' AND ')
 
+  if (query.categories.length > 0) {
+    // Category ID (filter)
+    filters['defaultFilter'] = `category_page_id:'${query.categories.join(' > ').replaceAll('-', ' ')}'`;
+  }
 
-    // OR using hierarchicalCategories (filter)
-  filters['customFilter'] = `hierarchicalCategories.lvl${query.categories.length - 1}:'${query.categories.join(' > ').replaceAll('-', ' ')}'`;
-
+  // OR using hierarchical_categories (filter)
+  filters['customFilter'] = `hierarchical_categories.lvl${query.categories.length - 1}:'${query.categories.join(' > ').replaceAll('-', ' ')}'`;
+  filters['customFilterLabel'] = 'hierarchical_categories';
 
   // Base element for custom Breadcrumbs
   const navItems = [{
