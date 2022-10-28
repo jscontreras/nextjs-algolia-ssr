@@ -1,7 +1,7 @@
 import React from 'react';
 import algoliasearch from 'algoliasearch/lite';
 import { createFetchRequester } from '@algolia/requester-fetch';
-import { hasCookie, getCookie } from 'cookies-next';
+import { hasCookie, getCookie, setCookie } from 'cookies-next';
 import { getServerState } from 'react-instantsearch-hooks-server';
 import { InstantSearchSSRProvider } from 'react-instantsearch-hooks-web';
 import { createNullCache } from '@algolia/cache-common';
@@ -46,10 +46,12 @@ export default function SearchPage({ serverState, serverUrl, navItems, defaultFi
 }
 
 export async function getServerSideProps({ req, res }) {
-  const defaultFilter = 'category';
+  const defaultFilter = 'category_page_id';
   let filterMode = defaultFilter;
   if (hasCookie('filterMode', { req, res })) {
     filterMode = getCookie('filterMode', { req, res });
+  } else {
+    setCookie('filterMode', defaultFilter, { req, res });
   }
 
   const protocol = req.headers.referer?.split('://')[0] || 'https';
@@ -59,7 +61,7 @@ export async function getServerSideProps({ req, res }) {
     props: {
       serverState,
       serverUrl,
-      defaultFilterSelected: filterMode === defaultFilter,
+      defaultFilterSelected: filterMode !== 'hierarchical_categories',
       navItems: [{ url: 'category_pages', title: 'Category pages' }]
     },
   };

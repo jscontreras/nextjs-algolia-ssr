@@ -14,6 +14,7 @@ import {
 import { BreadCrumbs } from './breadcrumbs';
 import { CategoriesMenu } from './categoriesMenu';
 import Link from 'next/link';
+import Router from 'next/router';
 
 const Instructions = ({ categoryPage, url, filterName }) => (
   <>{categoryPage ? (<div className='mb-4 mt-2 text-sm'>
@@ -24,9 +25,9 @@ const Instructions = ({ categoryPage, url, filterName }) => (
   </div>) : (
     <div className='mb-4 mt-2 text-sm'>
       <p>Filter attributes are obtained by parsing the URL path
-          <span className='italic text-amber-600'> {url}</span> into the corresponding query&apos;s filter value.
+        <span className='italic text-amber-600'> {url}</span> into the corresponding query&apos;s filter value.
       </p>
-        <p className='mt-2'>Open the <Link href='/debug'><a target="_blank" className="text-blue-600 underline" >Debug&#39;s tab</a></Link> to see the parameters sent to Algolia in real time.</p>
+      <p className='mt-2'>Open the <Link href='/debug'><a target="_blank" className="text-blue-600 underline" >Debug&#39;s tab</a></Link> to see the parameters sent to Algolia in real time.</p>
     </div>
   )}
   </>
@@ -74,34 +75,46 @@ const HitComponent = ({ hit }) => (
         <Snippet attribute="description" hit={hit} />...
       </div>
       <div className='flex'>
-        <div className="hit-categories mt-2 pl-2 text-xs">
-        <h4 className='text-xs mb-2 font-bold'>hierarchical_categories (Facet)</h4>
-        <ul className='pl-1'>
-        [{Object.keys(hit.hierarchical_categories).map((key, index) => (
-          <li className='pl-4' key={index}>
-          <span className="mb-1 text-amber-500" >{`"${key}:${hit.hierarchical_categories[key]}"`}</span>
-          <span>,</span>
-          </li>
-          ))}]
+        <div className="hit-categories  text-xs p-5 border rounded mr-2">
+          <h4 className='text-xs mb-2 font-bold'>hierarchical_categories (Facet)</h4>
+          <ul className='pl-1'>
+            [{Object.keys(hit.hierarchical_categories).map((key, index) => (
+              <li className='pl-4' key={index}>
+                <span className="mb-1 text-amber-500" >{`"${key}:${hit.hierarchical_categories[key]}"`}</span>
+                <span>,</span>
+              </li>
+            ))}]
           </ul>
         </div>
-        <div className="hit-categories mt-2 pl-2 text-xs border-solid">
-        <span className='text-xs mb-2 font-bold'>category_page_id (Facet):</span>
+        <div className="hit-categories text-xs p-5 border rounded mr-2">
+          <h4 className='text-xs mb-2 font-bold'>list_categories (Facet)</h4>
           <ul className='pl-1'>
-        [{Object.keys(hit.category_page_id).map((key, index) => (
-          <li className='pl-4' key={index}>
-            <span className="mb-1 text-emerald-500" >{`"${hit.category_page_id[key]}"`}</span>
-            <span>,</span>
-          </li>
-        ))}]
+            [{Object.keys(hit.list_categories).map((key, index) => (
+              <li className='pl-4' key={index}>
+                <span className="mb-1 text-sky-500" >{`"${hit.list_categories[key]}"`}</span>
+                <span>,</span>
+              </li>
+            ))}]
           </ul>
-      </div>
+        </div>
+        <div className="hit-categories  text-xs border-solid p-5 border rounded">
+          <span className='text-xs mb-2 font-bold'>category_page_id (Facet):</span>
+          <ul className='pl-1'>
+            [{Object.keys(hit.category_page_id).map((key, index) => (
+              <li className='pl-4' key={index}>
+                <span className="mb-1 text-emerald-500" >{`"${hit.category_page_id[key]}"`}</span>
+                <span>,</span>
+              </li>
+            ))}]
+          </ul>
+        </div>
       </div>
     </div>
   </div>
 );
 
 export function CategoriesApp(props) {
+
   const [defaultFilter, setDefaultFilter] = useState(props.defaultFilterSelected);
   const [url, setUrl] = useState();
   const [filter, setFilter] = useState(() => {
@@ -119,12 +132,12 @@ export function CategoriesApp(props) {
     const newValue = !defaultFilter;
     // If default
     if (newValue == true) {
-      setCookie('filterMode', 'category');
+      setCookie('filterMode', props.filters.defaultFilterLabel);
       if (props.filters) {
         setFilter(props.filters.defaultFilter);
       }
     } else {
-      setCookie('filterMode', 'hierarchical_categories');
+      setCookie('filterMode', props.filters.customFilterLabel);
       if (props.filters) {
         setFilter(props.filters.customFilter);
       }
@@ -133,14 +146,32 @@ export function CategoriesApp(props) {
   }
   useEffect(() => {
     setUrl(window.location.pathname);
-  }, [filter])
+    const handleBeforeHistoryChange = () => {
+      setUrl(window.location.pathname);
+    };
+
+    if (!props.filters) {
+      setFilter(null);
+    }
+    if (defaultFilter) {
+      setFilter(props.filters.defaultFilter);
+    } else {
+      setFilter(props.filters.customFilter);
+    }
+
+    Router.events.on('routeChangeComplete', handleBeforeHistoryChange);
+    return () => {
+      Router.events.off('routeChangeComplete', handleBeforeHistoryChange);
+    };
+
+  }, [defaultFilter, filter, props.filters])
 
   return (
     <InstantSearch {...props}>
       {filter ? <Configure filters={filter} hitsPerPage={12} analyticsTags={['browse']} /> : <Configure hitsPerPage={12} />}
       <header>
         <h1 className="text-2xl font-bold mb-4 mt-4">{props.title ? `${props.title} Landing Page` : 'Dynamic Routes (Categories) + Next.js'}</h1>
-        <Instructions categoryPage={!props.filters} url={url} filterName={!props.filters ? 'Nav Hierarchy Facets' : props.filters.customFilterLabel}/>
+        <Instructions categoryPage={!props.filters} url={url} filterName={!props.filters ? 'Nav Hierarchy Facets' : props.filters.customFilterLabel} />
         <SearchBox />
       </header>
       <BreadCrumbs items={props.navItems || []} />

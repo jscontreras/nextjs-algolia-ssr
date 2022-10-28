@@ -1,5 +1,5 @@
 import React from 'react';
-import { hasCookie, getCookie } from 'cookies-next';
+import { hasCookie, getCookie, setCookie } from 'cookies-next';
 import algoliasearch from 'algoliasearch/lite';
 import { getServerState } from 'react-instantsearch-hooks-server';
 import { InstantSearchSSRProvider } from 'react-instantsearch-hooks-web';
@@ -46,30 +46,34 @@ export default function SearchPage({ serverState, serverUrl, navItems, filters, 
 }
 
 export async function getServerSideProps({ req, query, res }) {
-  const defaultFilter = 'category';
+  const defaultFilter = 'category_page_id';
   let filterMode = defaultFilter;
   let filters = {};
   if (hasCookie('filterMode', { req, res })) {
     filterMode = getCookie('filterMode', { req, res });
+  } else {
+    setCookie('filterMode', defaultFilter, { req, res });
   }
 
   const protocol = req.headers.referer?.split('://')[0] || 'https';
   const serverUrl = `${protocol}://${req.headers.host}${req.url}`;
 
   // Using category (filter)
-  filters['defaultFilter'] = query.categories.map((category) => {
-    const separator = '"'
+  filters['list_categories'] = query.categories.map((category) => {
+    const separator = '"';
     return `list_categories:${separator}${category.replaceAll('-', ' ')}${separator}`
   }).join(' AND ')
+  filters['list_categoriesLabel'] = 'list_categories';
 
-  if (query.categories.length > 0) {
-    // category_page_id
-    filters['defaultFilter'] = `category_page_id:'${query.categories.join(' > ').replaceAll('-', ' ')}'`;
-  }
+  // category_page_id
+  filters['category_page_id'] = `category_page_id:'${query.categories.join(' > ').replaceAll('-', ' ')}'`;
+  filters['category_page_idLabel'] = 'list_categories';
 
   // OR using hierarchical_categories (filter)
   filters['customFilter'] = `hierarchical_categories.lvl${query.categories.length - 1}:'${query.categories.join(' > ').replaceAll('-', ' ')}'`;
   filters['customFilterLabel'] = 'hierarchical_categories';
+  filters['hierarchical_categories'] = `hierarchical_categories.lvl${query.categories.length - 1}:'${query.categories.join(' > ').replaceAll('-', ' ')}'`;
+  filters['hierarchical_categoriesLabel'] = 'hierarchical_categories';
 
   // Base element for custom Breadcrumbs
   const navItems = [{
@@ -87,6 +91,12 @@ export async function getServerSideProps({ req, query, res }) {
     })
   })
 
+  if (filterMode !== 'hierarchical_categories' && filters[filterMode]) {
+    filters = { ...filters, defaultFilter: filters[filterMode], defaultFilterLabel: filters[`${filterMode}Label`] }
+  } else {
+    filters = { ...filters, defaultFilter: filters['category_page_id'], defaultFilterLabel: filters['category_page_idLabel'] }
+  }
+
   // Getting Category page custom title.
   const title = query.categories.pop().replaceAll('-', ' ');
   // Getting Server State for hydration.
@@ -97,7 +107,7 @@ export async function getServerSideProps({ req, query, res }) {
       serverUrl,
       navItems: navItems,
       filters: filters,
-      defaultFilterSelected: filterMode === defaultFilter,
+      defaultFilterSelected: filters.customFilterLabel !== filterMode,
       title
     },
   };
