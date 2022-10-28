@@ -15,36 +15,43 @@ import { BreadCrumbs } from './breadcrumbs';
 import { CategoriesMenu } from './categoriesMenu';
 import Link from 'next/link';
 
-const Instructions = () => (
-  <div className='mb-4 mt-2 text-sm'>
+const Instructions = ({ categoryPage, url }) => (
+  <>{categoryPage ? (<div className='mb-4 mt-2 text-sm'>
     <>Use the <span className='font-bold'>Nav Hierarchy Facets</span> widget to refine the search using URL  parameters (<span className="text-amber-600 italic">facets, facetsFilters</span>).</>
     <> Alternatively, the <span className='font-bold'>Nav Category Links</span> menu provides URLs to the corresponding categories landing pages via the
       (<span className='italic text-amber-600'>filters</span>) parameter.</>
     <p className='mt-2'>Open the <Link href='/debug'><a target="_blank" className="text-blue-600 underline" >Debug&#39;s tab</a></Link> to see the parameters sent to Algolia in real time.</p>
-  </div>
+  </div>) : (
+    <div className='mb-4 mt-2 text-sm'>
+      <p>Filter attributes are obtained by parsing the URL path
+          <span className='italic text-amber-600'> {url}</span> into the corresponding query&apos;s filter value.
+      </p>
+        <p className='mt-2'>Open the <Link href='/debug'><a target="_blank" className="text-blue-600 underline" >Debug&#39;s tab</a></Link> to see the parameters sent to Algolia in real time.</p>
+    </div>
+  )}
+  </>
 )
 
-const FilterToggle = ({enabled, setEnabled})=> {
+const FilterToggle = ({ enabled, setEnabled }) => {
   return (
-        <>
-        <label className="inline-flex relative items-center ml-5 mt-3 cursor-pointer">
-          <input
-            type="checkbox"
-            className="sr-only peer"
-            checked={enabled}
-            readOnly
-          />
-          <div
-            onClick={() => {
-              setEnabled(!enabled);
-            }}
-            className="w-11 h-6 bg-gray-200 rounded-full peer  peer-focus:ring-green-300  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"
-          ></div>
-        <span className="ml-2 text-sm font-medium text-amber-500">
-          Use hierarchicalCategories filtering
-          </span>
-        </label>
-        </>
+    <>
+      <label className=" text-sm inline-flex relative items-center ml-5 mt-3 cursor-pointer">
+        <input
+          type="checkbox"
+          className="sr-only peer"
+          checked={enabled}
+          readOnly
+        />
+        <div
+          onClick={() => {
+            setEnabled(!enabled);
+          }}
+          className="w-11 h-6 bg-gray-200 rounded-full peer  peer-focus:ring-green-300  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"
+        ></div>
+        <span className='ml-2'>Use <span className="font-medium text-amber-500">hierarchicalCategories</span> attribute as filter.</span>
+
+      </label>
+    </>
   );
 }
 
@@ -80,6 +87,7 @@ const HitComponent = ({ hit }) => (
 
 export function CategoriesApp(props) {
   const [defaultFilter, setDefaultFilter] = useState(props.defaultFilterSelected);
+  const [url, setUrl] = useState();
   const [filter, setFilter] = useState(() => {
     if (!props.filters) {
       return null;
@@ -94,7 +102,7 @@ export function CategoriesApp(props) {
   const toggleFilter = () => {
     const newValue = !defaultFilter;
     // If default
-    if(newValue == true) {
+    if (newValue == true) {
       setCookie('filterMode', 'category');
       if (props.filters) {
         setFilter(props.filters.defaultFilter);
@@ -107,7 +115,8 @@ export function CategoriesApp(props) {
     }
     setDefaultFilter(newValue);
   }
-  useEffect(()=> {
+  useEffect(() => {
+    setUrl(window.location.pathname);
   }, [filter])
 
   return (
@@ -115,7 +124,7 @@ export function CategoriesApp(props) {
       {filter ? <Configure filters={filter} hitsPerPage={12} /> : <Configure hitsPerPage={12} />}
       <header>
         <h1 className="text-2xl font-bold mb-4 mt-4">{props.title ? `${props.title} Landing Page` : 'Dynamic Routes (Categories) + Next.js'}</h1>
-        <Instructions />
+        <Instructions categoryPage={!props.filters} url={url}/>
         <SearchBox />
       </header>
       <BreadCrumbs items={props.navItems || []} />
@@ -129,7 +138,7 @@ export function CategoriesApp(props) {
               'hierarchicalCategories.lvl1',
               'hierarchicalCategories.lvl2',
               'hierarchicalCategories.lvl3',
-            ]} separator=' > '/>
+            ]} separator=' > ' />
             <h2 className='font-bold mb-2 mt-8'>Nav Category Links</h2>
             <CategoriesMenu attributes={[
               'hierarchicalCategories.lvl0',
