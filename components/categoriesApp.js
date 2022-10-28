@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { setCookie } from 'cookies-next';
 import Image from 'next/future/image';
 import {
   HierarchicalMenu,
@@ -23,6 +24,30 @@ const Instructions = () => (
   </div>
 )
 
+const FilterToggle = ({enabled, setEnabled})=> {
+  return (
+        <>
+        <label className="inline-flex relative items-center ml-5 mt-3 cursor-pointer">
+          <input
+            type="checkbox"
+            className="sr-only peer"
+            checked={enabled}
+            readOnly
+          />
+          <div
+            onClick={() => {
+              setEnabled(!enabled);
+            }}
+            className="w-11 h-6 bg-gray-200 rounded-full peer  peer-focus:ring-green-300  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"
+          ></div>
+        <span className="ml-2 text-sm font-medium text-amber-500">
+          Use hierarchicalCategories filtering
+          </span>
+        </label>
+        </>
+  );
+}
+
 const HitComponent = ({ hit }) => (
   <div className="hit">
     <div className="hit-picture">
@@ -42,9 +67,11 @@ const HitComponent = ({ hit }) => (
         <Snippet attribute="description" hit={hit} />...
       </div>
       <div className="hit-categories mt-2 pl-2">
+        <h4 className='text-xs mb-2 font-bold'>hierarchicalCategories (Attribute)</h4>
         {Object.keys(hit.hierarchicalCategories).map((key, index) => (<p className="text-xs	mb-1 text-amber-500" key={index}>{`"${key}:${hit.hierarchicalCategories[key]}"`}</p>))}
       </div>
       <div className="hit-categories mt-2 pl-2">
+        <h4 className='text-xs mb-2 font-bold'>categories (Attribute)</h4>
         {Object.keys(hit.categories).map((key, index) => (<p className="text-xs	mb-1 text-emerald-500" key={index}>{`"${hit.categories[key]}"`}</p>))}
       </div>
     </div>
@@ -52,15 +79,47 @@ const HitComponent = ({ hit }) => (
 );
 
 export function CategoriesApp(props) {
+  const [defaultFilter, setDefaultFilter] = useState(props.defaultFilterSelected);
+  const [filter, setFilter] = useState(() => {
+    if (!props.filters) {
+      return null;
+    }
+    if (defaultFilter) {
+      return props.filters.defaultFilter;
+    } else {
+      return props.filters.customFilter;
+    }
+  });
+
+  const toggleFilter = () => {
+    const newValue = !defaultFilter;
+    // If default
+    if(newValue == true) {
+      setCookie('filterMode', 'category');
+      if (props.filters) {
+        setFilter(props.filters.defaultFilter);
+      }
+    } else {
+      setCookie('filterMode', 'hierarchicalCategories');
+      if (props.filters) {
+        setFilter(props.filters.customFilter);
+      }
+    }
+    setDefaultFilter(newValue);
+  }
+  useEffect(()=> {
+  }, [filter])
+
   return (
     <InstantSearch {...props}>
-      {props.filters ? <Configure filters={props.filters} hitsPerPage={12} /> : !props.filters && <Configure hitsPerPage={12} />}
+      {filter ? <Configure filters={filter} hitsPerPage={12} /> : <Configure hitsPerPage={12} />}
       <header>
         <h1 className="text-2xl font-bold mb-4 mt-4">{props.title ? `${props.title} Landing Page` : 'Dynamic Routes (Categories) + Next.js'}</h1>
         <Instructions />
         <SearchBox />
       </header>
       <BreadCrumbs items={props.navItems || []} />
+      <FilterToggle enabled={!defaultFilter} setEnabled={toggleFilter} />
       <main>
         {!props.filters && (
           <div className="menu text-sm">

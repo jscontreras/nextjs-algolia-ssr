@@ -1,4 +1,5 @@
 import React from 'react';
+import { hasCookie, getCookie } from 'cookies-next';
 import algoliasearch from 'algoliasearch/lite';
 import { getServerState } from 'react-instantsearch-hooks-server';
 import { InstantSearchSSRProvider } from 'react-instantsearch-hooks-web';
@@ -21,7 +22,7 @@ const searchClient = algoliasearch(
 const indexName = "instant_search";
 
 
-export default function SearchPage({ serverState, serverUrl, navItems, filters, title }) {
+export default function SearchPage({ serverState, serverUrl, navItems, filters, title, defaultFilterSelected }) {
   return (
     <InstantSearchSSRProvider {...serverState}>
       <Link href={'/'}><a className="text-blue-700">&larr; Home</a></Link>
@@ -31,6 +32,7 @@ export default function SearchPage({ serverState, serverUrl, navItems, filters, 
         indexName={indexName}
         navItems={navItems}
         title={title}
+        defaultFilterSelected={defaultFilterSelected}
         routing={{
           router: history({
             getLocation: () =>
@@ -43,18 +45,27 @@ export default function SearchPage({ serverState, serverUrl, navItems, filters, 
   );
 }
 
-export async function getServerSideProps({ req, query }) {
+export async function getServerSideProps({ req, query, res }) {
+  const defaultFilter = 'category';
+  let filterMode = defaultFilter;
+  let filters = {};
+  if (hasCookie('filterMode', { req, res })) {
+    filterMode = getCookie('filterMode', { req, res });
+  }
+
   const protocol = req.headers.referer?.split('://')[0] || 'https';
   const serverUrl = `${protocol}://${req.headers.host}${req.url}`;
 
   // Using categories (filter)
-  let filters = query.categories.map((category) => {
-    const separator = '"'
-    return `categories:${separator}${category.replaceAll('-', ' ')}${separator}`
-  }).join(' AND ')
+  filters['defaultFilter'] = query.categories.map((category) => {
+      const separator = '"'
+      return `categories:${separator}${category.replaceAll('-', ' ')}${separator}`
+    }).join(' AND ')
 
-  // OR using hierarchicalCategories (filter)
-  // filters = `hierarchicalCategories.lvl${query.categories.length - 1}:'${query.categories.join(' > ').replaceAll('-', ' ')}'`;
+
+    // OR using hierarchicalCategories (filter)
+  filters['customFilter'] = `hierarchicalCategories.lvl${query.categories.length - 1}:'${query.categories.join(' > ').replaceAll('-', ' ')}'`;
+
 
   // Base element for custom Breadcrumbs
   const navItems = [{
@@ -75,14 +86,14 @@ export async function getServerSideProps({ req, query }) {
   // Getting Category page custom title.
   const title = query.categories.pop().replaceAll('-', ' ');
   // Getting Server State for hydration.
-  const serverState = await getServerState(<SearchPage serverUrl={serverUrl} {...{navItems, filters, title}} />);
-
+  const serverState = await getServerState(<SearchPage serverUrl={serverUrl} {...{ navItems, filters, title }} />);
   return {
     props: {
       serverState,
       serverUrl,
       navItems: navItems,
       filters: filters,
+      defaultFilterSelected: filterMode === defaultFilter,
       title
     },
   };
