@@ -56,11 +56,16 @@ const FilterToggle = ({ enabled, setEnabled }) => {
   );
 }
 
+const ProductImage = ({src, alt}) => {
+  const placeholderImg = 'https://i.imgur.com/gf3TZMr.jpeg';
+  const [srcVal, setSrc] = useState(() => (src || placeholderImg));
+  return <Image src={srcVal} alt={alt} layout='fill' width={120} height={120} onError={() => { setSrc(placeholderImg) }} />
+}
+
 const HitComponent = ({ hit }) => (
   <div className="hit">
     <div className="hit-picture">
-      {/* <img src={`${hit.image}`} alt={hit.name}/> */}
-      <Image src={`${hit.image_urls[0]}`} alt={hit.name} layout='fill' width={120} height={120} />
+      <ProductImage src={`${hit.image_urls[0]}`} alt={hit.name} />
     </div>
     <div className="hit-content">
       <div>
