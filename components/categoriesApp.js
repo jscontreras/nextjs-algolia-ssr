@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { setCookie } from 'cookies-next';
+import { getCookie, setCookie } from 'cookies-next';
 import Image from 'next/future/image';
 import {
   HierarchicalMenu,
@@ -33,9 +33,10 @@ const Instructions = ({ categoryPage, url, filterName }) => (
   </>
 )
 
-const FilterToggle = ({ enabled, setEnabled }) => {
+const FilterToggle = ({ enabled, setEnabled, filters }) => {
+  const defaultFilterLabel = getCookie('filterMode', 'category_page_id');
   return (
-    <>
+    <div className='flex justify-between items-end'>
       <label className=" text-sm inline-flex relative items-center ml-5 mt-3 cursor-pointer">
         <input
           type="checkbox"
@@ -49,10 +50,10 @@ const FilterToggle = ({ enabled, setEnabled }) => {
           }}
           className="w-11 h-6 bg-gray-200 rounded-full peer  peer-focus:ring-green-300  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"
         ></div>
-        <span className='ml-2'>Use <span className="font-medium text-amber-500">hierarchical_categories</span> attribute as filter.</span>
-
+        <span className='ml-2'>Use <span className="font-medium text-amber-500">{filters.customFilterLabel}</span> attribute as filter.</span>
       </label>
-    </>
+      <span className="text-xs">Using filter (<span className='font-bold'>{enabled ? filters.customFilterLabel : filters.defaultFilterLabel}</span> )</span>
+    </div>
   );
 }
 
@@ -120,67 +121,37 @@ const HitComponent = ({ hit }) => (
 
 export function CategoriesApp(props) {
 
-  const [defaultFilter, setDefaultFilter] = useState(props.defaultFilterSelected);
+  const [defaultFilterSelected, setDefaultFilterSelected] = useState(getCookie('defaultFilterSelected'));
   const [url, setUrl] = useState();
-  const [filter, setFilter] = useState(() => {
-    if (!props.filters) {
-      return null;
-    }
-    if (defaultFilter) {
-      return props.filters.defaultFilter;
-    } else {
-      return props.filters.customFilter;
-    }
-  });
 
   const toggleFilter = () => {
-    const newValue = !defaultFilter;
-    // If default
-    if (newValue == true) {
-      setCookie('filterMode', props.filters.defaultFilterLabel);
-      if (props.filters) {
-        setFilter(props.filters.defaultFilter);
-      }
-    } else {
-      setCookie('filterMode', props.filters.customFilterLabel);
-      if (props.filters) {
-        setFilter(props.filters.customFilter);
-      }
-    }
-    setDefaultFilter(newValue);
+    const newValue = !defaultFilterSelected;
+    // Update cookie & state
+    setCookie('defaultFilterSelected', newValue);
+    setDefaultFilterSelected(newValue);
   }
   useEffect(() => {
     setUrl(window.location.pathname);
     const handleBeforeHistoryChange = () => {
       setUrl(window.location.pathname);
     };
-
-    if (!props.filters) {
-      setFilter(null);
-    }
-    if (defaultFilter) {
-      setFilter(props.filters.defaultFilter);
-    } else {
-      setFilter(props.filters.customFilter);
-    }
-
     Router.events.on('routeChangeComplete', handleBeforeHistoryChange);
     return () => {
       Router.events.off('routeChangeComplete', handleBeforeHistoryChange);
     };
 
-  }, [defaultFilter, filter, props.filters])
+  }, [defaultFilterSelected, props.filters, url])
 
   return (
     <InstantSearch {...props}>
-      {filter ? <Configure filters={filter} hitsPerPage={12} analyticsTags={['browse']} /> : <Configure hitsPerPage={12} />}
+      {props.filters ? <Configure filters={defaultFilterSelected ? props.filters.defaultFilter : props.filters.customFilter} hitsPerPage={12} analyticsTags={['browse']} /> : <Configure hitsPerPage={12} />}
       <header>
         <h1 className="text-2xl font-bold mb-4 mt-4">{props.title ? `${props.title} Landing Page` : 'Dynamic Routes (Categories) + Next.js'}</h1>
         <Instructions categoryPage={!props.filters} url={url} filterName={!props.filters ? 'Nav Hierarchy Facets' : props.filters.customFilterLabel} />
         <SearchBox />
       </header>
       <BreadCrumbs items={props.navItems || []} />
-      <FilterToggle enabled={!defaultFilter} setEnabled={toggleFilter} />
+      {props.filters && <FilterToggle enabled={!defaultFilterSelected} setEnabled={toggleFilter} filters={props.filters} />}
       <main>
         {!props.filters && (
           <div className="menu text-sm">

@@ -48,6 +48,7 @@ export default function SearchPage({ serverState, serverUrl, navItems, defaultFi
 export async function getServerSideProps({ req, res }) {
   const defaultFilter = 'category_page_id';
   let filterMode = defaultFilter;
+  // Getting custom filter
   if (hasCookie('filterMode', { req, res })) {
     filterMode = getCookie('filterMode', { req, res });
   } else {

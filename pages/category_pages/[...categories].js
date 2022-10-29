@@ -22,7 +22,7 @@ const searchClient = algoliasearch(
 const indexName = "prod_ECOM";
 
 
-export default function SearchPage({ serverState, serverUrl, navItems, filters, title, defaultFilterSelected }) {
+export default function SearchPage({ serverState, serverUrl, navItems, filters, title }) {
   return (
     <InstantSearchSSRProvider {...serverState}>
       <Link href={'/'}><a className="text-blue-700">&larr; Home</a></Link>
@@ -32,7 +32,6 @@ export default function SearchPage({ serverState, serverUrl, navItems, filters, 
         indexName={indexName}
         navItems={navItems}
         title={title}
-        defaultFilterSelected={defaultFilterSelected}
         routing={{
           router: history({
             getLocation: () =>
@@ -46,13 +45,14 @@ export default function SearchPage({ serverState, serverUrl, navItems, filters, 
 }
 
 export async function getServerSideProps({ req, query, res }) {
-  const defaultFilter = 'category_page_id';
-  let filterMode = defaultFilter;
+  let filterMode = 'category_page_id';
   let filters = {};
+
+  // Identidying the filter
   if (hasCookie('filterMode', { req, res })) {
     filterMode = getCookie('filterMode', { req, res });
   } else {
-    setCookie('filterMode', defaultFilter, { req, res });
+    setCookie('filterMode', filterMode, { req, res });
   }
 
   const protocol = req.headers.referer?.split('://')[0] || 'https';
@@ -67,13 +67,15 @@ export async function getServerSideProps({ req, query, res }) {
 
   // category_page_id
   filters['category_page_id'] = `category_page_id:'${query.categories.join(' > ')}'`;
-  filters['category_page_idLabel'] = 'list_categories';
+  filters['category_page_idLabel'] = 'category_page_id';
 
   // OR using hierarchical_categories (filter)
-  filters['customFilter'] = `hierarchical_categories.lvl${query.categories.length - 1}:'${query.categories.join(' > ')}'`;
-  filters['customFilterLabel'] = 'hierarchical_categories';
   filters['hierarchical_categories'] = `hierarchical_categories.lvl${query.categories.length - 1}:'${query.categories.join(' > ')}'`;
   filters['hierarchical_categoriesLabel'] = 'hierarchical_categories';
+
+  // Assigning hierarchical as custom
+  filters['customFilter'] = filters['hierarchical_categories'];
+  filters['customFilterLabel'] = filters['hierarchical_categoriesLabel'];
 
   // Base element for custom Breadcrumbs
   const navItems = [{
@@ -91,10 +93,13 @@ export async function getServerSideProps({ req, query, res }) {
     })
   })
 
-  if (filterMode !== 'hierarchical_categories' && filters[filterMode]) {
-    filters = { ...filters, defaultFilter: filters[filterMode], defaultFilterLabel: filters[`${filterMode}Label`] }
-  } else {
-    filters = { ...filters, defaultFilter: filters['category_page_id'], defaultFilterLabel: filters['category_page_idLabel'] }
+  // Providing customFilter and customFilterLabel based on defaultFilter
+  filters['defaultFilter'] = filters[filterMode];
+  filters['defaultFilterLabel'] = filters[`${filterMode}Label`];
+
+  // The status of the toggle depends on the cookie
+  if (!hasCookie('defaultFilterSelected', {req, res})) {
+    setCookie('defaultFilterSelected', true, {req, res});
   }
 
   // Getting Category page custom title.
@@ -107,7 +112,6 @@ export async function getServerSideProps({ req, query, res }) {
       serverUrl,
       navItems: navItems,
       filters: filters,
-      defaultFilterSelected: filters.customFilterLabel !== filterMode,
       title
     },
   };
