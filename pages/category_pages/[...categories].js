@@ -1,5 +1,5 @@
 import React from 'react';
-import { hasCookie, getCookie } from 'cookies-next';
+import { hasCookie, getCookie, setCookie } from 'cookies-next';
 import algoliasearch from 'algoliasearch/lite';
 import { getServerState } from 'react-instantsearch-hooks-server';
 import { InstantSearchSSRProvider } from 'react-instantsearch-hooks-web';
@@ -10,8 +10,8 @@ import { history } from 'instantsearch.js/es/lib/routers/index.js';
 import Link from 'next/link';
 
 const searchClient = algoliasearch(
-  'latency',
-  '6be0576ff61c053d5f9a3225e2a90f76',
+  'U9UXVSI686',
+  '341cf4d4310a13c8c6e6c9a069959cd5',
   {
     requester: createFetchRequester(),
     responsesCache: createNullCache(),
@@ -19,7 +19,7 @@ const searchClient = algoliasearch(
   }
 );
 
-const indexName = "instant_search";
+const indexName = "prod_ECOM";
 
 
 export default function SearchPage({ serverState, serverUrl, navItems, filters, title, defaultFilterSelected }) {
@@ -46,26 +46,34 @@ export default function SearchPage({ serverState, serverUrl, navItems, filters, 
 }
 
 export async function getServerSideProps({ req, query, res }) {
-  const defaultFilter = 'category';
+  const defaultFilter = 'category_page_id';
   let filterMode = defaultFilter;
   let filters = {};
   if (hasCookie('filterMode', { req, res })) {
     filterMode = getCookie('filterMode', { req, res });
+  } else {
+    setCookie('filterMode', defaultFilter, { req, res });
   }
 
   const protocol = req.headers.referer?.split('://')[0] || 'https';
   const serverUrl = `${protocol}://${req.headers.host}${req.url}`;
 
-  // Using categories (filter)
-  filters['defaultFilter'] = query.categories.map((category) => {
-      const separator = '"'
-      return `categories:${separator}${category.replaceAll('-', ' ')}${separator}`
-    }).join(' AND ')
+  // Using category (filter)
+  filters['list_categories'] = query.categories.map((category) => {
+    const separator = '"';
+    return `list_categories:${separator}${category}${separator}`
+  }).join(' AND ')
+  filters['list_categoriesLabel'] = 'list_categories';
 
+  // category_page_id
+  filters['category_page_id'] = `category_page_id:'${query.categories.join(' > ')}'`;
+  filters['category_page_idLabel'] = 'list_categories';
 
-    // OR using hierarchicalCategories (filter)
-  filters['customFilter'] = `hierarchicalCategories.lvl${query.categories.length - 1}:'${query.categories.join(' > ').replaceAll('-', ' ')}'`;
-
+  // OR using hierarchical_categories (filter)
+  filters['customFilter'] = `hierarchical_categories.lvl${query.categories.length - 1}:'${query.categories.join(' > ')}'`;
+  filters['customFilterLabel'] = 'hierarchical_categories';
+  filters['hierarchical_categories'] = `hierarchical_categories.lvl${query.categories.length - 1}:'${query.categories.join(' > ')}'`;
+  filters['hierarchical_categoriesLabel'] = 'hierarchical_categories';
 
   // Base element for custom Breadcrumbs
   const navItems = [{
@@ -79,12 +87,18 @@ export async function getServerSideProps({ req, query, res }) {
     url += `/${element}`
     navItems.push({
       url: `/category_pages${url}`,
-      title: `${element.replaceAll('-', ' ')}`
+      title: `${element}`
     })
   })
 
+  if (filterMode !== 'hierarchical_categories' && filters[filterMode]) {
+    filters = { ...filters, defaultFilter: filters[filterMode], defaultFilterLabel: filters[`${filterMode}Label`] }
+  } else {
+    filters = { ...filters, defaultFilter: filters['category_page_id'], defaultFilterLabel: filters['category_page_idLabel'] }
+  }
+
   // Getting Category page custom title.
-  const title = query.categories.pop().replaceAll('-', ' ');
+  const title = query.categories.pop();
   // Getting Server State for hydration.
   const serverState = await getServerState(<SearchPage serverUrl={serverUrl} {...{ navItems, filters, title }} />);
   return {
@@ -93,7 +107,7 @@ export async function getServerSideProps({ req, query, res }) {
       serverUrl,
       navItems: navItems,
       filters: filters,
-      defaultFilterSelected: filterMode === defaultFilter,
+      defaultFilterSelected: filters.customFilterLabel !== filterMode,
       title
     },
   };

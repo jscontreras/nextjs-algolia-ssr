@@ -1,7 +1,7 @@
 import React from 'react';
 import algoliasearch from 'algoliasearch/lite';
 import { createFetchRequester } from '@algolia/requester-fetch';
-import { hasCookie, getCookie } from 'cookies-next';
+import { hasCookie, getCookie, setCookie } from 'cookies-next';
 import { getServerState } from 'react-instantsearch-hooks-server';
 import { InstantSearchSSRProvider } from 'react-instantsearch-hooks-web';
 import { createNullCache } from '@algolia/cache-common';
@@ -11,8 +11,8 @@ import { history } from 'instantsearch.js/es/lib/routers/index.js';
 import Link from 'next/link';
 
 const searchClient = algoliasearch(
-  'latency',
-  '6be0576ff61c053d5f9a3225e2a90f76',
+  'U9UXVSI686',
+  '341cf4d4310a13c8c6e6c9a069959cd5',
   {
     requester: createFetchRequester(),
     responsesCache: createNullCache(),
@@ -20,7 +20,7 @@ const searchClient = algoliasearch(
   }
 );
 
-const indexName = "instant_search";
+const indexName = "prod_ECOM";
 
 
 export default function SearchPage({ serverState, serverUrl, navItems, defaultFilterSelected }) {
@@ -46,10 +46,12 @@ export default function SearchPage({ serverState, serverUrl, navItems, defaultFi
 }
 
 export async function getServerSideProps({ req, res }) {
-  const defaultFilter = 'category';
+  const defaultFilter = 'category_page_id';
   let filterMode = defaultFilter;
   if (hasCookie('filterMode', { req, res })) {
     filterMode = getCookie('filterMode', { req, res });
+  } else {
+    setCookie('filterMode', defaultFilter, { req, res });
   }
 
   const protocol = req.headers.referer?.split('://')[0] || 'https';
@@ -59,7 +61,7 @@ export async function getServerSideProps({ req, res }) {
     props: {
       serverState,
       serverUrl,
-      defaultFilterSelected: filterMode === defaultFilter,
+      defaultFilterSelected: filterMode !== 'hierarchical_categories',
       navItems: [{ url: 'category_pages', title: 'Category pages' }]
     },
   };
