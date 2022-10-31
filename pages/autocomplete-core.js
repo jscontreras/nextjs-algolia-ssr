@@ -6,9 +6,12 @@ import { getAlgoliaResults, parseAlgoliaHitHighlight } from '@algolia/autocomple
 import { createFetchRequester } from '@algolia/requester-fetch';
 import { createNullCache } from '@algolia/cache-common';
 import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions'
+import { createAlgoliaInsightsPlugin } from '@algolia/autocomplete-plugin-algolia-insights';
 import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches';
 
 import Link from 'next/link';
+import insightsClient from 'search-insights';
+
 const searchClient = algoliasearch(
   'latency',
   '6be0576ff61c053d5f9a3225e2a90f76',
@@ -19,6 +22,7 @@ const searchClient = algoliasearch(
   }
 );
 
+// Highlight text render
 function Highlight({
   hit,
   attribute,
@@ -39,15 +43,19 @@ function Highlight({
   );
 }
 
+// Query Suggesion Index Definition
 const querySuggestionsPlugin = createQuerySuggestionsPlugin({
   searchClient,
   indexName: 'instant_search_demo_query_suggestions',
 });
 
+// Recent Searches Index Definition
 const recentSearchesPlugin = createLocalStorageRecentSearchesPlugin({
   key: 'navbar',
 });
 
+
+// Query Suggestion Item Render
 function QuerySuggestionItem({ item, autocomplete }) {
   return (
     <div className="aa-ItemWrapper">
@@ -83,6 +91,42 @@ function QuerySuggestionItem({ item, autocomplete }) {
   );
 }
 
+// Insights Analytics Plugin.
+insightsClient('init', { appId, apiKey });
+const algoliaInsightsPlugin = createAlgoliaInsightsPlugin({
+  insightsClient,
+  onActive({ insights, insightsEvents, item, state, event }) {
+    insightsEvents.forEach((insightsEvent) => {
+      // Assuming you've initialized the Segment script
+      // and identified the current user already
+      console.log(
+        'Analytics (ACTIVE) Event Forwarding',
+        insightsEvents,
+        insights
+      );
+      // analytics.track('Product Browsed from Autocomplete', insightsEvent);
+    });
+  },
+  onItemsChange({ insights, insightsEvents, item, state, event }) {
+    // Assuming you've initialized the Segment script
+    // and identified the current user already
+    console.log('Analytics (CHANGE) Event Forwarding', insightsEvents, insights);
+    // analytics.track('Product Browsed from Autocomplete', insightsEvent);
+  },
+  onSelect({ insights, insightsEvents, item, state, event }) {
+    // Assuming you've initialized the Segment script
+    // and identified the current user already
+    console.log(
+      'Analytics (SELECT) Event Forwarding',
+      insightsEvents,
+      insights,
+      item
+    );
+    // analytics.track('Product Browsed from Autocomplete', insightsEvent);
+  },
+});
+
+// Recent Search Item Render
 function PastQueryItem({ item, autocomplete }) {
   function onRemove(id) {
     recentSearchesPlugin.data.removeItem(id);
