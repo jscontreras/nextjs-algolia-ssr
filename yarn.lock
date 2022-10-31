@@ -27,6 +27,14 @@
     htm "^3.0.0"
     preact "^10.0.0"
 
+"@algolia/autocomplete-plugin-algolia-insights@^1.7.2":
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/@algolia/autocomplete-plugin-algolia-insights/-/autocomplete-plugin-algolia-insights-1.7.2.tgz#2ca2701ecfd0206288303f6a0517295bcc799071"
+  integrity sha512-dyWJ3Hpn0vGy+Lxd6BZYUupIPB/j7ZA4uzmQ+ThRQF3fjQMpDk4/zNi8/hf0r0Ow9tXOQ7ALKJtHbxWIT/f/Uw==
+  dependencies:
+    "@algolia/autocomplete-js" "1.7.2"
+    "@algolia/autocomplete-shared" "1.7.2"
+
 "@algolia/autocomplete-plugin-query-suggestions@^1.7.2":
   version "1.7.2"
   resolved "https://registry.yarnpkg.com/@algolia/autocomplete-plugin-query-suggestions/-/autocomplete-plugin-query-suggestions-1.7.2.tgz#1739484e9fd7dcdf097c4375731509df319805fd"

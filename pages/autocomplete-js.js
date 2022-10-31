@@ -5,13 +5,18 @@ import { autocomplete, getAlgoliaResults } from '@algolia/autocomplete-js';
 import { createFetchRequester } from '@algolia/requester-fetch';
 import { createNullCache } from '@algolia/cache-common';
 import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions'
+import { createAlgoliaInsightsPlugin } from '@algolia/autocomplete-plugin-algolia-insights';
 import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches';
 import Link from 'next/link';
 import { AutocomplteSSR } from '../components/autocompleteSSR';
+import insightsClient from 'search-insights';
+
+const appId = 'latency';
+const apiKey = '6be0576ff61c053d5f9a3225e2a90f76';
 
 const searchClient = algoliasearch(
-  'latency',
-  '6be0576ff61c053d5f9a3225e2a90f76',
+  appId,
+  apiKey,
   {
     requester: createFetchRequester(),
     responsesCache: createNullCache(),
@@ -19,13 +24,50 @@ const searchClient = algoliasearch(
   }
 );
 
+// Query Suggestion Plugin
 const querySuggestionsPlugin = createQuerySuggestionsPlugin({
   searchClient,
   indexName: 'instant_search_demo_query_suggestions',
 });
 
+// Recent Search Plugin
 const recentSearchesPlugin = createLocalStorageRecentSearchesPlugin({
   key: 'navbar',
+});
+
+// Insights Analytics Plugin.
+insightsClient('init', { appId, apiKey });
+const algoliaInsightsPlugin = createAlgoliaInsightsPlugin({
+  insightsClient,
+  onActive({ insights, insightsEvents, item, state, event }) {
+    insightsEvents.forEach((insightsEvent) => {
+      // Assuming you've initialized the Segment script
+      // and identified the current user already
+      console.log(
+        'SEGMENT (ACTIVE) Event Forwarding',
+        insightsEvents,
+        insights
+      );
+      // analytics.track('Product Browsed from Autocomplete', insightsEvent);
+    });
+  },
+  onItemsChange({ insights, insightsEvents, item, state, event }) {
+    // Assuming you've initialized the Segment script
+    // and identified the current user already
+    console.log('SEGMENT (CHANGE) Event Forwarding', insightsEvents, insights);
+    // analytics.track('Product Browsed from Autocomplete', insightsEvent);
+  },
+  onSelect({ insights, insightsEvents, item, state, event }) {
+    // Assuming you've initialized the Segment script
+    // and identified the current user already
+    console.log(
+      'SEGMENT (SELECT) Event Forwarding',
+      insightsEvents,
+      insights,
+      item
+    );
+    // analytics.track('Product Browsed from Autocomplete', insightsEvent);
+  },
 });
 
 const AutocompleteSearch = () => {
@@ -52,7 +94,7 @@ const AutocompleteSearch = () => {
         panelRootRef.current.render(children);
       },
 
-      plugins: [querySuggestionsPlugin, recentSearchesPlugin],
+      plugins: [querySuggestionsPlugin, recentSearchesPlugin, algoliaInsightsPlugin],
       getSources() {
         return [
           // (3) Use an Algolia index source.
