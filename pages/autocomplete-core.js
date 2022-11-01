@@ -12,12 +12,17 @@ import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-pl
 import Link from 'next/link';
 import insightsClient from 'search-insights';
 
+const appId = 'latency';
+const apiKey = '6be0576ff61c053d5f9a3225e2a90f76';
 const searchClient = algoliasearch(
-  'latency',
-  '6be0576ff61c053d5f9a3225e2a90f76',
+  appId,
+  apiKey,
   {
+    // OPTIONAL Use fetch for request (Service Worker)
     requester: createFetchRequester(),
+    // Disables responses cache (DON'T USE IN PRODUCTION!)
     responsesCache: createNullCache(),
+    // Disables requests cache (DON'T USE IN PRODUCTION!)
     requestsCache: createNullCache({ serializable: false })
   }
 );
