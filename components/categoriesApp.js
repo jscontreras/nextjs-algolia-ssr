@@ -34,9 +34,8 @@ const Instructions = ({ categoryPage, url, filterName }) => (
 )
 
 const FilterToggle = ({ enabled, setEnabled, filters }) => {
-  const defaultFilterLabel = getCookie('filterMode', 'category_page_id');
   return (
-    <div className='flex justify-between items-end'>
+    <div className='flex justify-between flex-col flex-wrap'>
       <label className=" text-sm inline-flex relative items-center ml-5 mt-3 cursor-pointer">
         <input
           type="checkbox"
@@ -52,7 +51,8 @@ const FilterToggle = ({ enabled, setEnabled, filters }) => {
         ></div>
         <span className='ml-2'>Use <span className="font-medium text-amber-500">{filters.customFilterLabel}</span> attribute as filter.</span>
       </label>
-      <span className="text-xs">Using filter (<span className='font-bold'>{enabled ? filters.customFilterLabel : filters.defaultFilterLabel}</span> )</span>
+      <div className="p-3 mt-4 text-center mb-0 text-xs w-100 bg-rose-100	">Using filter (<span className='font-bold'>{enabled ? filters.customFilter : filters.defaultFilter}</span> )</div>
+
     </div>
   );
 }
