@@ -22,7 +22,7 @@ const searchClient = algoliasearch(
 const indexName = "prod_ECOM";
 
 
-export default function SearchPage({ serverState, serverUrl, navItems, filters, title }) {
+export default function SearchPage({ serverState, serverUrl, navItems, queryParamsOverrides = {}, title }) {
   return (
     <InstantSearchSSRProvider {...serverState}>
       <Link href={'/'}><a className="text-blue-700">&larr; Home</a></Link>
@@ -38,7 +38,7 @@ export default function SearchPage({ serverState, serverUrl, navItems, filters, 
               typeof window === 'undefined' ? new URL(serverUrl) : window.location,
           }),
         }}
-        filters={filters}
+        queryParamsOverrides = {queryParamsOverrides}
       />
     </InstantSearchSSRProvider>
   );
@@ -94,8 +94,8 @@ export async function getServerSideProps({ req, query, res }) {
   })
 
   // Providing customFilter and customFilterLabel based on defaultFilter
-  filters['defaultFilter'] = filters[filterMode];
-  filters['defaultFilterLabel'] = filters[`${filterMode}Label`];
+  filters['defaultFilter'] = filters[filterMode] || filters['category_page_id'];
+  filters['defaultFilterLabel'] = filters[`${filterMode}Label`] || `category_page_id`;
 
   // The status of the toggle depends on the cookie
   if (!hasCookie('defaultFilterSelected', {req, res})) {
@@ -108,11 +108,12 @@ export async function getServerSideProps({ req, query, res }) {
   const serverState = await getServerState(<SearchPage serverUrl={serverUrl} {...{ navItems, filters, title }} />);
   return {
     props: {
-      serverState,
+      serverState: serverState,
       serverUrl,
       navItems: navItems,
-      filters: filters,
-      title
+      title,
+      queryParamsOverrides: {
+        filters: filters, ruleContexts: ['browse_category'], analyticsTags: [title.replace(/\s/g, "-").toLowerCase()] },
     },
   };
 }

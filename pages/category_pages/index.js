@@ -23,7 +23,7 @@ const searchClient = algoliasearch(
 const indexName = "prod_ECOM";
 
 
-export default function SearchPage({ serverState, serverUrl, navItems, defaultFilterSelected }) {
+export default function SearchPage({ serverState, serverUrl, navItems, defaultFilterSelected, queryParamsOverrides ={} }) {
   return (
     <InstantSearchSSRProvider {...serverState}>
       <Link href={'/'}><a className="text-blue-700">&larr; Home</a></Link>
@@ -40,6 +40,7 @@ export default function SearchPage({ serverState, serverUrl, navItems, defaultFi
               typeof window === 'undefined' ? new URL(serverUrl) : window.location,
           }),
         }}
+        queryParamsOverrides={queryParamsOverrides}
       />
     </InstantSearchSSRProvider>
   );
@@ -63,7 +64,8 @@ export async function getServerSideProps({ req, res }) {
       serverState,
       serverUrl,
       defaultFilterSelected: filterMode !== 'hierarchical_categories',
-      navItems: [{ url: 'category_pages', title: 'Category pages' }]
+      navItems: [{ url: 'category_pages', title: 'Category pages' }],
+      queryParamsOverrides: { hitsPerPage: 12, ruleContexts: ['browse_search-page'] },
     },
   };
 }

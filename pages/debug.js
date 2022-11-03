@@ -15,10 +15,6 @@ const formatedTimestamp = (timestamp) => {
 const AlgoliaUrlsInspector = ({ payloads, channel }) => {
   return (
     <div>
-      <h2 className="font-bold">Interceptor ready...</h2>
-      <p className="mb-4">
-        Inspecting Recent <span className="text-sky-500">Algolia</span> Callbacks
-      </p>
       <p><button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => {
         channel.sendMessage('cleanCallbacks')
       }}>Flush Callbacks</button></p>
@@ -34,10 +30,10 @@ const AlgoliaUrlsInspector = ({ payloads, channel }) => {
           const renderValues = [<span className='text-xs absolute right-4 text-slate-400' key='date'>{dateString}</span>];
           for (const key of queryString.keys()) {
             if (!hiddenKeys.includes(key) && (mandatoryKeys.includes(key) || queryString.get(key))) {
-              renderValues.push(<p key={key} className={`break-all ${renderValues.length == 1 ? 'pt-4 mt-1': 'pt-0'}`}><span className="font-bold">{key}:</span>{queryString.get(key)}</p>)
+              renderValues.push(<p key={key} className={`break-all ${renderValues.length == 1 ? 'pt-4 mt-1 mb-1': 'pt-0'}`}><span className="font-bold">{key}:</span>{queryString.get(key)}</p>)
             }
           }
-          return(<li className="mt-4 w-full p-4 bg-slate-100 relative " key={index}>
+          return(<li className="mt-4 w-full p-4 bg-slate-100 relative text-xs" key={index}>
           {renderValues}
           </li>);
         })}
@@ -64,6 +60,28 @@ export default function DebugPage() {
     <>
       <Link href={'/'}><a className="text-blue-700">&larr; Home</a></Link>
       <h1 className="text-2xl font-bold mb-4 mt-4">Debugging Algolia URLs!!</h1>
+      <div>
+        <h2 className="font-bold">Interceptor ready...</h2>
+        <p className="mb-4">
+          Inspecting Recent <span className="text-sky-500">Algolia</span> Callbacks
+        </p>
+        <div className="bg-slate-50 p-2 mb-2">
+        <p>
+          <span className="font-bold text-sm">Request Hidden Fields:</span>
+            {hiddenKeys.map((hiddenKey, i) => (
+              <span className="italic text-sm" key={hiddenKey}> {hiddenKey}{i < hiddenKeys.length - 1 ? ',' : ''}</span>
+            ))}
+        </p>
+          <p>
+            <span className="font-bold text-sm">Request Mandatory Fields:</span>
+            {mandatoryKeys.map((mandatoryKey, i) => (
+              <span className="italic text-sm" key={mandatoryKey}> {mandatoryKey}{i < mandatoryKeys.length - 1 ? ',' : ''}</span>
+            ))}
+          </p>
+
+
+        </div>
+      </div>
       {payloads.length === 0 ? <EmptyUrls /> : <AlgoliaUrlsInspector payloads={payloads} channel={channel} />}
     </>
   )

@@ -120,7 +120,7 @@ const HitComponent = ({ hit }) => (
 );
 
 export function CategoriesApp(props) {
-
+  const {queryParamsOverrides}  = props;
   const [defaultFilterSelected, setDefaultFilterSelected] = useState(getCookie('defaultFilterSelected'));
   const [url, setUrl] = useState();
 
@@ -140,20 +140,20 @@ export function CategoriesApp(props) {
       Router.events.off('routeChangeComplete', handleBeforeHistoryChange);
     };
 
-  }, [defaultFilterSelected, props.filters, url])
+  }, [defaultFilterSelected, queryParamsOverrides.filters, url])
 
   return (
     <InstantSearch {...props}>
-      {props.filters ? <Configure filters={defaultFilterSelected ? props.filters.defaultFilter : props.filters.customFilter} hitsPerPage={12} analyticsTags={['browse']} /> : <Configure hitsPerPage={12} />}
+      {queryParamsOverrides.filters ? <Configure {...queryParamsOverrides} filters={defaultFilterSelected ? queryParamsOverrides.filters.defaultFilter : queryParamsOverrides.filters.customFilter} /> : <Configure {...queryParamsOverrides} />}
       <header>
         <h1 className="text-2xl font-bold mb-4 mt-4">{props.title ? `${props.title} Landing Page` : 'Dynamic Routes (Categories) + Next.js'}</h1>
-        <Instructions categoryPage={!props.filters} url={url} filterName={!props.filters ? 'Nav Hierarchy Facets' : props.filters.customFilterLabel} />
+        <Instructions categoryPage={!queryParamsOverrides.filters} url={url} filterName={!queryParamsOverrides.filters ? 'Nav Hierarchy Facets' : queryParamsOverrides.filters.customFilterLabel} />
         <SearchBox />
       </header>
       <BreadCrumbs items={props.navItems || []} />
-      {props.filters && <FilterToggle enabled={!defaultFilterSelected} setEnabled={toggleFilter} filters={props.filters} />}
+      {queryParamsOverrides.filters && <FilterToggle enabled={!defaultFilterSelected} setEnabled={toggleFilter} filters={queryParamsOverrides.filters} />}
       <main>
-        {!props.filters && (
+        {!queryParamsOverrides.filters && (
           <div className="menu text-sm">
             <h2 className='font-bold mb-2'>Nav Hierarchy Facets</h2>
             <HierarchicalMenu attributes={[
