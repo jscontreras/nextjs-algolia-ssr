@@ -33,7 +33,7 @@ const AlgoliaUrlsInspector = ({ payloads, channel }) => {
               renderValues.push(<p key={key} className={`break-all ${renderValues.length == 1 ? 'pt-4 mt-1 mb-1': 'pt-0'}`}><span className="font-bold">{key}:</span>{queryString.get(key)}</p>)
             }
           }
-          return(<li className="mt-4 w-full p-4 bg-slate-100 relative text-xs" key={index}>
+          return(<li className="mt-2 w-full p-2 pb-3 pl-3 pr-3 bg-slate-100 relative text-xs" key={index}>
           {renderValues}
           </li>);
         })}
