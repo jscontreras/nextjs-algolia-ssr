@@ -113,7 +113,7 @@ export async function getServerSideProps({ req, query, res }) {
       navItems: navItems,
       title,
       queryParamsOverrides: {
-        filters: filters, ruleContexts: ['browse_category'], analyticsTags: [title.replace(/\s/g, "-").toLowerCase()] },
+        filters: filters, ruleContexts: ['browse_category'], analyticsTags: ['browse', title.replace(/\s/g, "-").toLowerCase()] },
     },
   };
 }
