@@ -39,7 +39,6 @@ function MyApp(props) {
         // If controller detected then send the message channel
         if (initController) {
           const channel = new BroadcastChannel('app-channel');
-          const messageChannel = new MessageChannel();
 
           // Listen bardcast channel
           channel.onmessage = function (e) {
