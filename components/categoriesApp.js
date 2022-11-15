@@ -9,7 +9,7 @@ import {
   Highlight,
   Pagination,
   InstantSearch,
-  Snippet
+  Snippet,
 } from 'react-instantsearch-hooks-web';
 import { BreadCrumbs } from './breadcrumbs';
 import { CategoriesMenu } from './categoriesMenu';
@@ -57,7 +57,7 @@ const FilterToggle = ({ enabled, setEnabled, filters }) => {
   );
 }
 
-const ProductImage = ({src, alt}) => {
+const ProductImage = ({ src, alt }) => {
   const placeholderImg = 'https://i.imgur.com/gf3TZMr.jpeg';
   const [srcVal, setSrc] = useState(() => (src || placeholderImg));
   return <Image src={srcVal} alt={alt} layout='fill' width={120} height={120} onError={() => { setSrc(placeholderImg) }} />
@@ -119,8 +119,7 @@ const HitComponent = ({ hit }) => (
   </div>
 );
 
-export function CategoriesApp(props) {
-  const {queryParamsOverrides}  = props;
+export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, indexName, title, navItems, initialUiState, routing }) {
   const [defaultFilterSelected, setDefaultFilterSelected] = useState(getCookie('defaultFilterSelected'));
   const [url, setUrl] = useState();
 
@@ -140,20 +139,20 @@ export function CategoriesApp(props) {
       Router.events.off('routeChangeComplete', handleBeforeHistoryChange);
     };
 
-  }, [defaultFilterSelected, queryParamsOverrides.filters, url])
+  }, [url])
+
 
   return (
-    <InstantSearch {...props}>
-      {queryParamsOverrides.filters ? <Configure {...queryParamsOverrides} filters={defaultFilterSelected ? queryParamsOverrides.filters.defaultFilter : queryParamsOverrides.filters.customFilter} /> : <Configure {...queryParamsOverrides} />}
+    <InstantSearch indexName={indexName} searchClient={searchClient} initialUiState={initialUiState} routing={routing}>
+      <Configure {...queryParamsOverrides} />
       <header>
-        <h1 className="text-2xl font-bold mb-4 mt-4">{props.title ? `${props.title} Landing Page` : 'Dynamic Routes (Categories) + Next.js'}</h1>
+        <h1 className="text-2xl font-bold mb-4 mt-4">{title ? `${title} Landing Page` : 'Dynamic Routes (Categories) + Next.js'}</h1>
         <Instructions categoryPage={!queryParamsOverrides.filters} url={url} filterName={!queryParamsOverrides.filters ? 'Nav Hierarchy Facets' : queryParamsOverrides.filters.customFilterLabel} />
         <SearchBox />
       </header>
-      <BreadCrumbs items={props.navItems || []} />
-      {queryParamsOverrides.filters && <FilterToggle enabled={!defaultFilterSelected} setEnabled={toggleFilter} filters={queryParamsOverrides.filters} />}
+      <BreadCrumbs items={navItems || []} />
+      {/* {loadHierarchy && <FilterToggle enabled={!defaultFilterSelected} setEnabled={toggleFilter} filters={queryParamsOverrides.filters} />} */}
       <main>
-        {!queryParamsOverrides.filters && (
           <div className="menu text-sm">
             <h2 className='font-bold mb-2'>Nav Hierarchy Facets</h2>
             <HierarchicalMenu attributes={[
@@ -161,16 +160,15 @@ export function CategoriesApp(props) {
               'hierarchical_categories.lvl1',
               'hierarchical_categories.lvl2',
               'hierarchical_categories.lvl3',
-            ]} separator=' > ' />
+          ]} rootPath={rootPath} />
             <h2 className='font-bold mb-2 mt-8'>Nav Category Links</h2>
             <CategoriesMenu attributes={[
               'hierarchical_categories.lvl0',
               'hierarchical_categories.lvl1',
               'hierarchical_categories.lvl2',
               'hierarchical_categories.lvl3',
-            ]} separator=' > ' />
-
-          </div>)}
+          ]} rootPath={rootPath}/>
+          </div>
         <div className="results">
           <Hits hitComponent={HitComponent} />
         </div>

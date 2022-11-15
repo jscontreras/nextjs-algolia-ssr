@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import React from 'react';
-import { useHierarchicalMenu } from 'react-instantsearch-hooks-web';
+import React, {useEffect, useRef} from 'react';
+import { useHierarchicalMenu, useInstantSearch } from 'react-instantsearch-hooks-web';
 
 function friendlyURL(value) {
   return value;
@@ -31,7 +31,6 @@ function renderItem(item, path, key, level=2) {
 }
 
 export function CategoriesMenu(props) {
-
   const {
     items,
     isShowingMore,
@@ -43,5 +42,13 @@ export function CategoriesMenu(props) {
     createURL,
   } = useHierarchicalMenu(props);
 
-  return <ul>{items.map((item, key) => (renderItem(item, '/category_pages', key)))}</ul>;
+  const { uiState, setUiState } = useInstantSearch();
+  const uiStateRef = useRef(uiState);
+  const rootPathUrl = props.rootPath ? '/' + props.rootPath.replace(/\s>\s/g, '/') : '';
+  // Keep up to date uiState in a reference
+  useEffect(() => {
+    uiStateRef.current = uiState;
+  },[uiState]);
+
+  return <ul>{items.map((item, key) => (renderItem(item, `/category_pages${rootPathUrl}`, key)))}</ul>;
 }

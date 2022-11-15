@@ -58,14 +58,18 @@ export async function getServerSideProps({ req, res }) {
 
   const protocol = req.headers.referer?.split('://')[0] || 'https';
   const serverUrl = `${protocol}://${req.headers.host}${req.url}`;
+
+  const defaultFilterSelected = filterMode !== 'hierarchical_categories';
+  const navItems = [{ url: 'category_pages', title: 'Category pages' }];
+  const queryParamsOverrides = { hitsPerPage: 12, ruleContexts: ['browse_search-page'] };
   const serverState = await getServerState(<SearchPage serverUrl={serverUrl} />);
   return {
     props: {
       serverState,
       serverUrl,
-      defaultFilterSelected: filterMode !== 'hierarchical_categories',
-      navItems: [{ url: 'category_pages', title: 'Category pages' }],
-      queryParamsOverrides: { hitsPerPage: 12, ruleContexts: ['browse_search-page'] },
+      defaultFilterSelected,
+      navItems,
+      queryParamsOverrides
     },
   };
 }

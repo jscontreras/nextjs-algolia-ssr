@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect,useState} from 'react';
 import { hasCookie, getCookie, setCookie } from 'cookies-next';
 import algoliasearch from 'algoliasearch/lite';
 import { getServerState } from 'react-instantsearch-hooks-server';
@@ -9,7 +9,7 @@ import { CategoriesApp } from '../../components';
 import { history } from 'instantsearch.js/es/lib/routers/index.js';
 import Link from 'next/link';
 
-const searchClient = algoliasearch(
+const algoliaClient = algoliasearch(
   'U9UXVSI686',
   '341cf4d4310a13c8c6e6c9a069959cd5',
   {
@@ -19,19 +19,24 @@ const searchClient = algoliasearch(
   }
 );
 
+const searchClient = {
+  ...algoliaClient,
+};
+
 const indexName = "prod_ECOM";
 
 
-export default function SearchPage({ serverState, serverUrl, navItems, queryParamsOverrides = {}, title }) {
+export default function SearchPage({ serverUrl, initialUiState ={}, serverState, navItems, queryParamsOverrides = {}, title, rootPath='' }) {
   return (
     <InstantSearchSSRProvider {...serverState}>
       <Link href={'/'}><a className="text-blue-700">&larr; Home</a></Link>
       <CategoriesApp
-        hideMenu={true}
         searchClient={searchClient}
         indexName={indexName}
         navItems={navItems}
         title={title}
+        rootPath={rootPath}
+        initialUiState={initialUiState}
         routing={{
           router: history({
             getLocation: () =>
@@ -70,6 +75,7 @@ export async function getServerSideProps({ req, query, res }) {
   filters['category_page_idLabel'] = 'category_page_id';
 
   // OR using hierarchical_categories (filter)
+  const rootPath = query.categories.join(' > ');
   filters['hierarchical_categories'] = `hierarchical_categories.lvl${query.categories.length - 1}:'${query.categories.join(' > ')}'`;
   filters['hierarchical_categoriesLabel'] = 'hierarchical_categories';
 
@@ -103,17 +109,42 @@ export async function getServerSideProps({ req, query, res }) {
   }
 
   // Getting Category page custom title.
-  const title = query.categories.pop();
+  const title = query.categories[query.categories.length - 1];
+  filters = filters['hierarchical_categories'];
+
+  const facets = []
+  for (let index = 0; index < query.categories.length + 1; index++) {
+    facets.push(`hierarchical_categories.lvl${index}`);
+  }
+
+  const facetFilters = [[`hierarchical_categories.lvl${query.categories.length - 1}:${query.categories.join(' > ')}`]];
+
+  const hierarchicalMenu = {};
+  hierarchicalMenu['hierarchical_categories.lvl0'] = query.categories;
+
+  const queryParamsOverrides = {
+     filters, facetFilters, ruleContexts: ['browse_category'], analyticsTags: ['browse', title.replace(/\s/g, "-").toLowerCase()]
+  };
+
+  // Load the initial UI State for the hierarchycal Menus
+  const initialUiState = {
+    configure: queryParamsOverrides,
+    prod_ECOM: {
+      hierarchicalMenu
+    }
+  };
   // Getting Server State for hydration.
-  const serverState = await getServerState(<SearchPage serverUrl={serverUrl} {...{ navItems, filters, title }} />);
+  const serverState = await getServerState(<SearchPage serverUrl={serverUrl} navItems={navItems} title={title} rootPath={rootPath} initialUiState={initialUiState} queryParamsOverrides={queryParamsOverrides} />);
+
   return {
     props: {
-      serverState: serverState,
+      initialUiState,
+      serverState,
       serverUrl,
-      navItems: navItems,
+      navItems,
       title,
-      queryParamsOverrides: {
-        filters: filters, ruleContexts: ['browse_category'], analyticsTags: ['browse', title.replace(/\s/g, "-").toLowerCase()] },
-    },
+      rootPath,
+      queryParamsOverrides
+    }
   };
 }
