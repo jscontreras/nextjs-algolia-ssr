@@ -144,7 +144,7 @@ export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, in
 
   return (
     <InstantSearch indexName={indexName} searchClient={searchClient} initialUiState={initialUiState} routing={routing}>
-      <Configure {...queryParamsOverrides} />
+      {/* <Configure {...queryParamsOverrides} /> // Using initialUIState instead */}
       <header>
         <h1 className="text-2xl font-bold mb-4 mt-4">{title ? `${title} Landing Page` : 'Dynamic Routes (Categories) + Next.js'}</h1>
         <Instructions categoryPage={!queryParamsOverrides.filters} url={url} filterName={!queryParamsOverrides.filters ? 'Nav Hierarchy Facets' : queryParamsOverrides.filters.customFilterLabel} />
@@ -152,6 +152,8 @@ export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, in
       </header>
       <BreadCrumbs items={navItems || []} />
       {/* {loadHierarchy && <FilterToggle enabled={!defaultFilterSelected} setEnabled={toggleFilter} filters={queryParamsOverrides.filters} />} */}
+      {queryParamsOverrides.filters  && <div className="p-3 mt-4 text-center mb-0 text-xs w-100 bg-emerald-100	">Using filter (<span className='font-bold'>{queryParamsOverrides.filters}</span> )</div>}
+
       <main>
           <div className="menu text-sm">
             <h2 className='font-bold mb-2'>Nav Hierarchy Facets</h2>
