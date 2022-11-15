@@ -117,13 +117,12 @@ export async function getServerSideProps({ req, query, res }) {
     facets.push(`hierarchical_categories.lvl${index}`);
   }
 
-  const facetFilters = [[`hierarchical_categories.lvl${query.categories.length - 1}:${query.categories.join(' > ')}`]];
 
   const hierarchicalMenu = {};
   hierarchicalMenu['hierarchical_categories.lvl0'] = query.categories;
 
   const queryParamsOverrides = {
-     filters, facetFilters, ruleContexts: ['browse_category'], analyticsTags: ['browse', title.replace(/\s/g, "-").toLowerCase()]
+     filters, ruleContexts: ['browse_category'], analyticsTags: ['browse', title.replace(/\s/g, "-").toLowerCase()]
   };
 
   // Load the initial UI State for the hierarchycal Menus
