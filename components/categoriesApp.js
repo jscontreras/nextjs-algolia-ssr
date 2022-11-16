@@ -174,7 +174,7 @@ export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, in
 
       <main>
           <div className="menu text-sm">
-          <div className="p-3 mb-3 text-center mb-0 text-xs w-100 bg-amber-100	">
+          <div className="p-3 mb-3 text-center mb-0 text-xs w-100 bg-purple-100	">
             Using rootPath (<span className='font-bold whitespace-nowrap'>{rootPath ? rootPath: 'Null'}</span>)
             <span className='text-slate-500 whitespace-nowrap text-xs italic'>[hierarchical_categories]</span>
           </div>
