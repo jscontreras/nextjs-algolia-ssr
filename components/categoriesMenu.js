@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import React from 'react';
-import { useHierarchicalMenu } from 'react-instantsearch-hooks-web';
+import React, {useEffect, useRef} from 'react';
+import { useHierarchicalMenu, useInstantSearch } from 'react-instantsearch-hooks-web';
 
 function friendlyURL(value) {
   return value;
@@ -9,16 +9,16 @@ function friendlyURL(value) {
 function renderItem(item, path, key, level=2) {
   if (!item.data) {
     return (
-      <li key={key}>
+      <li key={key} className="ais-HierarchicalMenu-item">
         <Link href={friendlyURL(`${path}/${item.label}`)}>
-          <a className={item.isRefined ? 'font-bold text-amber-600 underline' : 'text-blue-600 underline'}>{item.label}</a>
+          <a className={item.isRefined ? 'font-bold text-blue-600 underline' : 'text-red-600 underline'}>{item.label}</a>
         </Link>
       </li>
     )
   } else {
     return (<li key={key}>
       <Link href={friendlyURL(`${path}/${item.label}`)}>
-        <a className={item.isRefined ? 'font-bold text-amber-600 underline' : 'text-blue-600 underline'}>{item.label}</a>
+        <a className={item.isRefined ? 'font-bold text-blue-600 underline' : 'text-red-600 underline'}>{item.label}</a>
       </Link>
       <ul className={`ml-${level}`}>
         {item.data.map((child, keyChild) => (
@@ -31,7 +31,6 @@ function renderItem(item, path, key, level=2) {
 }
 
 export function CategoriesMenu(props) {
-
   const {
     items,
     isShowingMore,
@@ -43,5 +42,13 @@ export function CategoriesMenu(props) {
     createURL,
   } = useHierarchicalMenu(props);
 
-  return <ul>{items.map((item, key) => (renderItem(item, '/category_pages', key)))}</ul>;
+  const { uiState, setUiState } = useInstantSearch();
+  const uiStateRef = useRef(uiState);
+  const rootPathUrl = props.rootPath ? '/' + props.rootPath.replace(/\s>\s/g, '/') : '';
+  // Keep up to date uiState in a reference
+  useEffect(() => {
+    uiStateRef.current = uiState;
+  },[uiState]);
+
+  return <ul class="ais-HierarchicalMenu ais-HierarchicalMenuLinks text-base">{items.map((item, key) => (renderItem(item, `/category_pages${rootPathUrl}`, key)))}</ul>;
 }

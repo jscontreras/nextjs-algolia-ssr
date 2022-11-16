@@ -3,7 +3,7 @@ import React from "react";
 
 export function BreadCrumbs(props) {
   return (
-    <div className="bg-white p-4 flex items-center flex-wrap">
+    <div className="bg-slate-50 p-3 mt-2 flex items-center flex-wrap">
       <ul className="flex items-center">
         <li className="inline-flex items-center">
           <Link href={'/'}>

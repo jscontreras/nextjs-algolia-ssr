@@ -32,11 +32,14 @@ a {
 
 main {
   display: flex;
-  margin: 25px 0;
+  margin: 5px 0 25px;
 }
 
 .menu {
   flex: 2;
+  border: dotted 1px lightgray;
+  margin: 0px 5px 0 0px;
+  padding: 10px;
 }
 
 footer {
@@ -87,7 +90,8 @@ footer {
   font-size: .75rem;
 }
 
-.ais-RefinementList-labelText, .ais-RefinementList-count {
+.ais-RefinementList-labelText,
+.ais-RefinementList-count {
   font-size: .75rem;
 }
 
@@ -105,20 +109,30 @@ footer {
   flex-grow: 0;
   flex-shrink: 2;
   display: flex;
-  justify-content: left;
+  justify-content: flex-end;
   align-items: flex-start;
   flex-direction: row;
 }
 
 .ais-Hits-item {
-  flex: 50 0 100%;
+  flex: 50 0 95%;
   padding: 2px;
 }
 
-.ais-HierarchicalMenu-item, .ais-HierarchicalMenu-link, .ais-HierarchicalMenu-label {
+.ais-HierarchicalMenu-item,
+.ais-HierarchicalMenu-link,
+.ais-HierarchicalMenu-label {
   font-size: .95em;
 }
 
 .ais-HierarchicalMenu-count {
   font-size: .75em;
+}
+
+.ais-HierarchicalMenu {
+  padding-left: 5px;
+}
+
+.ais-HierarchicalMenuLinks {
+  font-size: .9rem;
 }

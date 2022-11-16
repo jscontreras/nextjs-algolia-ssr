@@ -9,7 +9,7 @@ import {
   Highlight,
   Pagination,
   InstantSearch,
-  Snippet
+  Snippet,
 } from 'react-instantsearch-hooks-web';
 import { BreadCrumbs } from './breadcrumbs';
 import { CategoriesMenu } from './categoriesMenu';
@@ -33,31 +33,33 @@ const Instructions = ({ categoryPage, url, filterName }) => (
   </>
 )
 
-const FilterToggle = ({ enabled, setEnabled, filters }) => {
+const FilterToggle = ({ setEnabled, filters, customFilterLabel }) => {
+  const [active, setActive] = useState(false);
   return (
     <div className='flex justify-between flex-col flex-wrap'>
       <label className=" text-sm inline-flex relative items-center ml-5 mt-3 cursor-pointer">
         <input
           type="checkbox"
           className="sr-only peer"
-          checked={enabled}
+          checked={active}
           readOnly
         />
         <div
           onClick={() => {
-            setEnabled(!enabled);
+            setEnabled();
+            setActive(!active);
           }}
           className="w-11 h-6 bg-gray-200 rounded-full peer  peer-focus:ring-green-300  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"
         ></div>
-        <span className='ml-2'>Use <span className="font-medium text-amber-500">{filters.customFilterLabel}</span> attribute as filter.</span>
+        <span className='ml-2'>Use <span className="font-medium text-amber-500">{customFilterLabel}</span> attribute as filter.</span>
       </label>
-      <div className="p-3 mt-4 text-center mb-0 text-xs w-100 bg-rose-100	">Using filter (<span className='font-bold'>{enabled ? filters.customFilter : filters.defaultFilter}</span> )</div>
+      <div className="p-3 mt-4 text-center mb-0 text-xs w-100 bg-sky-100	">Using filter (<span className='font-bold'>{filters}</span>)</div>
 
     </div>
   );
 }
 
-const ProductImage = ({src, alt}) => {
+const ProductImage = ({ src, alt }) => {
   const placeholderImg = 'https://i.imgur.com/gf3TZMr.jpeg';
   const [srcVal, setSrc] = useState(() => (src || placeholderImg));
   return <Image src={srcVal} alt={alt} layout='fill' width={120} height={120} onError={() => { setSrc(placeholderImg) }} />
@@ -119,18 +121,34 @@ const HitComponent = ({ hit }) => (
   </div>
 );
 
-export function CategoriesApp(props) {
-  const {queryParamsOverrides}  = props;
-  const [defaultFilterSelected, setDefaultFilterSelected] = useState(getCookie('defaultFilterSelected'));
-  const [url, setUrl] = useState();
+export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, indexName, title, navItems, initialUiState, routing, extraFilters={} }) {
 
+  const defaultFilterLabel = 'category_page_id';
+  const alternateFilterLabel = extraFilters.label ? extraFilters.label : 'list_categories';
+
+  const [queryParams, setQueryParams] = useState(queryParamsOverrides);
+  const [filterLabel, setFilterLabel] = useState(defaultFilterLabel);
+  const [url, setUrl] = useState();
   const toggleFilter = () => {
-    const newValue = !defaultFilterSelected;
-    // Update cookie & state
-    setCookie('defaultFilterSelected', newValue);
-    setDefaultFilterSelected(newValue);
-  }
+    // If defaultFilterLabel is Selected
+    if (filterLabel == defaultFilterLabel) {
+      setQueryParams({ ...queryParamsOverrides, filters: extraFilters.filters });
+      setFilterLabel(alternateFilterLabel);
+    } else {
+      setQueryParams({...queryParamsOverrides});
+      setFilterLabel(defaultFilterLabel);
+    }
+  };
+
   useEffect(() => {
+    // checking if server filters were updated
+    if (filterLabel == defaultFilterLabel && queryParams.filters != queryParamsOverrides.filters) {
+      setQueryParams({ ...queryParamsOverrides });
+    }
+    if (filterLabel == alternateFilterLabel && queryParams.filters != extraFilters.filters) {
+      setQueryParams({ ...queryParamsOverrides, filters: extraFilters.filters });
+    }
+    // Updating URL with router
     setUrl(window.location.pathname);
     const handleBeforeHistoryChange = () => {
       setUrl(window.location.pathname);
@@ -140,37 +158,41 @@ export function CategoriesApp(props) {
       Router.events.off('routeChangeComplete', handleBeforeHistoryChange);
     };
 
-  }, [defaultFilterSelected, queryParamsOverrides.filters, url])
+  }, [url, queryParams, filterLabel, queryParamsOverrides, alternateFilterLabel, extraFilters.filters])
+
 
   return (
-    <InstantSearch {...props}>
-      {queryParamsOverrides.filters ? <Configure {...queryParamsOverrides} filters={defaultFilterSelected ? queryParamsOverrides.filters.defaultFilter : queryParamsOverrides.filters.customFilter} /> : <Configure {...queryParamsOverrides} />}
+    <InstantSearch indexName={indexName} searchClient={searchClient} initialUiState={initialUiState} routing={routing}>
+      <Configure {...queryParams} />
       <header>
-        <h1 className="text-2xl font-bold mb-4 mt-4">{props.title ? `${props.title} Landing Page` : 'Dynamic Routes (Categories) + Next.js'}</h1>
-        <Instructions categoryPage={!queryParamsOverrides.filters} url={url} filterName={!queryParamsOverrides.filters ? 'Nav Hierarchy Facets' : queryParamsOverrides.filters.customFilterLabel} />
+        <h1 className="text-2xl font-bold mb-4 mt-4">{title ? `${title} Landing Page` : 'Dynamic Routes (Categories) + Next.js'}</h1>
+        <Instructions categoryPage={!queryParams.filters} url={url} filterName={!queryParams.filters ? 'Nav Hierarchy Facets' : alternateFilterLabel} />
         <SearchBox />
       </header>
-      <BreadCrumbs items={props.navItems || []} />
-      {queryParamsOverrides.filters && <FilterToggle enabled={!defaultFilterSelected} setEnabled={toggleFilter} filters={queryParamsOverrides.filters} />}
+      <BreadCrumbs items={navItems || []} />
+      {queryParams.filters  && <FilterToggle setEnabled={toggleFilter} filters={queryParams.filters} customFilterLabel={filterLabel} />}
+
       <main>
-        {!queryParamsOverrides.filters && (
           <div className="menu text-sm">
-            <h2 className='font-bold mb-2'>Nav Hierarchy Facets</h2>
+          <div className="p-3 mb-3 text-center mb-0 text-xs w-100 bg-purple-100	">
+            Using rootPath (<span className='font-bold whitespace-nowrap'>{rootPath ? rootPath: 'Null'}</span>)
+            <span className='text-slate-500 whitespace-nowrap text-xs italic'>[hierarchical_categories]</span>
+          </div>
+          <h2 className='font-bold mb-2'>Nav Hierarchy <span className='font-normal italic'>(Facets)</span></h2>
             <HierarchicalMenu attributes={[
               'hierarchical_categories.lvl0',
               'hierarchical_categories.lvl1',
               'hierarchical_categories.lvl2',
               'hierarchical_categories.lvl3',
-            ]} separator=' > ' />
-            <h2 className='font-bold mb-2 mt-8'>Nav Category Links</h2>
+          ]} rootPath={rootPath} />
+          <h2 className='font-bold mb-2 mt-8'>Nav Category <span className='font-normal italic'>(Links)</span></h2>
             <CategoriesMenu attributes={[
               'hierarchical_categories.lvl0',
               'hierarchical_categories.lvl1',
               'hierarchical_categories.lvl2',
               'hierarchical_categories.lvl3',
-            ]} separator=' > ' />
-
-          </div>)}
+          ]} rootPath={rootPath}/>
+          </div>
         <div className="results">
           <Hits hitComponent={HitComponent} />
         </div>
