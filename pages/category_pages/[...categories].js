@@ -29,7 +29,13 @@ const indexName = "prod_ECOM";
  * @param {*} param0
  * @returns
  */
-export default function SearchPage({ serverUrl, initialUiState = {}, serverState, navItems, queryParamsOverrides = {}, title, rootPath = '' }) {
+export default function SearchPage(
+  { serverUrl,
+    initialUiState = {},
+    serverState, navItems,
+    queryParamsOverrides = {},
+    title, rootPath = '',
+    extraFilters = {} }) {
   return (
     <InstantSearchSSRProvider {...serverState}>
       <Link href={'/'}><a className="text-blue-700">&larr; Home</a></Link>
@@ -47,13 +53,14 @@ export default function SearchPage({ serverUrl, initialUiState = {}, serverState
           }),
         }}
         queryParamsOverrides={queryParamsOverrides}
+        extraFilters={extraFilters}
       />
     </InstantSearchSSRProvider>
   );
 }
 
-export async function getServerSideProps({ req, query, res }) {
-  const defaultFilter = 'hierarchical_categories';
+export async function getServerSideProps({ req, query }) {
+  const defaultFilter = 'category_page_id';
   const filterMode = defaultFilter;
   const filtersDefinitions = {};
 
@@ -117,12 +124,14 @@ export async function getServerSideProps({ req, query, res }) {
   hierarchicalMenu['hierarchical_categories.lvl0'] = query.categories;
 
   const queryParamsOverrides = {
-    filters, ruleContexts: ['browse_category'], analyticsTags: ['browse', title.replace(/\s/g, "-").toLowerCase()]
+    hitsPerPage: 10,
+    filters,
+    ruleContexts: ['browse_category'],
+    analyticsTags: ['browse', title.replace(/\s/g, "-").toLowerCase()]
   };
 
-  // Load the initial UI State for the hierarchycal Menus
+  // Load the initial UI State for the hierarchycal Menus (setting the context for the facets)
   const initialUiState = {
-    configure: queryParamsOverrides,
     prod_ECOM: {
       hierarchicalMenu
     }
@@ -135,7 +144,11 @@ export async function getServerSideProps({ req, query, res }) {
     navItems,
     title,
     rootPath,
-    queryParamsOverrides
+    queryParamsOverrides,
+    extraFilters: {
+      label: filtersDefinitions['list_categoriesLabel'],
+      filters: filtersDefinitions['list_categories']
+    },
   }
 
   // Getting Server State for hydration.

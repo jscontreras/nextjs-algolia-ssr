@@ -9,16 +9,16 @@ function friendlyURL(value) {
 function renderItem(item, path, key, level=2) {
   if (!item.data) {
     return (
-      <li key={key}>
+      <li key={key} className="ais-HierarchicalMenu-item">
         <Link href={friendlyURL(`${path}/${item.label}`)}>
-          <a className={item.isRefined ? 'font-bold text-amber-600 underline' : 'text-blue-600 underline'}>{item.label}</a>
+          <a className={item.isRefined ? 'font-bold text-blue-600 underline' : 'text-red-600 underline'}>{item.label}</a>
         </Link>
       </li>
     )
   } else {
     return (<li key={key}>
       <Link href={friendlyURL(`${path}/${item.label}`)}>
-        <a className={item.isRefined ? 'font-bold text-amber-600 underline' : 'text-blue-600 underline'}>{item.label}</a>
+        <a className={item.isRefined ? 'font-bold text-blue-600 underline' : 'text-red-600 underline'}>{item.label}</a>
       </Link>
       <ul className={`ml-${level}`}>
         {item.data.map((child, keyChild) => (
@@ -50,5 +50,5 @@ export function CategoriesMenu(props) {
     uiStateRef.current = uiState;
   },[uiState]);
 
-  return <ul>{items.map((item, key) => (renderItem(item, `/category_pages${rootPathUrl}`, key)))}</ul>;
+  return <ul class="ais-HierarchicalMenu ais-HierarchicalMenuLinks text-base">{items.map((item, key) => (renderItem(item, `/category_pages${rootPathUrl}`, key)))}</ul>;
 }

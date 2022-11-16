@@ -55,12 +55,10 @@ export async function getServerSideProps({ req }) {
   const serverUrl = `${protocol}://${req.headers.host}${req.url}`;
 
   const navItems = [{ url: 'category_pages', title: 'Category pages' }];
-  const queryParamsOverrides = { hitsPerPage: 12, ruleContexts: ['browse_search-page'] };
+  const queryParamsOverrides = { hitsPerPage: 10, ruleContexts: ['browse_search-page'] };
 
-  // Load the initial UI State for the hierarchycal Menus
-  const initialUiState = {
-    configure: queryParamsOverrides,
-  };
+  // Load the initial UI State for the hierarchycal Page doesn't override any facets.
+  const initialUiState = {};
 
   // Render properties for backend rendering
   const renderProps = {

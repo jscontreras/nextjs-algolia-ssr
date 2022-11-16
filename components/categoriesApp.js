@@ -33,25 +33,27 @@ const Instructions = ({ categoryPage, url, filterName }) => (
   </>
 )
 
-const FilterToggle = ({ enabled, setEnabled, filters }) => {
+const FilterToggle = ({ setEnabled, filters, customFilterLabel }) => {
+  const [active, setActive] = useState(false);
   return (
     <div className='flex justify-between flex-col flex-wrap'>
       <label className=" text-sm inline-flex relative items-center ml-5 mt-3 cursor-pointer">
         <input
           type="checkbox"
           className="sr-only peer"
-          checked={enabled}
+          checked={active}
           readOnly
         />
         <div
           onClick={() => {
-            setEnabled(!enabled);
+            setEnabled();
+            setActive(!active);
           }}
           className="w-11 h-6 bg-gray-200 rounded-full peer  peer-focus:ring-green-300  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"
         ></div>
-        <span className='ml-2'>Use <span className="font-medium text-amber-500">{filters.customFilterLabel}</span> attribute as filter.</span>
+        <span className='ml-2'>Use <span className="font-medium text-amber-500">{customFilterLabel}</span> attribute as filter.</span>
       </label>
-      <div className="p-3 mt-4 text-center mb-0 text-xs w-100 bg-rose-100	">Using filter (<span className='font-bold'>{enabled ? filters.customFilter : filters.defaultFilter}</span> )</div>
+      <div className="p-3 mt-4 text-center mb-0 text-xs w-100 bg-sky-100	">Using filter (<span className='font-bold'>{filters}</span>)</div>
 
     </div>
   );
@@ -119,17 +121,34 @@ const HitComponent = ({ hit }) => (
   </div>
 );
 
-export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, indexName, title, navItems, initialUiState, routing }) {
-  const [defaultFilterSelected, setDefaultFilterSelected] = useState(getCookie('defaultFilterSelected'));
-  const [url, setUrl] = useState();
+export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, indexName, title, navItems, initialUiState, routing, extraFilters={} }) {
 
+  const defaultFilterLabel = 'category_page_id';
+  const alternateFilterLabel = extraFilters.label ? extraFilters.label : 'list_categories';
+
+  const [queryParams, setQueryParams] = useState(queryParamsOverrides);
+  const [filterLabel, setFilterLabel] = useState(defaultFilterLabel);
+  const [url, setUrl] = useState();
   const toggleFilter = () => {
-    const newValue = !defaultFilterSelected;
-    // Update cookie & state
-    setCookie('defaultFilterSelected', newValue);
-    setDefaultFilterSelected(newValue);
-  }
+    // If defaultFilterLabel is Selected
+    if (filterLabel == defaultFilterLabel) {
+      setQueryParams({ ...queryParamsOverrides, filters: extraFilters.filters });
+      setFilterLabel(alternateFilterLabel);
+    } else {
+      setQueryParams({...queryParamsOverrides});
+      setFilterLabel(defaultFilterLabel);
+    }
+  };
+
   useEffect(() => {
+    // checking if server filters were updated
+    if (filterLabel == defaultFilterLabel && queryParams.filters != queryParamsOverrides.filters) {
+      setQueryParams({ ...queryParamsOverrides });
+    }
+    if (filterLabel == alternateFilterLabel && queryParams.filters != extraFilters.filters) {
+      setQueryParams({ ...queryParamsOverrides, filters: extraFilters.filters });
+    }
+    // Updating URL with router
     setUrl(window.location.pathname);
     const handleBeforeHistoryChange = () => {
       setUrl(window.location.pathname);
@@ -139,31 +158,34 @@ export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, in
       Router.events.off('routeChangeComplete', handleBeforeHistoryChange);
     };
 
-  }, [url])
+  }, [url, queryParams, filterLabel, queryParamsOverrides, alternateFilterLabel, extraFilters.filters])
 
 
   return (
     <InstantSearch indexName={indexName} searchClient={searchClient} initialUiState={initialUiState} routing={routing}>
-      {/* <Configure {...queryParamsOverrides} /> // Using initialUIState instead */}
+      <Configure {...queryParams} />
       <header>
         <h1 className="text-2xl font-bold mb-4 mt-4">{title ? `${title} Landing Page` : 'Dynamic Routes (Categories) + Next.js'}</h1>
-        <Instructions categoryPage={!queryParamsOverrides.filters} url={url} filterName={!queryParamsOverrides.filters ? 'Nav Hierarchy Facets' : queryParamsOverrides.filters.customFilterLabel} />
+        <Instructions categoryPage={!queryParams.filters} url={url} filterName={!queryParams.filters ? 'Nav Hierarchy Facets' : alternateFilterLabel} />
         <SearchBox />
       </header>
       <BreadCrumbs items={navItems || []} />
-      {/* {loadHierarchy && <FilterToggle enabled={!defaultFilterSelected} setEnabled={toggleFilter} filters={queryParamsOverrides.filters} />} */}
-      {queryParamsOverrides.filters  && <div className="p-3 mt-4 text-center mb-0 text-xs w-100 bg-emerald-100	">Using filter (<span className='font-bold'>{queryParamsOverrides.filters}</span> )</div>}
+      {queryParams.filters  && <FilterToggle setEnabled={toggleFilter} filters={queryParams.filters} customFilterLabel={filterLabel} />}
 
       <main>
           <div className="menu text-sm">
-            <h2 className='font-bold mb-2'>Nav Hierarchy Facets</h2>
+          <div className="p-3 mb-3 text-center mb-0 text-xs w-100 bg-amber-100	">
+            Using rootPath (<span className='font-bold whitespace-nowrap'>{rootPath ? rootPath: 'Null'}</span>)
+            <span className='text-slate-500 whitespace-nowrap text-xs italic'>[hierarchical_categories]</span>
+          </div>
+          <h2 className='font-bold mb-2'>Nav Hierarchy <span className='font-normal'>using</span> Facets</h2>
             <HierarchicalMenu attributes={[
               'hierarchical_categories.lvl0',
               'hierarchical_categories.lvl1',
               'hierarchical_categories.lvl2',
               'hierarchical_categories.lvl3',
           ]} rootPath={rootPath} />
-            <h2 className='font-bold mb-2 mt-8'>Nav Category Links</h2>
+          <h2 className='font-bold mb-2 mt-8'>Nav Category <span className='font-normal'>using</span> Links</h2>
             <CategoriesMenu attributes={[
               'hierarchical_categories.lvl0',
               'hierarchical_categories.lvl1',
