@@ -178,14 +178,14 @@ export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, in
             Using rootPath (<span className='font-bold whitespace-nowrap'>{rootPath ? rootPath: 'Null'}</span>)
             <span className='text-slate-500 whitespace-nowrap text-xs italic'>[hierarchical_categories]</span>
           </div>
-          <h2 className='font-bold mb-2'>Nav Hierarchy <span className='font-normal'>using</span> Facets</h2>
+          <h2 className='font-bold mb-2'>Nav Hierarchy <span className='font-normal italic'>(Facets)</span></h2>
             <HierarchicalMenu attributes={[
               'hierarchical_categories.lvl0',
               'hierarchical_categories.lvl1',
               'hierarchical_categories.lvl2',
               'hierarchical_categories.lvl3',
           ]} rootPath={rootPath} />
-          <h2 className='font-bold mb-2 mt-8'>Nav Category <span className='font-normal'>using</span> Links</h2>
+          <h2 className='font-bold mb-2 mt-8'>Nav Category <span className='font-normal italic'>(Links)</span></h2>
             <CategoriesMenu attributes={[
               'hierarchical_categories.lvl0',
               'hierarchical_categories.lvl1',
