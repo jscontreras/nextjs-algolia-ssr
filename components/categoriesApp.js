@@ -160,9 +160,9 @@ export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, in
 
   }, [url, queryParams, filterLabel, queryParamsOverrides, alternateFilterLabel, extraFilters.filters])
 
-
+  // If want to use router use routing={routing}
   return (
-    <InstantSearch indexName={indexName} searchClient={searchClient} initialUiState={initialUiState} routing={routing}>
+    <InstantSearch indexName={indexName} searchClient={searchClient} initialUiState={initialUiState} routing={false} >
       <Configure {...queryParams} />
       <header>
         <h1 className="text-2xl font-bold mb-4 mt-4">{title ? `${title} Landing Page` : 'Dynamic Routes (Categories) + Next.js'}</h1>
