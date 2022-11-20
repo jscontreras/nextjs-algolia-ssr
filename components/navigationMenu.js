@@ -139,9 +139,13 @@ export function NavigationMenu(props) {
     items,
     classNames,
     hasItems,
-    createURL,
   } = menuProps;
   const onNavigate = menuProps.refine;
+
+  // provide custom createURL
+  const createURL = (itemValue) => {
+    return `/${itemValue}`.replace(/ > /g, "/");
+  }
 
   // Keep up to date uiState in a reference
   useEffect(() => {
