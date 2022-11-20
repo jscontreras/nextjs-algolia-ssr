@@ -21,7 +21,7 @@ export function NavApp(props) {
             'hierarchicalCategories.lvl1',
             'hierarchicalCategories.lvl2',
           ]} separator=' > '
-          limit={7}
+          limit={5}
           />
         </div>
       </main>

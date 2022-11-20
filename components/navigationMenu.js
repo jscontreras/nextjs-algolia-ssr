@@ -61,7 +61,7 @@ function HierarchicalList({
                 if (counter == 0) {
                   const newState = { ...uiState, };
                   newState.instant_search.hierarchicalMenu = {};
-                  setUiState(newState);
+                  //setUiState(newState);
                 }
               }, 1000)
             }}

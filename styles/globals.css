@@ -140,7 +140,8 @@ footer {
 .ais-HierarchicalNav-list--child {
   position: absolute;
   display: flex;
-  justify-content: flex-start;
+  align-items: stretch;
+  justify-content: stretch;
   width: 100%;
   left: 0;
   margin-top: 0px;
@@ -160,4 +161,13 @@ footer {
   flex-direction: column;
   position: absolute;
   top: 45px;
+}
+.ais-HierarchicalMenu-list.level--1 .ais-HierarchicalNav-item {
+  height: 80px;
+  flex-shrink: 0;
+}
+
+.ais-HierarchicalMenu-list.level--2 .ais-HierarchicalNav-item {
+  height: 45px;
+  flex-shrink: 1;
 }
