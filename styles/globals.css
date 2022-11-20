@@ -136,3 +136,28 @@ footer {
 .ais-HierarchicalMenuLinks {
   font-size: .9rem;
 }
+
+.ais-HierarchicalNav-list--child {
+  position: absolute;
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  left: 0;
+  margin-top: 0px;
+  background-color: white;
+  ;
+  z-index: 1;
+}
+
+.ais-HierarchicalNav-item a {
+  padding: 10px;
+  margin: 1px;
+  border: 1px solid blue;
+}
+
+
+.ais-HierarchicalMenu-list.level--2 {
+  flex-direction: column;
+  position: absolute;
+  top: 45px;
+}

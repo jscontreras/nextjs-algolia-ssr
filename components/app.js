@@ -10,7 +10,7 @@ import {
   InstantSearch,
 } from 'react-instantsearch-hooks-web';
 
-const HitComponent = ({ hit }) => (
+export const HitComponent = ({ hit }) => (
   <div className="hit">
     <div className="hit-picture">
       {/* <img src={`${hit.image}`} alt={hit.name}/> */}

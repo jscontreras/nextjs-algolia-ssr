@@ -19,8 +19,6 @@ const searchClient = algoliasearch(
   apiKey,
   {
     requester: createFetchRequester(),
-    responsesCache: createNullCache(),
-    requestsCache: createNullCache({ serializable: false })
   }
 );
 

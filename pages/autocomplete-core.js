@@ -20,10 +20,6 @@ const searchClient = algoliasearch(
   {
     // OPTIONAL Use fetch for request (Service Worker)
     requester: createFetchRequester(),
-    // Disables responses cache (DON'T USE IN PRODUCTION!)
-    responsesCache: createNullCache(),
-    // Disables requests cache (DON'T USE IN PRODUCTION!)
-    requestsCache: createNullCache({ serializable: false })
   }
 );
 
