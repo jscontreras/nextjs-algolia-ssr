@@ -4,7 +4,7 @@ import { getServerState } from 'react-instantsearch-hooks-server';
 import { InstantSearchSSRProvider } from 'react-instantsearch-hooks-web';
 import { createFetchRequester } from '@algolia/requester-fetch';
 import { createNullCache } from '@algolia/cache-common';
-import { InstantSearchBasicApp } from '../../components/instantSearchBasicApp';
+import { InstantSearchRulesApp } from '../../components/instantSearchRulesApp';
 import { history } from 'instantsearch.js/es/lib/routers/index.js';
 import Link from 'next/link';
 
@@ -23,7 +23,7 @@ export default function SearchPage({ serverState, serverUrl }) {
   return (
     <InstantSearchSSRProvider {...serverState}>
       <Link href={'/'}><a className="text-blue-700">&larr; Home</a></Link>
-      <InstantSearchBasicApp
+      <InstantSearchRulesApp
         searchClient={searchClient}
         indexName={indexName}
         routing={{

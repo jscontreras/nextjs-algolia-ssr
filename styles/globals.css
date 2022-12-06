@@ -136,3 +136,8 @@ footer {
 .ais-HierarchicalMenuLinks {
   font-size: .9rem;
 }
+
+.rules-dynamic-widgets > div {
+  margin-bottom: 10px;
+  margin-top: 5px;
+}

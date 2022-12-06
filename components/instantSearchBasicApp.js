@@ -32,7 +32,7 @@ const HitComponent = ({ hit }) => (
   </div>
 );
 
-export function App(props) {
+export function InstantSearchBasicApp(props) {
   return (
     <InstantSearch {...props}>
       <Configure hitsPerPage={12} />
