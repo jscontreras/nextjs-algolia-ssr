@@ -3,8 +3,6 @@ import algoliasearch from 'algoliasearch/lite';
 import { createAutocomplete } from '@algolia/autocomplete-core';
 import { createElement, Fragment } from 'react';
 import { getAlgoliaResults, parseAlgoliaHitHighlight } from '@algolia/autocomplete-preset-algolia';
-import { createFetchRequester } from '@algolia/requester-fetch';
-import { createNullCache } from '@algolia/cache-common';
 import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions'
 import { createAlgoliaInsightsPlugin } from '@algolia/autocomplete-plugin-algolia-insights';
 import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches';
@@ -17,14 +15,6 @@ const apiKey = '6be0576ff61c053d5f9a3225e2a90f76';
 const searchClient = algoliasearch(
   appId,
   apiKey,
-  {
-    // OPTIONAL Use fetch for request (Service Worker)
-    requester: createFetchRequester(),
-    // Disables responses cache (DON'T USE IN PRODUCTION!)
-    responsesCache: createNullCache(),
-    // Disables requests cache (DON'T USE IN PRODUCTION!)
-    requestsCache: createNullCache({ serializable: false })
-  }
 );
 
 // Highlight text render

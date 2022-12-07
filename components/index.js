@@ -1,2 +1,2 @@
-export * from './app';
+export * from './instantSearchBasicApp';
 export * from './categoriesApp';
