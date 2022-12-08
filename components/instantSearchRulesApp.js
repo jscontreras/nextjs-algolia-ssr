@@ -41,7 +41,7 @@ export function QueryRulesCustomDataBanner(props) {
         }, 1000);
       }
       return (<div className='w-full bg-slate-100 p-4 text-center mb-4' key={i}>
-        <span className='text-sm center w-full'>Redirecting to <a className='text-blue-700' href={redirect}>{redirect}</a> in {countDown}
+        <span className='text-sm center w-full'>Redirecting to <a className='text-blue-700' href={redirect}>{redirect}</a> in {countDown} secs.
           <span className='cursor-pointer text-amber-700' onClick={() => { setKeepCounting(!keepCounting)}}> [{keepCounting ? 'pause' : 'resume'}]</span>
         </span>
         </div>)
