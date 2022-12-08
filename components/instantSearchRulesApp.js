@@ -34,9 +34,8 @@ export function QueryRulesCustomDataBanner(props) {
       </section>
     );
   })
-  console.log('banner', banners)
   if (banners.length == 0) {
-    return (<div className='w-full bg-slate-100 p-4 text-center'><span className='text-sm center w-full'>Banners Section</span></div>)
+    return (<div className='w-full bg-slate-100 p-4 text-center mb-4'><span className='text-sm center w-full'>Banners Section</span></div>)
   } else {
     return <>{banners}</>;
   }
@@ -69,11 +68,9 @@ export function InstantSearchRulesApp(props) {
     <InstantSearch {...props}>
       <Configure hitsPerPage={12} clickAnalytics={true} />
       <header>
-        <h1 className="text-2xl font-bold mb-4">
-          Rules</h1>
+        <h1 className="text-2xl font-bold mb-4 mt-2">
+          Rules Playground</h1>
         <QueryRulesCustomDataBanner />
-
-        <p className='mb-4 mt-2'>Test Server Side Rendering by running this page with Javascript disabled!</p>
         <SearchBox />
       </header>
       <main>

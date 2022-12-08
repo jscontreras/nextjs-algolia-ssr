@@ -37,7 +37,7 @@ export function InstantSearchBasicApp(props) {
     <InstantSearch {...props}>
       <Configure hitsPerPage={12} />
       <header>
-        <h1 className="text-2xl font-bold mb-4">
+        <h1 className="text-2xl font-bold mb-4 mt-2">
         React InstantSearch + Next.js</h1>
         <p className='mb-4 mt-2'>Test Server Side Rendering by running this page with Javascript disabled!</p>
         <SearchBox />

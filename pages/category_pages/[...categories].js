@@ -2,8 +2,6 @@ import React from 'react';
 import algoliasearch from 'algoliasearch/lite';
 import { getServerState } from 'react-instantsearch-hooks-server';
 import { InstantSearchSSRProvider } from 'react-instantsearch-hooks-web';
-import { createFetchRequester } from '@algolia/requester-fetch';
-import { createNullCache } from '@algolia/cache-common';
 import { CategoriesApp } from '../../components';
 import { history } from 'instantsearch.js/es/lib/routers/index.js';
 import Link from 'next/link';
@@ -11,11 +9,6 @@ import Link from 'next/link';
 const algoliaClient = algoliasearch(
   'U9UXVSI686',
   '341cf4d4310a13c8c6e6c9a069959cd5',
-  {
-    requester: createFetchRequester(),
-    responsesCache: createNullCache(),
-    requestsCache: createNullCache({ serializable: false })
-  }
 );
 
 const searchClient = {

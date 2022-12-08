@@ -15,64 +15,6 @@ function MyApp(props) {
   const [algoliaUrls, setAlgoliaUrls] = useState([]);
   const [serviceWorkerChannel, setServiceWorkerChannel] = useState({})
 
-  useEffect(() => {
-    if ("serviceWorker" in navigator) {
-
-      // Check if there is already one working otherwise register and reload
-      if (!navigator.serviceWorker.controller) {
-        navigator.serviceWorker.register("/sw-algolia.js", {
-          scope: '/'
-        }).then(
-          function (registration) {
-            if (initController) {
-              initController = false;
-              console.log("Interceptor Service Worker registration successful with scope: ", registration.scope);
-              location.reload();
-            }
-          },
-          function (err) {
-            console.log("Service Worker registration failed: ", err);
-          }
-
-        );
-      } else {
-        // If controller detected then send the message channel
-        if (initController) {
-          const channel = new BroadcastChannel('app-channel');
-
-          // Listen bardcast channel
-          channel.onmessage = function (e) {
-            if (e.data.action === 'echoed') {
-              console.log('Broadcasted Echo:', e.data.payload);
-            }
-            else if (e.data.action === 'algolia') {
-              setAlgoliaUrls(e.data.payload.payloads)
-            }
-          };
-
-          initController = false;
-          console.log('Service Worker Controller Ready');
-          // Register a handler to detect hwen a new or update sercice worker is installed & activate
-          navigator.serviceWorker.oncontrollerchange = (ev) => {
-            console.log('Service Worker Changed!!!!!!!!!!!!!!!!!!!!')
-          }
-
-          navigator.serviceWorker.controller.postMessage({
-            action: 'getPreviousUrls',
-          });
-
-          setServiceWorkerChannel({
-            sendMessage:
-            (action, payload = {}) => {
-            navigator.serviceWorker.controller.postMessage({
-                action,
-                payload
-            })}
-          })
-        }
-      }
-    }
-  }, [serviceWorkerChannel])
   return <>
     <Head>
       <meta charSet="UTF-8" />

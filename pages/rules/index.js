@@ -7,8 +7,8 @@ import { history } from 'instantsearch.js/es/lib/routers/index.js';
 import Link from 'next/link';
 
 const searchClient = algoliasearch(
-  'SGF0RZXAXL',
-  '0ac0c3b165eb3773097eca1ac25d8fdd',
+  'latency',
+  '6be0576ff61c053d5f9a3225e2a90f76',
 );
 
 const indexName = "instant_search";
