@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useCallback } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/future/image';
 import {
   HierarchicalMenu,
@@ -17,17 +17,38 @@ import {
   ClearRefinements,
   useQueryRules
 } from 'react-instantsearch-hooks-web';
+import { stringify } from 'qs';
 
 
 export function QueryRulesCustomDataBanner(props) {
   const { items } = useQueryRules(props);
-  const banners =  items.map(({ banner, title, link }) => {
-    if (!banner) {
-      return null;
+  const [countDown, setCountDown] = useState(10);
+  const [keepCounting, setKeepCounting] = useState(true);
+
+
+  const banners =  items.map((data, i) => {
+    const { banner, title, link, redirect } = data;
+    if (redirect) {
+      if (keepCounting) {
+        setTimeout(() => {
+          if (countDown == 0) {
+            window.location = redirect;
+          } else {
+            if(keepCounting) {
+              setCountDown(countDown - 1)
+            }
+          }
+        }, 1000);
+      }
+      return (<div className='w-full bg-slate-100 p-4 text-center mb-4' key={i}>
+        <span className='text-sm center w-full'>Redirecting to <a className='text-blue-700' href={redirect}>{redirect}</a> in {countDown}
+          <span className='cursor-pointer text-amber-700' onClick={() => { setKeepCounting(!keepCounting)}}> [{keepCounting ? 'pause' : 'resume'}]</span>
+        </span>
+        </div>)
     }
     return  (
       <section key={title} className="mb-4">
-        {/* <h2>{title}</h2> */}
+         {!banner && <h2>{title}</h2>}
         <a href={link}>
           <img src={banner} alt={title} />
         </a>
@@ -35,9 +56,13 @@ export function QueryRulesCustomDataBanner(props) {
     );
   })
   if (banners.length == 0) {
-    return (<div className='w-full bg-slate-100 p-4 text-center mb-4'><span className='text-sm center w-full'>Banners Section</span></div>)
+    return (<div className='w-full bg-slate-100 p-4 text-center mb-4'>
+    <span className='text-sm center w-full'>Banners & Redirects Section</span></div>)
   } else {
-    return <>{banners}</>;
+    return <>
+      {items && <div className='w-full bg-slate-400 p-2 mb-2'><span className='text-sm w-full'>{JSON.stringify(items,  null, 2)}</span></div>}
+      {banners}
+    </>;
   }
 }
 
