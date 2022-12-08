@@ -48,6 +48,12 @@ export default function Home() {
               <p>Hierarchy Facets and Category landing Pages.</p>
             </a>
           </Link>
+          <Link href={'/rules'}>
+            <a className={styles.card}>
+              <h2>Rules &rarr;</h2>
+              <p>Rules demo (latency app).</p>
+            </a>
+          </Link>
         </div>
       </main>
 

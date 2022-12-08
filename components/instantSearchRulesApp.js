@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable @next/next/no-img-element */
+import React, { useCallback } from 'react';
 import Image from 'next/future/image';
 import {
   HierarchicalMenu,
@@ -11,14 +12,41 @@ import {
   DynamicWidgets,
   RefinementList,
   Snippet,
-  ToggleRefinement
+  ToggleRefinement,
+  CurrentRefinements,
+  ClearRefinements,
+  useQueryRules
 } from 'react-instantsearch-hooks-web';
+
+
+export function QueryRulesCustomDataBanner(props) {
+  const { items } = useQueryRules(props);
+  const banners =  items.map(({ banner, title, link }) => {
+    if (!banner) {
+      return null;
+    }
+    return  (
+      <section key={title} className="mb-4">
+        {/* <h2>{title}</h2> */}
+        <a href={link}>
+          <img src={banner} alt={title} />
+        </a>
+      </section>
+    );
+  })
+  console.log('banner', banners)
+  if (banners.length == 0) {
+    return (<div className='w-full bg-slate-100 p-4 text-center'><span className='text-sm center w-full'>Banners Section</span></div>)
+  } else {
+    return <>{banners}</>;
+  }
+}
 
 const HitComponent = ({ hit }) => (
   <div className="hit">
     <div className="hit-picture">
       {/* <img src={`${hit.image}`} alt={hit.name}/> */}
-      <Image src={`${hit.image}`} alt={hit.name} layout='fill' width={150} height={150}/>
+      <Image src={`${hit.image}`} alt={hit.name} layout='fill' width={150} height={150} />
     </div>
     <div className="hit-content">
       <div>
@@ -39,10 +67,12 @@ const HitComponent = ({ hit }) => (
 export function InstantSearchRulesApp(props) {
   return (
     <InstantSearch {...props}>
-      <Configure hitsPerPage={12} />
+      <Configure hitsPerPage={12} clickAnalytics={true} />
       <header>
         <h1 className="text-2xl font-bold mb-4">
-        Rules</h1>
+          Rules</h1>
+        <QueryRulesCustomDataBanner />
+
         <p className='mb-4 mt-2'>Test Server Side Rendering by running this page with Javascript disabled!</p>
         <SearchBox />
       </header>
@@ -53,17 +83,30 @@ export function InstantSearchRulesApp(props) {
               root: 'MyCustomToggleRefinement bg-emerald-100 p-3 pr-0 mr-2',
               checkbox: 'MyCustomToggleRefinementCheckbox MyCustomToggleRefinementCheckbox--subclass',
             }} title="Shipping Options" />
-          <HierarchicalMenu attributes={[
-            'hierarchicalCategories.lvl0',
-            'hierarchicalCategories.lvl1',
-            'hierarchicalCategories.lvl2',
-            'hierarchicalCategories.lvl3',
-          ]} separator=' > ' showMore={true}/>
-            <RefinementList attribute="brand" classNames={{ root: 'bg-sky-100 p-2 mr-2'}}/>
-            <RefinementList attribute="type" classNames={{ root: 'bg-amber-100 p-2 mr-2' }}/>
+            <HierarchicalMenu attributes={[
+              'hierarchicalCategories.lvl0',
+              'hierarchicalCategories.lvl1',
+              'hierarchicalCategories.lvl2',
+              'hierarchicalCategories.lvl3',
+            ]} separator=' > ' showMore={true} />
+            <RefinementList attribute="brand" classNames={{ root: 'bg-sky-100 p-2 mr-2' }} />
+            <RefinementList attribute="type" classNames={{ root: 'bg-amber-100 p-2 mr-2' }} />
           </DynamicWidgets>
         </div>
         <div className="results">
+          <div className='flex min-w-full	'>
+            <CurrentRefinements classNames={{ category: 'mr-1', root: 'mt-1 mb-2' }}
+              transformItems={(items) => {
+                return items.map((item) => {
+                  if (item.attribute == 'free_shipping') {
+                    item.label = 'Free Shipping'
+                  }
+                  return item;
+                })
+              }}
+            />
+            <ClearRefinements classNames={{ button: 'mt-2 h-7', disabledButton: 'hidden'}}/>
+          </div>
           <Hits hitComponent={HitComponent} />
         </div>
       </main>
