@@ -60,7 +60,7 @@ export function QueryRulesCustomDataBanner(props) {
     <span className='text-sm center w-full'>Banners & Redirects Section</span></div>)
   } else {
     return <>
-      {items && <div className='w-full bg-slate-400 p-2 mb-2'><span className='text-sm w-full'>{JSON.stringify(items,  null, 2)}</span></div>}
+      {items && <div className='w-full bg-white p-1 mb-1'><span className='text-xs w-full'>{JSON.stringify(items,  null, 2)}</span></div>}
       {banners}
     </>;
   }
