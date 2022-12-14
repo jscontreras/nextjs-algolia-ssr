@@ -17,8 +17,6 @@ import {
   ClearRefinements,
   useQueryRules
 } from 'react-instantsearch-hooks-web';
-import { stringify } from 'qs';
-
 
 export function QueryRulesCustomDataBanner(props) {
   const { items } = useQueryRules(props);
@@ -111,8 +109,10 @@ export function InstantSearchRulesApp(props) {
               'hierarchicalCategories.lvl2',
               'hierarchicalCategories.lvl3',
             ]} separator=' > ' showMore={true} />
-            <RefinementList attribute="brand" classNames={{ root: 'bg-sky-100 p-2 mr-2' }} />
-            <RefinementList attribute="type" classNames={{ root: 'bg-amber-100 p-2 mr-2' }} />
+            <RefinementList attribute="brand" classNames={{ root: 'bg-sky-100 p-2 mr-2' }} searchable={true}
+              searchablePlaceholder="Brands" />
+            <RefinementList attribute="type" classNames={{ root: 'bg-amber-100 p-2 mr-2' }} searchable={true}
+              searchablePlaceholder="Use Cases" />
           </DynamicWidgets>
         </div>
         <div className="results">
