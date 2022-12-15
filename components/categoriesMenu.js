@@ -50,5 +50,5 @@ export function CategoriesMenu(props) {
     uiStateRef.current = uiState;
   },[uiState]);
 
-  return <ul class="ais-HierarchicalMenu ais-HierarchicalMenuLinks text-base">{items.map((item, key) => (renderItem(item, `/category_pages${rootPathUrl}`, key)))}</ul>;
+  return <ul className="ais-HierarchicalMenu ais-HierarchicalMenuLinks text-base">{items.map((item, key) => (renderItem(item, `/category_pages${rootPathUrl}`, key)))}</ul>;
 }

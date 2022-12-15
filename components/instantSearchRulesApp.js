@@ -85,16 +85,63 @@ const HitComponent = ({ hit }) => (
     </div>
   </div>
 );
+    // create a react component that renders a blue sky  button with white state text and hover using tailwind.
 
 export function InstantSearchRulesApp(props) {
+  const [contexts, setContexts] = useState([]); // initial array of tags
+  const ContextTags = () => {
+
+    const handleAddTag = (event) => {
+      event.preventDefault();
+
+      // get the input value
+      const tag = event.target.elements.tagInput.value.trim();
+
+      // add the tag to the array if it is not an empty string
+      if (tag) {
+        setContexts((prevTags) => [...prevTags, tag]);
+      }
+
+      // clear the input field
+      event.target.elements.tagInput.value = '';
+    }
+
+    const handleRemoveTag = (tagToRemove) => {
+      setContexts((prevTags) => prevTags.filter((tag) => tag !== tagToRemove));
+    }
+
+    return (
+      <div className="bg-indigo-100 py-2 mt-2 px-2 flex justify-between">
+        <form onSubmit={handleAddTag} className="text-xs">
+          <input type="text" name="tagInput" className="bg-white py-1 mr-1 border" />
+          <button type="submit" class="bg-sky-500 hover:bg-sky-700 text-white py-1 px-2 rounded">
+            Add Context
+          </button>
+        </form>
+        <ul>
+          {contexts.map((tag) => (
+            <li key={tag} class="inline-block bg-purple-700 rounded pl-2 text-xs text-white mr-2">
+              {tag}
+              <button onClick={() => handleRemoveTag(tag)} class="bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded ml-2">
+                x
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
+
   return (
     <InstantSearch {...props}>
-      <Configure hitsPerPage={12} clickAnalytics={true} />
+      <Configure hitsPerPage={12} clickAnalytics={true} ruleContexts={contexts} />
       <header>
         <h1 className="text-2xl font-bold mb-4 mt-2">
           Rules Playground</h1>
         <QueryRulesCustomDataBanner />
         <SearchBox />
+        <ContextTags />
       </header>
       <main>
         <div className="menun rules-dynamic-widgets">
