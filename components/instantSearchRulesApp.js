@@ -19,11 +19,12 @@ import {
 } from 'react-instantsearch-hooks-web';
 
 const HierarchicalMenu = (props) => {
+  const topProps = {...props};
+  delete topProps.showMore;
 
-
-  return <>
+  return <div {...topProps}>
     <h2 className="font-bold text-sm mt-2">{props.title}</h2>
-    <HierarchicalMenuOriginal {...props} /></>;
+    <HierarchicalMenuOriginal {...props} /></div>;
 }
 
 export function QueryRulesCustomDataBanner(props) {
