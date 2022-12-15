@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Image from 'next/future/image';
 import {
   HierarchicalMenu,
+  useHierarchicalMenu,
   SearchBox,
   Hits,
   Configure,
@@ -18,11 +19,18 @@ import {
   useQueryRules
 } from 'react-instantsearch-hooks-web';
 
+const MyHierarchicalMenu = (props) => {
+
+
+  return <>
+    <h2 className="font-bold text-sm mt-2">{props.title}</h2>
+    <HierarchicalMenu {...props} /></>;
+}
+
 export function QueryRulesCustomDataBanner(props) {
   const { items } = useQueryRules(props);
   const [countDown, setCountDown] = useState(10);
   const [keepCounting, setKeepCounting] = useState(true);
-
 
   const banners =  items.map((data, i) => {
     const { banner, title, link, redirect } = data;
@@ -113,16 +121,16 @@ export function InstantSearchRulesApp(props) {
     return (
       <div className="bg-indigo-100 py-2 mt-2 px-2 flex justify-between">
         <form onSubmit={handleAddTag} className="text-xs">
-          <input type="text" name="tagInput" className="bg-white py-1 mr-1 border" />
-          <button type="submit" class="bg-sky-500 hover:bg-sky-700 text-white py-1 px-2 rounded">
-            Add Context
+          <input type="text" name="tagInput" className="bg-white py-1 pl-1 mr-1 border" placeholder="Add Context String"/>
+          <button type="submit" className="bg-sky-500 hover:bg-sky-700 text-white py-1 px-2 rounded">
+            +
           </button>
         </form>
         <ul>
           {contexts.map((tag) => (
-            <li key={tag} class="inline-block bg-purple-700 rounded pl-2 text-xs text-white mr-2">
+            <li key={tag} className="inline-block bg-purple-700 rounded pl-2 text-xs text-white mr-2">
               {tag}
-              <button onClick={() => handleRemoveTag(tag)} class="bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded ml-2">
+              <button onClick={() => handleRemoveTag(tag)} className="bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded ml-2">
                 x
               </button>
             </li>
@@ -146,16 +154,17 @@ export function InstantSearchRulesApp(props) {
       <main>
         <div className="menun rules-dynamic-widgets">
           <DynamicWidgets facets={['*']}>
-            <ToggleRefinement attribute="free_shipping" label=" Free shipping" classNames={{
-              root: 'MyCustomToggleRefinement bg-emerald-100 p-3 pr-0 mr-2',
-              checkbox: 'MyCustomToggleRefinementCheckbox MyCustomToggleRefinementCheckbox--subclass',
-            }} title="Shipping Options" />
-            <HierarchicalMenu attributes={[
+            <MyHierarchicalMenu attributes={[
               'hierarchicalCategories.lvl0',
               'hierarchicalCategories.lvl1',
               'hierarchicalCategories.lvl2',
               'hierarchicalCategories.lvl3',
-            ]} separator=' > ' showMore={true} />
+            ]} separator=' > ' showMore={true} title="Hierarchical Categories" />
+            <ToggleRefinement attribute="free_shipping" label=" Free shipping" classNames={{
+              root: 'MyCustomToggleRefinement bg-emerald-100 p-3 pr-0 mr-2',
+              checkbox: 'MyCustomToggleRefinementCheckbox MyCustomToggleRefinementCheckbox--subclass',
+            }} title="Shipping Options" />
+
             <RefinementList attribute="brand" classNames={{ root: 'bg-sky-100 p-2 mr-2' }} searchable={true}
               searchablePlaceholder="Brands" />
             <RefinementList attribute="type" classNames={{ root: 'bg-amber-100 p-2 mr-2' }} searchable={true}
