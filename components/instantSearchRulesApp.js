@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Image from 'next/future/image';
 import {
-  HierarchicalMenu,
+  HierarchicalMenu as HierarchicalMenuOriginal,
   SearchBox,
   Hits,
   Configure,
@@ -18,12 +18,12 @@ import {
   useQueryRules
 } from 'react-instantsearch-hooks-web';
 
-const MyHierarchicalMenu = (props) => {
+const HierarchicalMenu = (props) => {
 
 
   return <>
     <h2 className="font-bold text-sm mt-2">{props.title}</h2>
-    <HierarchicalMenu {...props} /></>;
+    <HierarchicalMenuOriginal {...props} /></>;
 }
 
 export function QueryRulesCustomDataBanner(props) {
@@ -92,7 +92,6 @@ const HitComponent = ({ hit }) => (
     </div>
   </div>
 );
-    // create a react component that renders a blue sky  button with white state text and hover using tailwind.
 
 export function InstantSearchRulesApp(props) {
   const [contexts, setContexts] = useState([]); // initial array of tags
@@ -129,7 +128,7 @@ export function InstantSearchRulesApp(props) {
           {contexts.map((tag) => (
             <li key={tag} className="inline-block bg-purple-700 rounded pl-2 text-xs text-white mr-2">
               {tag}
-              <button onClick={() => handleRemoveTag(tag)} className="bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded ml-2">
+              <button onClick={() => handleRemoveTag(tag)} className="bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded ml-2">
                 x
               </button>
             </li>
@@ -138,7 +137,6 @@ export function InstantSearchRulesApp(props) {
       </div>
     );
   }
-
 
   return (
     <InstantSearch {...props}>
@@ -153,7 +151,7 @@ export function InstantSearchRulesApp(props) {
       <main>
         <div className="menun rules-dynamic-widgets">
           <DynamicWidgets facets={['*']}>
-            <MyHierarchicalMenu attributes={[
+            <HierarchicalMenu attributes={[
               'hierarchicalCategories.lvl0',
               'hierarchicalCategories.lvl1',
               'hierarchicalCategories.lvl2',
