@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import Image from 'next/future/image';
 import {
   HierarchicalMenu,
-  useHierarchicalMenu,
   SearchBox,
   Hits,
   Configure,
@@ -176,8 +175,12 @@ export function InstantSearchRulesApp(props) {
             <CurrentRefinements classNames={{ category: 'mr-1', root: 'mt-1 mb-2' }}
               transformItems={(items) => {
                 return items.map((item) => {
+                  console.log(item);
                   if (item.attribute == 'free_shipping') {
                     item.label = 'Free Shipping'
+                  }
+                  if (item.label.includes('hierarchicalCategories')) {
+                    item.label = 'Category';
                   }
                   return item;
                 })
