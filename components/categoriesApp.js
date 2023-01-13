@@ -10,6 +10,8 @@ import {
   Pagination,
   InstantSearch,
   Snippet,
+  DynamicWidgets,
+  RefinementList,
 } from 'react-instantsearch-hooks-web';
 import { BreadCrumbs } from './breadcrumbs';
 import { CategoriesMenu } from './categoriesMenu';
@@ -121,7 +123,7 @@ const HitComponent = ({ hit }) => (
   </div>
 );
 
-export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, indexName, title, navItems, initialUiState, routing, extraFilters={} }) {
+export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, indexName, title, navItems, initialUiState, routing, extraFilters = {} }) {
 
   const defaultFilterLabel = 'category_page_id';
   const alternateFilterLabel = extraFilters.label ? extraFilters.label : 'list_categories';
@@ -135,7 +137,7 @@ export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, in
       setQueryParams({ ...queryParamsOverrides, filters: extraFilters.filters });
       setFilterLabel(alternateFilterLabel);
     } else {
-      setQueryParams({...queryParamsOverrides});
+      setQueryParams({ ...queryParamsOverrides });
       setFilterLabel(defaultFilterLabel);
     }
   };
@@ -162,7 +164,7 @@ export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, in
 
   // If want to use router use routing={routing}
   return (
-    <InstantSearch indexName={indexName} searchClient={searchClient} initialUiState={initialUiState} routing={false} >
+    <InstantSearch indexName={indexName} searchClient={searchClient} initialUiState={initialUiState} routing={routing} >
       <Configure {...queryParams} />
       <header>
         <h1 className="text-2xl font-bold mb-4 mt-4">{title ? `${title} Landing Page` : 'Dynamic Routes (Categories) + Next.js'}</h1>
@@ -170,29 +172,31 @@ export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, in
         <SearchBox />
       </header>
       <BreadCrumbs items={navItems || []} />
-      {queryParams.filters  && <FilterToggle setEnabled={toggleFilter} filters={queryParams.filters} customFilterLabel={filterLabel} />}
+      {queryParams.filters && <FilterToggle setEnabled={toggleFilter} filters={queryParams.filters} customFilterLabel={filterLabel} />}
 
       <main>
-          <div className="menu text-sm">
+        <div className="menu text-sm">
           <div className="p-3 mb-3 text-center mb-0 text-xs w-100 bg-purple-100	">
-            Using rootPath (<span className='font-bold whitespace-nowrap'>{rootPath ? rootPath: 'Null'}</span>)
+            Using rootPath (<span className='font-bold whitespace-nowrap'>{rootPath ? rootPath : 'Null'}</span>)
             <span className='text-slate-500 whitespace-nowrap text-xs italic'>[hierarchical_categories]</span>
           </div>
           <h2 className='font-bold mb-2'>Nav Hierarchy <span className='font-normal italic'>(Facets)</span></h2>
-            <HierarchicalMenu attributes={[
-              'hierarchical_categories.lvl0',
-              'hierarchical_categories.lvl1',
-              'hierarchical_categories.lvl2',
-              'hierarchical_categories.lvl3',
+          <HierarchicalMenu attributes={[
+            'hierarchical_categories.lvl0',
+            'hierarchical_categories.lvl1',
+            'hierarchical_categories.lvl2',
+            'hierarchical_categories.lvl3',
           ]} rootPath={rootPath} />
           <h2 className='font-bold mb-2 mt-8'>Nav Category <span className='font-normal italic'>(Links)</span></h2>
-            <CategoriesMenu attributes={[
-              'hierarchical_categories.lvl0',
-              'hierarchical_categories.lvl1',
-              'hierarchical_categories.lvl2',
-              'hierarchical_categories.lvl3',
-          ]} rootPath={rootPath}/>
-          </div>
+          <CategoriesMenu attributes={[
+            'hierarchical_categories.lvl0',
+            'hierarchical_categories.lvl1',
+            'hierarchical_categories.lvl2',
+            'hierarchical_categories.lvl3',
+          ]} rootPath={rootPath} />
+          <RefinementList attribute="brand" classNames={{ root: 'bg-sky-100 p-2 mr-2' }} searchable={true}
+            searchablePlaceholder="Brands" />
+        </div>
         <div className="results">
           <Hits hitComponent={HitComponent} />
         </div>
