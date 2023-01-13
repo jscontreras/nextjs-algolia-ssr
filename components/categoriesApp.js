@@ -194,7 +194,7 @@ export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, in
             'hierarchical_categories.lvl2',
             'hierarchical_categories.lvl3',
           ]} rootPath={rootPath} />
-          <RefinementList attribute="brand" classNames={{ root: 'bg-sky-100 p-2 mr-2' }} searchable={true}
+          <RefinementList attribute="brand" classNames={{ root: 'bg-sky-100 p-2 mr-2 mt-4' }} searchable={true}
             searchablePlaceholder="Brands" />
         </div>
         <div className="results">
