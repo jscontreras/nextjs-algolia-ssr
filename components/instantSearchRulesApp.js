@@ -19,7 +19,7 @@ import {
 } from 'react-instantsearch-hooks-web';
 
 const HierarchicalMenu = (props) => {
-  const topProps = {...props};
+  const topProps = { ...props };
   delete topProps.showMore;
 
   return <div {...topProps}>
@@ -32,7 +32,7 @@ export function QueryRulesCustomDataBanner(props) {
   const [countDown, setCountDown] = useState(10);
   const [keepCounting, setKeepCounting] = useState(true);
 
-  const banners =  items.map((data, i) => {
+  const banners = items.map((data, i) => {
     const { banner, title, link, redirect } = data;
     if (redirect) {
       if (keepCounting) {
@@ -40,7 +40,7 @@ export function QueryRulesCustomDataBanner(props) {
           if (countDown == 0) {
             window.location = redirect;
           } else {
-            if(keepCounting) {
+            if (keepCounting) {
               setCountDown(countDown - 1)
             }
           }
@@ -48,13 +48,13 @@ export function QueryRulesCustomDataBanner(props) {
       }
       return (<div className='w-full bg-slate-100 p-4 text-center mb-4' key={i}>
         <span className='text-sm center w-full'>Redirecting to <a className='text-blue-700' href={redirect}>{redirect}</a> in {countDown} secs.
-          <span className='cursor-pointer text-amber-700' onClick={() => { setKeepCounting(!keepCounting)}}> [{keepCounting ? 'pause' : 'resume'}]</span>
+          <span className='cursor-pointer text-amber-700' onClick={() => { setKeepCounting(!keepCounting) }}> [{keepCounting ? 'pause' : 'resume'}]</span>
         </span>
-        </div>)
+      </div>)
     }
-    return  (
+    return (
       <section key={title} className="mb-4">
-         {!banner && <h2>{title}</h2>}
+        {!banner && <h2>{title}</h2>}
         <a href={link}>
           <img src={banner} alt={title} />
         </a>
@@ -63,10 +63,10 @@ export function QueryRulesCustomDataBanner(props) {
   })
   if (banners.length == 0) {
     return (<div className='w-full bg-slate-100 p-4 text-center mb-4'>
-    <span className='text-sm center w-full'>Banners & Redirects Section</span></div>)
+      <span className='text-sm center w-full'>Banners & Redirects Section</span></div>)
   } else {
     return <>
-      {items && <div className='w-full bg-white p-1 mb-1'><span className='text-xs w-full'>{JSON.stringify(items,  null, 2)}</span></div>}
+      {items && <div className='w-full bg-white p-1 mb-1'><span className='text-xs w-full'>{JSON.stringify(items, null, 2)}</span></div>}
       {banners}
     </>;
   }
@@ -95,6 +95,13 @@ const HitComponent = ({ hit }) => (
 );
 
 export function InstantSearchRulesApp(props) {
+
+  const transformItems = (items, extra) => {
+    console.log('extra', items)
+    return ['hierarchicalCategories.lvl0', 'categories', 'price', 'free_shipping', 'rating', 'type', 'brand'];
+  };
+
+
   const [contexts, setContexts] = useState([]); // initial array of tags
   const ContextTags = () => {
 
@@ -120,7 +127,7 @@ export function InstantSearchRulesApp(props) {
     return (
       <div className="bg-indigo-100 py-2 mt-2 px-2 flex justify-between">
         <form onSubmit={handleAddTag} className="text-xs">
-          <input type="text" name="tagInput" className="bg-white py-1 pl-1 mr-1 border" placeholder="Add Context String"/>
+          <input type="text" name="tagInput" className="bg-white py-1 pl-1 mr-1 border" placeholder="Add Context String" />
           <button type="submit" className="bg-sky-500 hover:bg-sky-700 text-white py-1 px-2 rounded">
             +
           </button>
@@ -151,7 +158,7 @@ export function InstantSearchRulesApp(props) {
       </header>
       <main>
         <div className="menun rules-dynamic-widgets">
-          <DynamicWidgets facets={['*']}>
+          <DynamicWidgets facets={['*']} transformItems={transformItems}>
             <HierarchicalMenu attributes={[
               'hierarchicalCategories.lvl0',
               'hierarchicalCategories.lvl1',
@@ -184,7 +191,7 @@ export function InstantSearchRulesApp(props) {
                 })
               }}
             />
-            <ClearRefinements classNames={{ button: 'mt-2 h-7', disabledButton: 'hidden'}}/>
+            <ClearRefinements classNames={{ button: 'mt-2 h-7', disabledButton: 'hidden' }} />
           </div>
           <Hits hitComponent={HitComponent} />
         </div>

@@ -8,8 +8,8 @@ import { history } from 'instantsearch.js/es/lib/routers/index.js';
 import Link from 'next/link';
 
 const searchClient = algoliasearch(
-  'U9UXVSI686',
-  '341cf4d4310a13c8c6e6c9a069959cd5',
+  'SGF0RZXAXL',
+  '0ac0c3b165eb3773097eca1ac25d8fdd',
 );
 
 const indexName = "prod_ECOM";
@@ -48,7 +48,7 @@ export async function getServerSideProps({ req }) {
   const serverUrl = `${protocol}://${req.headers.host}${req.url}`;
 
   const navItems = [{ url: 'category_pages', title: 'Category pages' }];
-  const queryParamsOverrides = { hitsPerPage: 10, ruleContexts: ['browse_search-page'] };
+  const queryParamsOverrides = { hitsPerPage: 10, ruleContexts: ['testing-SSR'] };
 
   // Load the initial UI State for the hierarchycal Page doesn't override any facets.
   const initialUiState = {};
@@ -61,6 +61,7 @@ export async function getServerSideProps({ req }) {
     queryParamsOverrides
   };
   const serverState = await getServerState(<SearchPage {...renderProps} />);
+  const a = 15;
   return {
     props: {
       serverState,
