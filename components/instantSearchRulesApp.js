@@ -164,7 +164,7 @@ export function InstantSearchRulesApp(props) {
             }} title="Shipping Options" />
 
             <RefinementList attribute="brand" classNames={{ root: 'bg-sky-100 p-2 mr-2' }} searchable={true}
-              searchablePlaceholder="Brands" />
+              searchablePlaceholder="Brands" operator='or'/>
             <RefinementList attribute="type" classNames={{ root: 'bg-amber-100 p-2 mr-2' }} searchable={true}
               searchablePlaceholder="Use Cases" />
           </DynamicWidgets>
