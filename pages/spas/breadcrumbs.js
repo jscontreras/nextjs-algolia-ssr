@@ -5,6 +5,7 @@ import algoliasearch from 'algoliasearch/lite';
 
 import {
   HierarchicalMenu,
+  DynamicWidgets,
   SearchBox,
   Hits,
   Highlight,
@@ -15,7 +16,8 @@ import {
   ClearRefinements,
   Breadcrumb,
   useInstantSearch,
-  Snippet
+  Snippet,
+  ToggleRefinement
 } from 'react-instantsearch-hooks-web';
 
 const searchClient = algoliasearch(
@@ -100,19 +102,26 @@ export default function SearchPage({ serverState, serverUrl }) {
           'hierarchicalCategories.lvl2',
         ]} />
         <h1 className="text-2xl font-bold mb-4 mt-2">
-          Breadcrumbs + HierarchicalMenu</h1>
+          Sorting Brand Facets Values</h1>
         <Instructions />
         <SearchBox />
       </header>
       <main>
-        <div className="menun rules-dynamic-widgets">
+        <div className="rules-dynamic-widgets">
           <HierarchicalMenu attributes={[
             'hierarchicalCategories.lvl0',
             'hierarchicalCategories.lvl1',
             'hierarchicalCategories.lvl2',
           ]} separator=' > ' />
-          <RefinementList attribute="brand" classNames={{ root: 'bg-sky-100 p-2 mr-2' }}
-            searchablePlaceholder="Brands" operator='or' />
+          <DynamicWidgets facets={['*']}>
+            <RefinementList attribute="brand" classNames={{ root: 'bg-sky-100 p-2 mr-2' }}
+              searchablePlaceholder="Brands" operator='or' />
+            <ToggleRefinement attribute="free_shipping" label=" Free shipping" classNames={{
+              root: 'MyCustomToggleRefinement bg-emerald-100 p-3 pr-0 mr-2',
+              checkbox: 'MyCustomToggleRefinementCheckbox MyCustomToggleRefinementCheckbox--subclass',
+            }} title="Shipping Options" />
+          </DynamicWidgets>
+
         </div>
         <div className="results">
           <div className='flex min-w-full	'>

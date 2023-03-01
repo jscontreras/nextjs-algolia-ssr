@@ -5,6 +5,7 @@ import algoliasearch from 'algoliasearch/lite';
 
 import {
   HierarchicalMenu,
+  DynamicWidgets,
   SearchBox,
   Hits,
   Highlight,
@@ -15,7 +16,8 @@ import {
   ClearRefinements,
   Breadcrumb,
   useInstantSearch,
-  Snippet
+  Snippet,
+  ToggleRefinement
 } from 'react-instantsearch-hooks-web';
 
 const searchClient = algoliasearch(
@@ -27,32 +29,41 @@ const indexName = "instant_search";
 
 // Control the Initial Render with InitialUIState
 const initialUiState = {
-  // Product: {
-  //   hierarchicalMenu: {
-  //     "categories.lvl0": ["home", "casa"]
-  //   }
-  // }
+  "instant_search": {
+    "hierarchicalMenu": {
+      "hierarchicalCategories.lvl0": [
+        "Cameras & Camcorders",
+        "Digital Cameras"
+      ]
+    }
+  }
 }
 
 // This Middleware will show you the states
-// function middleware({ instantSearchInstance }) {
-//   return {
-//     onStateChange({ uiState }) {
-//       console.log('uiState', uiState)
-//     },
-//     subscribe() { },
-//     unsubscribe() { }
-//   }
-// }
+function middleware({ instantSearchInstance }) {
+  return {
+    onStateChange({ uiState }) {
+      console.log('uiState', uiState)
+    },
+    subscribe() { },
+    unsubscribe() { }
+  }
+}
 
-// function Middleware() {
-//   const { use } = useInstantSearch();
+function Middleware() {
+  const { use } = useInstantSearch();
 
-//   React.useLayoutEffect(() => {
-//     return use(middleware);
-//   });
-// }
+  React.useLayoutEffect(() => {
+    return use(middleware);
+  });
+}
 
+const Instructions = () => (
+  <div className='mt-0 mb-4 text-sm'>
+    <p>Shows how InstantShare widgets share UI state (<span className="text-amber-600 italic">HierarchicalMenu, Breadcrumb</span>).</p>
+    <p>InitialUI  State <span className='italic bold text-emerald-500'>(printed in console)</span> can be modified via the <span className="text-sky-600 italic">InitialUIState</span> InstantSearch property</p>
+  </div>
+)
 
 const HitComponent = ({ hit }) => (
   <div className="hit">
@@ -83,7 +94,7 @@ export default function SearchPage({ serverState, serverUrl }) {
       indexName={indexName}
       initialUiState={initialUiState}
     >
-      {/* <Middleware /> // Uncomment this line to enable Middleware and see the UI States*/}
+      <Middleware />
       <header>
         <Breadcrumb attributes={[
           'hierarchicalCategories.lvl0',
@@ -91,18 +102,26 @@ export default function SearchPage({ serverState, serverUrl }) {
           'hierarchicalCategories.lvl2',
         ]} />
         <h1 className="text-2xl font-bold mb-4 mt-2">
-          Rules Playground</h1>
+         Sorting Brand Facets Values</h1>
+        <Instructions />
         <SearchBox />
       </header>
       <main>
-        <div className="menun rules-dynamic-widgets">
+        <div className="rules-dynamic-widgets">
           <HierarchicalMenu attributes={[
             'hierarchicalCategories.lvl0',
             'hierarchicalCategories.lvl1',
             'hierarchicalCategories.lvl2',
           ]} separator=' > ' />
-          <RefinementList attribute="brand" classNames={{ root: 'bg-sky-100 p-2 mr-2' }}
-            searchablePlaceholder="Brands" operator='or' />
+          <DynamicWidgets facets={['*']}>
+            <RefinementList attribute="brand" classNames={{ root: 'bg-sky-100 p-2 mr-2' }}
+              searchablePlaceholder="Brands" operator='or' />
+            <ToggleRefinement attribute="free_shipping" label=" Free shipping" classNames={{
+              root: 'MyCustomToggleRefinement bg-emerald-100 p-3 pr-0 mr-2',
+              checkbox: 'MyCustomToggleRefinementCheckbox MyCustomToggleRefinementCheckbox--subclass',
+            }} title="Shipping Options" />
+          </DynamicWidgets>
+
         </div>
         <div className="results">
           <div className='flex min-w-full	'>
