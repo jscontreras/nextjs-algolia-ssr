@@ -20,9 +20,11 @@ import {
   ToggleRefinement
 } from 'react-instantsearch-hooks-web';
 
+const APP_ID = 'SGF0RZXAXL';
+const SEARCH_API_KEY = '0ac0c3b165eb3773097eca1ac25d8fdd';
 const searchClient = algoliasearch(
-  'SGF0RZXAXL',
-  '0ac0c3b165eb3773097eca1ac25d8fdd',
+  APP_ID,
+  SEARCH_API_KEY,
 );
 
 const indexName = "instant_search";
@@ -58,10 +60,12 @@ function Middleware() {
   });
 }
 
-const Instructions = () => (
+const Instructions = ({brandsFacetPinnedValues}) => (
   <div className='mt-0 mb-4 text-sm'>
-    <p>Shows how InstantShare widgets share UI state (<span className="text-amber-600 italic">HierarchicalMenu, Breadcrumb</span>).</p>
-    <p>InitialUI  State <span className='italic bold text-emerald-500'>(printed in console)</span> can be modified via the <span className="text-sky-600 italic">InitialUIState</span> InstantSearch property</p>
+    <p>The <span className="text-amber-600 italic">brand</span> facet contains values for multiple products <span className='italic'>(mobiles, cameras, etc.)</span>.</p>
+    <p className='mb-2'>The current brand facet configuration, contains the following pinned items</p>
+    <span className='text-emerald-100 bg-black p-1'>{JSON.stringify(brandsFacetPinnedValues, 1, null)}</span>
+    <p className='mt-2'> Check the pinned values for <span className='font-bold italic'>{"Cameras & Camcorders > Digital Cameras"}</span> and <span className='font-bold italic'>{"Cell Phones"}</span> categories. </p>
   </div>
 )
 
@@ -87,7 +91,7 @@ const HitComponent = ({ hit }) => (
   </div>
 );
 
-export default function SearchPage({ serverState, serverUrl }) {
+export default function SearchPage({ brandsOrder }) {
   return (
     <InstantSearch
       searchClient={searchClient}
@@ -103,7 +107,7 @@ export default function SearchPage({ serverState, serverUrl }) {
         ]} />
         <h1 className="text-2xl font-bold mb-4 mt-2">
          Sorting Brand Facets Values</h1>
-        <Instructions />
+        <Instructions brandsFacetPinnedValues={brandsOrder}/>
         <SearchBox />
       </header>
       <main>
@@ -148,4 +152,20 @@ export default function SearchPage({ serverState, serverUrl }) {
       </footer>
     </InstantSearch>
   );
+}
+
+// pages/index.js
+export async function getServerSideProps() {
+  const adminKey = process.env.ALGOLIA_ADMIN_API_KEY;
+  const adminClient = algoliasearch(
+    APP_ID,
+    adminKey,
+  );
+  const index = adminClient.initIndex(indexName);
+  const settings = await index.getSettings();
+    return {
+      props: {
+        brandsOrder: settings.renderingContent.facetOrdering.values.brand.order
+      }
+    }
 }
