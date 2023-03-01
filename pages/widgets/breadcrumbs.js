@@ -115,7 +115,7 @@ export default function SearchPage({ serverState, serverUrl }) {
           ]} separator=' > ' />
           <DynamicWidgets facets={['*']}>
             <RefinementList attribute="brand" classNames={{ root: 'bg-sky-100 p-2 mr-2' }}
-              searchablePlaceholder="Brands" operator='or' />
+              searchablePlaceholder="Brands" operator='or'limit={20} />
             <ToggleRefinement attribute="free_shipping" label=" Free shipping" classNames={{
               root: 'MyCustomToggleRefinement bg-emerald-100 p-3 pr-0 mr-2',
               checkbox: 'MyCustomToggleRefinementCheckbox MyCustomToggleRefinementCheckbox--subclass',
