@@ -14,7 +14,6 @@ import {
   Breadcrumb,
   useInstantSearch,
   Snippet,
-  RangeInput,
   useRange
 } from 'react-instantsearch-hooks-web';
 
@@ -183,40 +182,5 @@ function MyRangeInput(props) {
       </div>
         <button className='ml-2 mt-8 bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded' onClick={setFilter} >ok</button>
     </div>
-  );
-
-
-  return (
-    <div>
-      <input
-        type="number"
-        value={range.min}
-        onChange={(event) =>
-          refine({
-            min: parseInt(event.target.value),
-            max: range.max,
-          })
-        }
-        min={range.min}
-        max={range.max}
-        step={range.step}
-      />
-      <span>${range.min}</span>
-      <input
-        type="number"
-        value={range.max}
-        onChange={(event) =>
-          refine({
-            min: range.min,
-            max: parseInt(event.target.value),
-          })
-        }
-        min={range.min}
-        max={range.max}
-        step={range.step}
-      />
-      <span>${range.max}</span>
-    </div>
-
   );
 }
