@@ -191,7 +191,7 @@ export default function SearchPage({ brandsOrder }) {
                     })
                   }}
                 />
-                <ClearRefinements classNames={{ button: 'mt-2 h-7', disabledButton: 'hidden' }} />
+                {/* <ClearRefinements classNames={{ button: 'mt-2 h-7', disabledButton: 'hidden' }} /> */}
               </div>
               <Hits hitComponent={HitComponent} />
             </div>
