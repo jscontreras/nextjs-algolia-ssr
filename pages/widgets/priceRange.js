@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Image from 'next/future/image';
 import algoliasearch from 'algoliasearch/lite';
 
@@ -125,15 +125,13 @@ export default function SearchPage({ serverState, serverUrl }) {
   );
 }
 
-function MyRangeInput(props) {
-  const { start, range, canRefine, refine, sendEven } = useRange({
-    attribute: 'price',
-    min: 0,
-    max: 1000,
+function MyRangeInput({attribute}) {
+  const rangeProps = useRange({
+    attribute: attribute,
   });
-
-  const [fromPrice, setFromPrice] = useState('');
-  const [toPrice, setToPrice] = useState('');
+  const { range, canRefine, refine } = rangeProps;
+  const [fromPrice, setFromPrice] = useState(range.min);
+  const [toPrice, setToPrice] = useState(range.max);
 
   function handleFromPriceChange(event) {
     const value = event.target.value.replace(/\D/g, ''); // allow only digits
@@ -149,6 +147,11 @@ function MyRangeInput(props) {
     refine([`${fromPrice}`, `${toPrice}`])
     console.log('second', canRefine)
   }
+
+  useEffect(() => {
+    setFromPrice(range.min);
+    setToPrice(range.max);
+  })
 
   return (
     <div className="flex items-center justify-between p-4">
