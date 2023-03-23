@@ -26,6 +26,7 @@
     "react-dom": "^18.2.0",
     "react-instantsearch-hooks-server": "^6.35.0",
     "react-instantsearch-hooks-web": "^6.35.0",
+    "search-insights": "^2.4.0",
     "sharp": "^0.31.1"
   },
   "devDependencies": {

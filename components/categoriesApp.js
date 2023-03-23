@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { getCookie, setCookie } from 'cookies-next';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
+import aa from 'search-insights';
+import { createInsightsMiddleware } from 'instantsearch.js/es/middlewares';
+
 import Image from 'next/future/image';
 import {
   HierarchicalMenu,
@@ -10,13 +12,29 @@ import {
   Pagination,
   InstantSearch,
   Snippet,
-  DynamicWidgets,
   RefinementList,
+  useInstantSearch
 } from 'react-instantsearch-hooks-web';
 import { BreadCrumbs } from './breadcrumbs';
 import { CategoriesMenu } from './categoriesMenu';
 import Link from 'next/link';
 import Router from 'next/router';
+
+aa('setUserToken', 'ma-user-999');
+
+function InsightsMiddleware() {
+  const { use } = useInstantSearch();
+
+  useEffect(() => {
+    const middleware = createInsightsMiddleware({
+      insightsClient: aa,
+    });
+
+    return use(middleware);
+  }, [use]);
+
+  return null;
+}
 
 const Instructions = ({ categoryPage, url, filterName }) => (
   <>{categoryPage ? (<div className='mb-4 mt-2 text-sm'>
@@ -67,7 +85,7 @@ const ProductImage = ({ src, alt }) => {
   return <Image src={srcVal} alt={alt} layout='fill' width={120} height={120} onError={() => { setSrc(placeholderImg) }} />
 }
 
-const HitComponent = ({ hit }) => (
+const HitComponent = ({ hit, sendEvent }) => (
   <div className="hit">
     <div className="hit-picture">
       <ProductImage src={`${hit.image_urls[0]}`} alt={hit.name} />
@@ -77,6 +95,12 @@ const HitComponent = ({ hit }) => (
         <Highlight attribute="name" hit={hit} />
         <span> - ${hit.price.value}</span>
         <span> - {hit.rating} stars</span>
+        <p>
+        <button className="bg-blue-500 hover:bg-blue-700 text-sm text-white font-semibold py-1 px-2 rounded-md shadow-md"
+          onClick={() => {
+            sendEvent('conversion', hit, 'Product Ordered');
+          }}>Add to cart</button>
+        </p>
       </div>
       <div className="hit-type">
         <Highlight attribute="type" hit={hit} />
@@ -165,7 +189,8 @@ export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, in
   // If want to use router use routing={routing}
   return (
     <InstantSearch indexName={indexName} searchClient={searchClient} initialUiState={initialUiState} routing={routing} >
-      <Configure {...queryParams} />
+      <Configure {...queryParams} clickAnalytics />
+      <InsightsMiddleware />
       <header>
         <h1 className="text-2xl font-bold mb-4 mt-4">{title ? `${title} Landing Page` : 'Dynamic Routes (Categories) + Next.js'}</h1>
         <Instructions categoryPage={!queryParams.filters} url={url} filterName={!queryParams.filters ? 'Nav Hierarchy Facets' : alternateFilterLabel} />
