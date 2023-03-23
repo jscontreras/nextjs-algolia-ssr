@@ -80,7 +80,7 @@ const FilterToggle = ({ setEnabled, filters, customFilterLabel }) => {
 }
 
 const ProductImage = ({ src, alt }) => {
-  const placeholderImg = 'https://i.imgur.com/gf3TZMr.jpeg';
+  const placeholderImg = '/ef3-placeholder-image.jpg';
   const [srcVal, setSrc] = useState(() => (src || placeholderImg));
   return <Image src={srcVal} alt={alt} layout='fill' width={120} height={120} onError={() => { setSrc(placeholderImg) }} />
 }
