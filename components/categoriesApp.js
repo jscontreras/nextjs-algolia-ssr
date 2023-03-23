@@ -20,6 +20,7 @@ import { CategoriesMenu } from './categoriesMenu';
 import Link from 'next/link';
 import Router from 'next/router';
 
+// Setting default user token.
 aa('setUserToken', 'ma-user-999');
 
 function InsightsMiddleware() {
