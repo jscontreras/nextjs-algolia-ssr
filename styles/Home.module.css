@@ -130,4 +130,7 @@
   .footer {
     background: black;
   }
+  .powerLink {
+    color: lightblue;
+  }
 }
