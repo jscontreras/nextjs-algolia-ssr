@@ -4,7 +4,6 @@ import { getServerState } from 'react-instantsearch-hooks-server';
 import { InstantSearchSSRProvider } from 'react-instantsearch-hooks-web';
 import { InstantSearchBasicApp } from '../../components/instantSearchBasicApp';
 import { history } from 'instantsearch.js/es/lib/routers/index.js';
-import Link from 'next/link';
 
 const searchClient = algoliasearch(
   'latency',
@@ -15,7 +14,6 @@ const indexName = "instant_search";
 export default function SearchPage({ serverState, serverUrl }) {
   return (
     <InstantSearchSSRProvider {...serverState}>
-      <Link href={'/'}><a className="text-blue-700">&larr; Home</a></Link>
       <InstantSearchBasicApp
         searchClient={searchClient}
         indexName={indexName}

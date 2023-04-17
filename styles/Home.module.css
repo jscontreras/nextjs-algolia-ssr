@@ -127,4 +127,7 @@
   .logo img {
     filter: invert(1);
   }
+  .footer {
+    background: black;
+  }
 }

@@ -1,7 +1,7 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import Link from 'next/link'
 import styles from '../styles/Home.module.css'
+import Image from 'next/future/image'
 
 export default function Home() {
   return (
@@ -18,7 +18,7 @@ export default function Home() {
 
         </h1>
         <h2 className="text-3xl font-bold underline">
-          Algolia Isomorphic Render POC
+          Algolia React Prototypes & demos
         </h2>
 
 
@@ -33,7 +33,7 @@ export default function Home() {
           <Link href={'/autocomplete-core'}>
               <a className={styles.card}>
                 <h2>Autocomplete Core &rarr;</h2>
-              <p>Isomprohic rendering using Algolia <span className='font-bold'>autocomplete-core</span> Lib.</p>
+              <p>Isomprohic Server Side Rendering using Algolia <span className='font-bold'>autocomplete-core</span> Lib.</p>
               </a>
           </Link>
           <Link href={'/autocomplete-js'}>
@@ -45,13 +45,25 @@ export default function Home() {
           <Link href={'/category_pages'}>
             <a className={styles.card}>
               <h2>Category Pages &rarr;</h2>
-              <p>Hierarchy Facets and Category landing Pages.</p>
+              <p>Hierarchycal Facets and Category landing Pages + Isomorphic Server Side Rendering.</p>
             </a>
           </Link>
           <Link href={'/rules'}>
             <a className={styles.card}>
               <h2>Rules &rarr;</h2>
-              <p>Rules demo (latency app).</p>
+              <p>InstantSearch Rules demo (latency app).</p>
+            </a>
+          </Link>
+          <Link href={'/widgets/sortFacetValues'}>
+            <a className={styles.card}>
+              <h2>Facet Sorting &rarr;</h2>
+              <p>InstantSearch Dynamic Widgets + Custom Breadcrumbs.</p>
+            </a>
+          </Link>
+          <Link href={'/widgets/priceRange'}>
+            <a className={styles.card}>
+              <h2>Price Range &rarr;</h2>
+              <p>InstantSearch React hooks useRange + initial range values.</p>
             </a>
           </Link>
         </div>

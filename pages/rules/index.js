@@ -21,7 +21,6 @@ const indexName = "instant_search";
 export default function SearchPage({ serverState, serverUrl }) {
   return (
     <InstantSearchSSRProvider {...serverState}>
-      <Link href={'/'}><a className="text-blue-700">&larr; Home</a></Link>
       <InstantSearchRulesApp
         searchClient={searchClient}
         indexName={indexName}

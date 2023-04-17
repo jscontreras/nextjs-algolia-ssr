@@ -11,11 +11,11 @@ import {
   InstantSearch,
   CurrentRefinements,
   ClearRefinements,
-  Breadcrumb,
   useInstantSearch,
   Snippet,
   useRange
 } from 'react-instantsearch-hooks-web';
+import { CustomBreadcrumb } from '../../components/customBreadcrumb';
 
 const searchClient = algoliasearch(
   'SGF0RZXAXL',
@@ -81,11 +81,13 @@ export default function SearchPage({ serverState, serverUrl }) {
     >
       <Middleware />
       <header>
-        <Breadcrumb attributes={[
+        <CustomBreadcrumb attributes={[
           'hierarchicalCategories.lvl0',
           'hierarchicalCategories.lvl1',
           'hierarchicalCategories.lvl2',
-        ]} />
+        ]}
+        rootItems={[{label:'Home', value: '/'}, {label: 'Full Catalog', value: ''}]}
+         />
         <h1 className="text-2xl font-bold mb-4 mt-2">
           PriceRange hook</h1>
         <Instructions />
@@ -151,7 +153,7 @@ function MyRangeInput({attribute}) {
   useEffect(() => {
     setFromPrice(range.min);
     setToPrice(range.max);
-  })
+  },[range.min, range.max])
 
   return (
     <div className="flex items-center justify-between p-4">
@@ -163,10 +165,11 @@ function MyRangeInput({attribute}) {
           type="text"
           id="fromPrice"
           name="fromPrice"
-          className="shadow appearance-none border rounded w-32 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded w-32 py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
           value={fromPrice}
           onChange={handleFromPriceChange}
-          placeholder="0"
+          placeholder="?"
+          onFocus={e => e.target.select()}
         />
       </div>
       <div>
@@ -177,10 +180,11 @@ function MyRangeInput({attribute}) {
           type="text"
           id="toPrice"
           name="toPrice"
-          className="shadow appearance-none border rounded w-32 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded w-32 py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
           value={toPrice}
           onChange={handleToPriceChange}
-          placeholder="1000"
+          placeholder="?"
+          onFocus={e => e.target.select()}
         />
       </div>
         <button className='ml-2 mt-8 bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded' onClick={setFilter} >ok</button>

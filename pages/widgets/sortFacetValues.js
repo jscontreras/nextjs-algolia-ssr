@@ -14,11 +14,11 @@ import {
   RefinementList,
   CurrentRefinements,
   ClearRefinements,
-  Breadcrumb,
   useInstantSearch,
   Snippet,
   ToggleRefinement
 } from 'react-instantsearch-hooks-web';
+import { CustomBreadcrumb } from '../../components/customBreadcrumb';
 
 const APP_ID = 'SGF0RZXAXL';
 const SEARCH_API_KEY = '0ac0c3b165eb3773097eca1ac25d8fdd';
@@ -60,7 +60,7 @@ function Middleware() {
   });
 }
 
-const Instructions = ({brandsFacetPinnedValues}) => (
+const Instructions = ({ brandsFacetPinnedValues }) => (
   <div className='mt-0 mb-4 text-sm'>
     <p>The <span className="text-amber-600 italic">brand</span> facet contains values for multiple products <span className='italic'>(mobiles, cameras, etc.)</span>.</p>
     <p className='mb-2'>The current brand facet configuration, contains the following pinned items</p>
@@ -100,14 +100,16 @@ export default function SearchPage({ brandsOrder }) {
     >
       <Middleware />
       <header>
-        <Breadcrumb attributes={[
+        <CustomBreadcrumb attributes={[
           'hierarchicalCategories.lvl0',
           'hierarchicalCategories.lvl1',
           'hierarchicalCategories.lvl2',
-        ]} />
+        ]}
+          rootItems={[{ label: 'Home', value: '/' }, { label: 'Full Catalog', value: '' }]}
+        />
         <h1 className="text-2xl font-bold mb-4 mt-2">
-         Sorting Brand Facets Values</h1>
-        <Instructions brandsFacetPinnedValues={brandsOrder}/>
+          Sorting Brand Facets Values</h1>
+        <Instructions brandsFacetPinnedValues={brandsOrder} />
         <SearchBox />
       </header>
       <main>
@@ -163,9 +165,9 @@ export async function getServerSideProps() {
   );
   const index = adminClient.initIndex(indexName);
   const settings = await index.getSettings();
-    return {
-      props: {
-        brandsOrder: settings.renderingContent.facetOrdering.values.brand.order
-      }
+  return {
+    props: {
+      brandsOrder: settings.renderingContent.facetOrdering.values.brand.order
     }
+  }
 }

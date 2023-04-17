@@ -17,6 +17,7 @@ import {
   ClearRefinements,
   useQueryRules
 } from 'react-instantsearch-hooks-web';
+import { CustomBreadcrumb } from './customBreadcrumb';
 
 const HierarchicalMenu = (props) => {
   const topProps = {...props};
@@ -138,10 +139,16 @@ export function InstantSearchRulesApp(props) {
       </div>
     );
   }
-
   return (
     <InstantSearch {...props}>
       <Configure hitsPerPage={12} clickAnalytics={true} ruleContexts={contexts} />
+      <CustomBreadcrumb attributes={[
+        'hierarchicalCategories.lvl0',
+        'hierarchicalCategories.lvl1',
+        'hierarchicalCategories.lvl2',
+      ]}
+        rootItems={[{ label: 'Home', value: '/' }, { label: 'Full Catalog', value: '' }]}
+      />
       <header>
         <h1 className="text-2xl font-bold mb-4 mt-2">
           Rules Playground</h1>

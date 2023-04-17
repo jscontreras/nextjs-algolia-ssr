@@ -9,6 +9,7 @@ import {
   Pagination,
   InstantSearch,
 } from 'react-instantsearch-hooks-web';
+import { CustomBreadcrumb } from './customBreadcrumb';
 
 const HitComponent = ({ hit }) => (
   <div className="hit">
@@ -36,6 +37,13 @@ export function InstantSearchBasicApp(props) {
   return (
     <InstantSearch {...props}>
       <Configure hitsPerPage={12} />
+      <CustomBreadcrumb attributes={[
+        'hierarchicalCategories.lvl0',
+        'hierarchicalCategories.lvl1',
+        'hierarchicalCategories.lvl2',
+      ]}
+        rootItems={[{ label: 'Home', value: '/' }, { label: 'Full Catalog', value: '' }]}
+      />
       <header>
         <h1 className="text-2xl font-bold mb-4 mt-2">
         React InstantSearch + Next.js</h1>
