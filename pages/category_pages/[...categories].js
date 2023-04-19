@@ -7,15 +7,15 @@ import { history } from 'instantsearch.js/es/lib/routers/index.js';
 import Link from 'next/link';
 
 const algoliaClient = algoliasearch(
-  'U9UXVSI686',
-  '341cf4d4310a13c8c6e6c9a069959cd5',
+  'SGF0RZXAXL',
+  '0ac0c3b165eb3773097eca1ac25d8fdd',
 );
 
 const searchClient = {
   ...algoliaClient,
 };
 
-const indexName = "prod_ECOM";
+const indexName = "prod_ECOM_demo";
 
 /**
  * Server side rendering of a particular Category.

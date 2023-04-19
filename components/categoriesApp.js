@@ -38,23 +38,28 @@ function InsightsMiddleware() {
 
 const Instructions = ({ categoryPage, url, filterName }) => (
   <>{categoryPage ? (<div className='mb-4 mt-2 text-sm'>
-    <>Use the <span className='font-bold'>{filterName}</span> widget to refine the search using URL  parameters (<span className="text-amber-600 italic">facets, facetsFilters</span>).</>
-    <> Alternatively, the <span className='font-bold'>Nav Category Links</span> menu provides URLs to the corresponding categories landing pages via the
-      (<span className='italic text-amber-600'>filters</span>) parameter.</>
-    <p className='mt-2'>Open the <Link href='/debug'><a target="_blank" className="text-blue-600 underline" >Debug&#39;s tab</a></Link> to see the parameters sent to Algolia in real time.</p>
+    <p>Use the <span className='font-bold'>{filterName}</span> widget to refine the search using (<span className="text-amber-600 italic">facets, facetsFilters</span>).
+      This facet uses the <span className='font-bold'>HierarchicalMenu</span> InstantSearch widget via the &ldquo;lvl.*&rdquo; categories format.</p>
+    <p className='mt-2'> Alternatively, the <span className='font-bold'>Nav Category Links</span> widget allows catalog navigation by proving URLs to the corresponding categories landing pages via the
+      (<span className='italic text-amber-600'>filters</span>) parameter.</p>
+    <p className='mt-2'>Visit the <Link href='https://www.algolia.com/doc/guides/solutions/ecommerce/browse/tutorials/category-pages/'><a target="_blank" className="text-blue-600 underline" >Algolia Categories</a></Link> documentation to get more information.</p>
   </div>) : (
     <div className='mb-4 mt-2 text-sm'>
       <p>Filter attributes are obtained by parsing the URL path
         <span className='italic text-amber-600'> {url}</span> into the corresponding query&apos;s filter value.
       </p>
-      <p className='mt-2'>Open the <Link href='/debug'><a target="_blank" className="text-blue-600 underline" >Debug&#39;s tab</a></Link> to see the parameters sent to Algolia in real time.</p>
+        <p className='mt-2'>You can use different attributes to filter your category pages. However, the <span className='font-bold'>category_page_id</span> facets format exposes the hierarchy, and can also be used as the category attribute for
+          <a className="text-blue-600 underline" href="https://academy.algolia.com/collections/bbcde9a8-c1b5-11ed-8f15-06cf503dca07" target='_blank' rel="noreferrer"> Merchandizing Studio</a>,
+          <a className="text-blue-600 underline" href="https://www.algolia.com/doc/guides/personalization/what-is-personalization" target='_blank' rel="noreferrer"> AI Personalization</a>,
+          <a className="text-blue-600 underline" href="https://www.algolia.com/doc/guides/algolia-ai/query-categorization/" target='_blank' rel="noreferrer"> Query Categorization</a>, etc. </p>
+      <p className='mt-2'>Visit the <Link href='https://www.algolia.com/doc/guides/algolia-ai/query-categorization/'><a target="_blank" className="text-blue-600 underline" >Algolia Categories Guideline</a></Link> to get more information.</p>
     </div>
   )}
   </>
 )
 
 const FilterToggle = ({ setEnabled, filters, customFilterLabel }) => {
-  const [active, setActive] = useState(false);
+  const [active, setActive] = useState(true);
   return (
     <div className='flex justify-between flex-col flex-wrap'>
       <label className=" text-sm inline-flex relative items-center ml-5 mt-3 cursor-pointer">
@@ -96,10 +101,10 @@ const HitComponent = ({ hit, sendEvent }) => (
         <span> - ${hit.price.value}</span>
         <span> - {hit.rating} stars</span>
         <p>
-        <button className="bg-blue-500 hover:bg-blue-700 text-sm text-white font-semibold py-1 px-2 rounded-md shadow-md"
-          onClick={() => {
-            sendEvent('conversion', hit, 'Product Ordered');
-          }}>Add to cart</button>
+          <button className="bg-blue-500 hover:bg-blue-700 text-sm text-white font-semibold py-1 px-2 rounded-md shadow-md"
+            onClick={() => {
+              sendEvent('conversion', hit, 'Product Ordered');
+            }}>Add to cart</button>
         </p>
       </div>
       <div className="hit-type">
