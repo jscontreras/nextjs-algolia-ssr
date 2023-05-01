@@ -59,7 +59,7 @@ const Instructions = ({ categoryPage, url, filterName }) => (
 )
 
 const FilterToggle = ({ setEnabled, filters, customFilterLabel }) => {
-  const [active, setActive] = useState(true);
+  const [active, setActive] = useState(false);
   return (
     <div className='flex justify-between flex-col flex-wrap'>
       <label className=" text-sm inline-flex relative items-center ml-5 mt-3 cursor-pointer">
