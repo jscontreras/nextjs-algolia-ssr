@@ -154,11 +154,33 @@ const HitComponent = ({ hit, sendEvent }) => (
   </div>
 );
 
+/**
+ * Helper function to write Catalog page title
+ * @param {} title
+ * @returns
+ */
 function pageCaption(title) {
   if (title.endsWith('s')) {
     return `${title}' Catalog Page`
   }
   return `${title}'s Catalog Page`
+}
+
+/**
+ * Helper function to return backgroud colors
+ * @returns
+ */
+function getBackgroundColor(cat) {
+  const str = cat.length < 10? cat + cat + cat : cat;
+  const colors = ['bg-purple-800', 'bg-black', 'bg-blue-800', 'bg-orange-600', 'bg-teal-800'];
+  let hash = 5381;
+
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash * 33) ^ str.charCodeAt(i);
+  }
+
+  const randomIndex = Math.abs(hash) % colors.length;
+  return colors[randomIndex];
 }
 
 export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, indexName, title, navItems, initialUiState, routing, extraFilters = {} }) {
@@ -209,7 +231,7 @@ export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, in
         <header>
           <BreadCrumbs items={navItems || []} />
 
-          <h1 className={`text-2xl font-bold pb-4 pt-4 pl-2 ${title ? 'bg-black text-white mb-4 mt-4' : ''}`}>{title ? `>>> ${pageCaption(title)} ⭐` : 'Catalog Search Page 🔎'}</h1>
+          <h1 className={`text-2xl font-bold  ${title ? `${getBackgroundColor(title)} text-white mb-4 mt-4 pt-12 pb-12 pl-8` : 'pb-4 pt-4 pl-2'}`}>{title ? `>>> ${pageCaption(title)} ⭐` : 'Catalog Search Page 🔎'}</h1>
           <Instructions categoryPage={!queryParams.filters} url={url} filterName={!queryParams.filters ? 'Nav Hierarchy Facets' : alternateFilterLabel} />
           {queryParams.filters && <FilterToggle setEnabled={toggleFilter} filters={queryParams.filters} customFilterLabel={alternateFilterLabel} />}
           <SearchBox />
