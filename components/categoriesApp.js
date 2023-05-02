@@ -207,12 +207,13 @@ export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, in
         <Configure {...queryParams} clickAnalytics />
         <InsightsMiddleware />
         <header>
-          <h1 className={`text-2xl font-bold pb-4 pt-4 pl-2 ${title ? 'bg-black text-white mb-4 mt-4' : ''}`}>{title ? `>>> ${pageCaption(title)} ⭐` : 'Catalog Search Page 🔍'}</h1>
+          <BreadCrumbs items={navItems || []} />
+
+          <h1 className={`text-2xl font-bold pb-4 pt-4 pl-2 ${title ? 'bg-black text-white mb-4 mt-4' : ''}`}>{title ? `>>> ${pageCaption(title)} ⭐` : 'Catalog Search Page 🔎'}</h1>
           <Instructions categoryPage={!queryParams.filters} url={url} filterName={!queryParams.filters ? 'Nav Hierarchy Facets' : alternateFilterLabel} />
           {queryParams.filters && <FilterToggle setEnabled={toggleFilter} filters={queryParams.filters} customFilterLabel={alternateFilterLabel} />}
           <SearchBox />
         </header>
-        <BreadCrumbs items={navItems || []} />
         <SubCategoriesMenu attributes={[
           'hierarchical_categories.lvl0',
           'hierarchical_categories.lvl1',

@@ -47,7 +47,7 @@ export async function getServerSideProps({ req }) {
   const protocol = req.headers.referer?.split('://')[0] || 'https';
   const serverUrl = `${protocol}://${req.headers.host}${req.url}`;
 
-  const navItems = [{ url: 'category_pages', title: 'Catalog' }];
+  const navItems = [{ url: 'category_pages', title: 'Catalog 🔎' }];
   const queryParamsOverrides = { hitsPerPage: 10, ruleContexts: ['browse_search-page'] };
 
   // Load the initial UI State for the hierarchycal Page doesn't override any facets.
