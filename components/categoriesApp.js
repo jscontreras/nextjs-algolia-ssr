@@ -172,7 +172,7 @@ function pageCaption(title) {
  */
 function getBackgroundColor(cat) {
   const str = cat.length < 10? cat + cat + cat : cat;
-  const colors = ['bg-purple-800', 'bg-black', 'bg-blue-800', 'bg-orange-600', 'bg-teal-800'];
+  const colors = ['bg-purple-800', 'bg-black', 'bg-blue-800', 'bg-orange-600', 'bg-teal-800', 'bg-purple-800', 'bg-black', 'bg-blue-800', 'bg-orange-600'];
   let hash = 5381;
 
   for (let i = 0; i < str.length; i++) {
