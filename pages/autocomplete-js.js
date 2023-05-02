@@ -1,13 +1,12 @@
-import React, { createElement, Fragment, useEffect, useRef, useState } from 'react'
-import algoliasearch from 'algoliasearch';
+import { useEffect, useRef, createElement, Fragment, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { autocomplete, getAlgoliaResults } from '@algolia/autocomplete-js';
-import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions'
-import { createAlgoliaInsightsPlugin } from '@algolia/autocomplete-plugin-algolia-insights';
+import algoliasearch from 'algoliasearch/lite';
+import '@algolia/autocomplete-theme-classic';
 import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches';
+import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions';
 import Link from 'next/link';
 import { AutocomplteSSR } from '../components/autocompleteSSR';
-import insightsClient from 'search-insights';
 
 const appId = 'latency';
 const apiKey = '6be0576ff61c053d5f9a3225e2a90f76';
@@ -29,10 +28,6 @@ const recentSearchesPlugin = createLocalStorageRecentSearchesPlugin({
   key: 'navbar',
 });
 
-// Insights Analytics Plugin.
-insightsClient('init', { appId, apiKey });
-const algoliaInsightsPlugin = createAlgoliaInsightsPlugin({
-  insightsClient});
 // const algoliaInsightsPlugin = createAlgoliaInsightsPlugin({
 //   insightsClient,
 //   onActive({ insights, insightsEvents, item, state, event }) {
@@ -66,93 +61,91 @@ const algoliaInsightsPlugin = createAlgoliaInsightsPlugin({
 //   },
 // });
 
-const AutocompleteSearch = () => {
-  // REACT INITIALIZATION
-  const panelRootRef = useRef(null);
-  const rootRef = useRef(null);
+function AutocompleteSearch() {
   const [ready, setReady] = useState(false);
   const containerRef = useRef(null);
+  const panelRootRef = useRef(null);
+  const rootRef = useRef(null);
+
   useEffect(() => {
     if (!containerRef.current) {
-      return undefined
+      return undefined;
     }
+
     const search = autocomplete({
       container: containerRef.current,
-      placeholder: 'Search for Products',
+      placeholder: 'Search',
+      insights: true,
+      plugins: [recentSearchesPlugin, querySuggestionsPlugin],
+      getSources({ query }) {
+        return [
+          {
+            sourceId: 'products',
+            getItems() {
+              return getAlgoliaResults({
+                searchClient,
+                queries: [
+                  {
+                    indexName: 'instant_search',
+                    query,
+                  },
+                ],
+              });
+            },
+            templates: {
+              item({ item, components }) {
+                return <ProductItem hit={item} components={components} />;
+              },
+              noResults() {
+                return 'No products matching.';
+              },
+            },
+          },
+        ];
+      },
       renderer: { createElement, Fragment, render: () => { } },
       render({ children }, root) {
         if (!panelRootRef.current || rootRef.current !== root) {
           rootRef.current = root;
+
           panelRootRef.current?.unmount();
           panelRootRef.current = createRoot(root);
         }
 
         panelRootRef.current.render(children);
       },
-
-      plugins: [querySuggestionsPlugin, recentSearchesPlugin, algoliaInsightsPlugin],
-      getSources() {
-        return [
-          // (3) Use an Algolia index source.
-          {
-            sourceId: 'products',
-            getItemInputValue({ item }) {
-              return item.query;
-            },
-            getItems({ query }) {
-              const results = getAlgoliaResults({
-                searchClient,
-                queries: [
-                  {
-                    indexName: 'instant_search',
-                    query,
-                    params: {
-                      hitsPerPage: 4,
-                      clickAnalytics: true,
-                    },
-                  },
-                ],
-              });
-              return results;
-            },
-            getItemUrl({ item }) {
-              return `/?query=${item.name}`;
-            },
-            renderNoResults({ state, render }, root) {
-              render(`No results for "${state.query}".`, root);
-            },
-            templates: {
-              item({ item, components }) {
-                return (
-                  <div className="aa-ItemWrapper">
-                    <div className="aa-ItemContent">
-                      <div className="aa-ItemContentBody">
-                        <div className="aa-ItemContentTitle">
-                          <components.ReverseHighlight hit={item} attribute="name" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              },
-              noResults() {
-                return 'No matching items.';
-              },
-            },
-          },
-        ];
-      },
     });
     setReady(true);
     return () => {
-      search.destroy()
-    }
-  }, [])
-
+      search.destroy();
+    };
+  }, []);
   return <>
     <div className='autocomplete__container' ref={containerRef} />
     {!ready && <AutocomplteSSR />}
   </>
+}
+
+function ProductItem({ hit, components }) {
+  return (
+    <div className="aa-ItemWrapper">
+      <div className="aa-ItemContent">
+        <div className="aa-ItemIcon aa-ItemIcon--picture aa-ItemIcon--alignTop">
+          <img src={hit.image} alt={hit.name} width="40" height="40" />
+        </div>
+
+        <div className="aa-ItemContentBody">
+          <div className="aa-ItemContentTitle">
+            <components.Highlight hit={hit} attribute="name" />
+          </div>
+          <div className="aa-ItemContentDescription">
+            By <strong>{hit.brand}</strong> in{' '}
+            <strong>{hit.categories[0]}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function AutocompletePage() {
