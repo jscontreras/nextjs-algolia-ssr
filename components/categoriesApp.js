@@ -78,7 +78,7 @@ const FilterToggle = ({ setEnabled, filters, customFilterLabel }) => {
         ></div>
         <span className='ml-2'>Use <span className="font-medium text-amber-500">{customFilterLabel}</span> attribute as filter.</span>
       </label>
-      <div className="p-3 mt-4 text-center mb-4 text-xs w-100 bg-sky-100">Using filter (<span className='font-bold'>{filters}</span>)</div>
+      <div className="p-3 mt-4 text-center mb-4 text-xs w-100 bg-amber-100">Using filter (<span className='font-bold'>{filters}</span>)</div>
 
     </div>
   );
