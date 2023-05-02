@@ -23,7 +23,7 @@ const indexName = "prod_ECOM_demo";
  * @returns
  */
 export default function SearchPage(
-  { serverUrl,
+  {
     initialUiState = {},
     serverState, navItems,
     queryParamsOverrides = {},
@@ -39,12 +39,6 @@ export default function SearchPage(
         title={title}
         rootPath={rootPath}
         initialUiState={initialUiState}
-        routing={{
-          router: history({
-            getLocation: () =>
-              typeof window === 'undefined' ? new URL(serverUrl) : window.location,
-          }),
-        }}
         queryParamsOverrides={queryParamsOverrides}
         extraFilters={extraFilters}
       />
@@ -83,7 +77,7 @@ export async function getServerSideProps({ req, query }) {
   // Base element for custom Breadcrumbs
   const navItems = [{
     url: '/category_pages',
-    title: 'Category pages'
+    title: 'Catalog'
   }];
 
   // Get Custom Breadcrumb rendering

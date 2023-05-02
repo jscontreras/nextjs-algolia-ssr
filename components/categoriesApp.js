@@ -13,12 +13,13 @@ import {
   InstantSearch,
   Snippet,
   RefinementList,
-  useInstantSearch
+  useInstantSearch,
+  DynamicWidgets
 } from 'react-instantsearch-hooks-web';
 import { BreadCrumbs } from './breadcrumbs';
-import { CategoriesMenu } from './categoriesMenu';
 import Link from 'next/link';
 import Router from 'next/router';
+import { SubCategoriesMenu } from './subCategoriesMenu';
 
 aa('setUserToken', 'ma-user-999');
 
@@ -38,20 +39,19 @@ function InsightsMiddleware() {
 
 const Instructions = ({ categoryPage, url, filterName }) => (
   <>{categoryPage ? (<div className='mb-4 mt-2 text-sm'>
-    <p>Use the <span className='font-bold'>{filterName}</span> widget to refine the search using (<span className="text-amber-600 italic">facets, facetsFilters</span>).
-      This facet uses the <span className='font-bold'>HierarchicalMenu</span> InstantSearch widget via the &ldquo;lvl.*&rdquo; categories format.</p>
-    <p className='mt-2'> Alternatively, the <span className='font-bold'>Nav Category Links</span> widget allows catalog navigation by proving URLs to the corresponding categories landing pages via the
-      (<span className='italic text-amber-600'>filters</span>) parameter.</p>
+    <p>
+      The categories facet uses the <span className='font-bold'>HierarchicalMenu InstantSearch widget</span> with the &ldquo;lvl.*&rdquo; format (<span className='bg-lime-100'>hierarchical_categories</span> attribute).</p>
+    <p className='mt-2'> Alternatively, the <span className='font-bold'>Subcategories&apos; section</span> provides catalog pages navigation links to the corresponding categories landing pages (<span className='bg-lime-100'>category_page_id</span> attribute).</p>
     <p className='mt-2'>Visit the <Link href='https://www.algolia.com/doc/guides/solutions/ecommerce/browse/tutorials/category-pages/'><a target="_blank" className="text-blue-600 underline" >Algolia Categories</a></Link> documentation to get more information.</p>
   </div>) : (
     <div className='mb-4 mt-2 text-sm'>
       <p>Filter attributes are obtained by parsing the URL path
         <span className='italic text-amber-600'> {url}</span> into the corresponding query&apos;s filter value.
       </p>
-        <p className='mt-2'>You can use different attributes to filter your category pages. However, the <span className='font-bold'>category_page_id</span> facets format exposes the hierarchy, and can also be used as the category attribute for
-          <a className="text-blue-600 underline" href="https://academy.algolia.com/collections/bbcde9a8-c1b5-11ed-8f15-06cf503dca07" target='_blank' rel="noreferrer"> Merchandizing Studio</a>,
-          <a className="text-blue-600 underline" href="https://www.algolia.com/doc/guides/personalization/what-is-personalization" target='_blank' rel="noreferrer"> AI Personalization</a>,
-          <a className="text-blue-600 underline" href="https://www.algolia.com/doc/guides/algolia-ai/query-categorization/" target='_blank' rel="noreferrer"> Query Categorization</a>, etc. </p>
+      <p className='mt-2'>You can use different attributes to filter your category pages. However, the <span className='font-bold'>category_page_id</span> facets format exposes the hierarchy, and can also be used as the category attribute for
+        <a className="text-blue-600 underline" href="https://academy.algolia.com/collections/bbcde9a8-c1b5-11ed-8f15-06cf503dca07" target='_blank' rel="noreferrer"> Merchandizing Studio</a>,
+        <a className="text-blue-600 underline" href="https://www.algolia.com/doc/guides/personalization/what-is-personalization" target='_blank' rel="noreferrer"> AI Personalization</a>,
+        <a className="text-blue-600 underline" href="https://www.algolia.com/doc/guides/algolia-ai/query-categorization/" target='_blank' rel="noreferrer"> Query Categorization</a>, etc. </p>
       <p className='mt-2'>Visit the <Link href='https://www.algolia.com/doc/guides/algolia-ai/query-categorization/'><a target="_blank" className="text-blue-600 underline" >Algolia Categories Guideline</a></Link> to get more information.</p>
     </div>
   )}
@@ -78,7 +78,7 @@ const FilterToggle = ({ setEnabled, filters, customFilterLabel }) => {
         ></div>
         <span className='ml-2'>Use <span className="font-medium text-amber-500">{customFilterLabel}</span> attribute as filter.</span>
       </label>
-      <div className="p-3 mt-4 text-center mb-0 text-xs w-100 bg-sky-100	">Using filter (<span className='font-bold'>{filters}</span>)</div>
+      <div className="p-3 mt-4 text-center mb-4 text-xs w-100 bg-sky-100">Using filter (<span className='font-bold'>{filters}</span>)</div>
 
     </div>
   );
@@ -115,18 +115,20 @@ const HitComponent = ({ hit, sendEvent }) => (
       </div>
       <div className='flex'>
         <div className="hit-categories  text-xs p-5 border rounded mr-2">
-          <h4 className='text-xs mb-2 font-bold'>hierarchical_categories (Facet)</h4>
+          <h4 className='text-xs mb-2 font-bold'>hierarchical_categories</h4>
           <ul className='pl-1'>
-            [{Object.keys(hit.hierarchical_categories).map((key, index) => (
+            {'{'}
+            {Object.keys(hit.hierarchical_categories).map((key, index) => (
               <li className='pl-4' key={index}>
-                <span className="mb-1 text-amber-500" >{`"${key}:${hit.hierarchical_categories[key]}"`}</span>
+                <span className="mb-1 text-amber-500" >{`${key}: "${hit.hierarchical_categories[key]}"`}</span>
                 <span>,</span>
               </li>
-            ))}]
+            ))}
+            {'}'}
           </ul>
         </div>
         <div className="hit-categories text-xs p-5 border rounded mr-2">
-          <h4 className='text-xs mb-2 font-bold'>list_categories (Facet)</h4>
+          <h4 className='text-xs mb-2 font-bold'>list_categories</h4>
           <ul className='pl-1'>
             [{Object.keys(hit.list_categories).map((key, index) => (
               <li className='pl-4' key={index}>
@@ -137,7 +139,7 @@ const HitComponent = ({ hit, sendEvent }) => (
           </ul>
         </div>
         <div className="hit-categories  text-xs border-solid p-5 border rounded">
-          <span className='text-xs mb-2 font-bold'>category_page_id (Facet):</span>
+          <span className='text-xs mb-2 font-bold'>category_page_id:</span>
           <ul className='pl-1'>
             [{Object.keys(hit.category_page_id).map((key, index) => (
               <li className='pl-4' key={index}>
@@ -151,6 +153,13 @@ const HitComponent = ({ hit, sendEvent }) => (
     </div>
   </div>
 );
+
+function pageCaption(title) {
+  if (title.endsWith('s')) {
+    return `${title}' Catalog Page`
+  }
+  return `${title}'s Catalog Page`
+}
 
 export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, indexName, title, navItems, initialUiState, routing, extraFilters = {} }) {
 
@@ -193,54 +202,57 @@ export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, in
 
   // If want to use router use routing={routing}
   return (
-    <InstantSearch indexName={indexName} searchClient={searchClient} initialUiState={initialUiState} routing={routing} >
-      <Configure {...queryParams} clickAnalytics />
-      <InsightsMiddleware />
-      <header>
-        <h1 className="text-2xl font-bold mb-4 mt-4">{title ? `${title} Landing Page` : 'Dynamic Routes (Categories) + Next.js'}</h1>
-        <Instructions categoryPage={!queryParams.filters} url={url} filterName={!queryParams.filters ? 'Nav Hierarchy Facets' : alternateFilterLabel} />
-        <SearchBox />
-      </header>
-      <BreadCrumbs items={navItems || []} />
-      {queryParams.filters && <FilterToggle setEnabled={toggleFilter} filters={queryParams.filters} customFilterLabel={filterLabel} />}
+    <div>
+      <InstantSearch indexName={indexName} searchClient={searchClient} initialUiState={initialUiState} routing={routing} >
+        <Configure {...queryParams} clickAnalytics />
+        <InsightsMiddleware />
+        <header>
+          <h1 className={`text-2xl font-bold pb-4 pt-4 pl-2 ${title ? 'bg-black text-white mb-4 mt-4' : ''}`}>{title ? `>>> ${pageCaption(title)} ⭐` : 'Catalog Search Page 🔍'}</h1>
+          <Instructions categoryPage={!queryParams.filters} url={url} filterName={!queryParams.filters ? 'Nav Hierarchy Facets' : alternateFilterLabel} />
+          {queryParams.filters && <FilterToggle setEnabled={toggleFilter} filters={queryParams.filters} customFilterLabel={alternateFilterLabel} />}
+          <SearchBox />
+        </header>
+        <BreadCrumbs items={navItems || []} />
+        <SubCategoriesMenu attributes={[
+          'hierarchical_categories.lvl0',
+          'hierarchical_categories.lvl1',
+          'hierarchical_categories.lvl2',
+          'hierarchical_categories.lvl3',
+        ]} rootPath={rootPath} />
+        <main>
+          <div className="menu text-sm">
+            <div className="p-3 mb-3 text-center mb-0 text-xs w-100 bg-purple-100	">
+              Using rootPath (<span className='font-bold whitespace-nowrap'>{rootPath ? rootPath : 'Null'}</span>)
+              <span className='text-slate-500 whitespace-nowrap text-xs italic'>[hierarchical_categories]</span>
+            </div>
+            <DynamicWidgets facets={['*']}>
 
-      <main>
-        <div className="menu text-sm">
-          <div className="p-3 mb-3 text-center mb-0 text-xs w-100 bg-purple-100	">
-            Using rootPath (<span className='font-bold whitespace-nowrap'>{rootPath ? rootPath : 'Null'}</span>)
-            <span className='text-slate-500 whitespace-nowrap text-xs italic'>[hierarchical_categories]</span>
+              {/* <h2 className='font-bold mb-2'>Nav Hierarchy <span className='font-normal italic'>(Facets)</span></h2> */}
+              <HierarchicalMenu attributes={[
+                'hierarchical_categories.lvl0',
+                'hierarchical_categories.lvl1',
+                'hierarchical_categories.lvl2',
+                'hierarchical_categories.lvl3',
+              ]} rootPath={rootPath} />
+              <RefinementList attribute="brand" classNames={{ root: 'bg-sky-100 p-2 mr-2 mt-4' }} searchable={true}
+                searchablePlaceholder="Brands" />
+            </DynamicWidgets>
           </div>
-          <h2 className='font-bold mb-2'>Nav Hierarchy <span className='font-normal italic'>(Facets)</span></h2>
-          <HierarchicalMenu attributes={[
-            'hierarchical_categories.lvl0',
-            'hierarchical_categories.lvl1',
-            'hierarchical_categories.lvl2',
-            'hierarchical_categories.lvl3',
-          ]} rootPath={rootPath} />
-          <h2 className='font-bold mb-2 mt-8'>Nav Category <span className='font-normal italic'>(Links)</span></h2>
-          <CategoriesMenu attributes={[
-            'hierarchical_categories.lvl0',
-            'hierarchical_categories.lvl1',
-            'hierarchical_categories.lvl2',
-            'hierarchical_categories.lvl3',
-          ]} rootPath={rootPath} />
-          <RefinementList attribute="brand" classNames={{ root: 'bg-sky-100 p-2 mr-2 mt-4' }} searchable={true}
-            searchablePlaceholder="Brands" />
-        </div>
-        <div className="results">
-          <Hits hitComponent={HitComponent} />
-        </div>
-      </main>
-      <footer>
-        <Pagination />
-        <div>
-          See{' '}
-          <a className='underline' href="https://github.com/jscontreras/nextjs-algolia-ssr/tree/main/pages">
-            source code
-          </a>{' '}
-          on GitHub
-        </div>
-      </footer>
-    </InstantSearch>
+          <div className="results">
+            <Hits hitComponent={HitComponent} />
+          </div>
+        </main>
+        <footer>
+          <Pagination />
+          <div>
+            See{' '}
+            <a className='underline' href="https://github.com/jscontreras/nextjs-algolia-ssr/tree/main/pages">
+              source code
+            </a>{' '}
+            on GitHub
+          </div>
+        </footer>
+      </InstantSearch>
+    </div>
   );
 }
