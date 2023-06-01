@@ -20,7 +20,7 @@ const searchClient = algoliasearch(
   apiKey,
 );
 
-insightsClient("init", { appId, apiKey, useCookie: false, userToken: 'ma-user-999' });
+insightsClient("init", { appId, apiKey, useCookie: false, userToken: 'ma-user-999', host: 'https://google.com' });
 
 // Query Suggestion Plugin
 const querySuggestionsPlugin = createQuerySuggestionsPlugin({
