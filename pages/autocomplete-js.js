@@ -2,11 +2,15 @@ import { useEffect, useRef, createElement, Fragment, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { autocomplete, getAlgoliaResults } from '@algolia/autocomplete-js';
 import algoliasearch from 'algoliasearch/lite';
+import insightsClient from "search-insights";
 import '@algolia/autocomplete-theme-classic';
-import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches';
-import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions';
 import Link from 'next/link';
 import { AutocomplteSSR } from '../components/autocompleteSSR';
+
+// ALgolia Plugins
+import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches';
+import { createAlgoliaInsightsPlugin } from "@algolia/autocomplete-plugin-algolia-insights";
+import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions';
 
 const appId = 'latency';
 const apiKey = '6be0576ff61c053d5f9a3225e2a90f76';
@@ -15,6 +19,8 @@ const searchClient = algoliasearch(
   appId,
   apiKey,
 );
+
+insightsClient("init", { appId, apiKey, useCookie: false, userToken: 'ma-user-999' });
 
 // Query Suggestion Plugin
 const querySuggestionsPlugin = createQuerySuggestionsPlugin({
@@ -28,6 +34,9 @@ const recentSearchesPlugin = createLocalStorageRecentSearchesPlugin({
   key: 'navbar',
 });
 
+// This Plugin has more options in case you want to forward events to GA4 etc.
+// Insights Analytics Client (Setting User Toeken Dynamically);
+const algoliaInsightsPlugin = createAlgoliaInsightsPlugin({ insightsClient });
 // const algoliaInsightsPlugin = createAlgoliaInsightsPlugin({
 //   insightsClient,
 //   onActive({ insights, insightsEvents, item, state, event }) {
@@ -76,7 +85,7 @@ function AutocompleteSearch() {
       container: containerRef.current,
       placeholder: 'Search',
       insights: true,
-      plugins: [recentSearchesPlugin, querySuggestionsPlugin],
+      plugins: [recentSearchesPlugin, querySuggestionsPlugin, algoliaInsightsPlugin],
       getSources({ query }) {
         return [
           {
@@ -87,6 +96,7 @@ function AutocompleteSearch() {
                 queries: [
                   {
                     indexName: 'instant_search',
+                    clickAnalytics: true,
                     query,
                   },
                 ],
