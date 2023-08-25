@@ -194,6 +194,7 @@ function Autocomplete() {
   const autocomplete = React.useMemo(
     () => {
       return createAutocomplete({
+        openOnFocus: true,
         placeholder: 'Search for Products',
         plugins: [querySuggestionsPlugin, recentSearchesPlugin],
         onStateChange({ state }) {

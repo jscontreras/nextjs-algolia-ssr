@@ -84,6 +84,7 @@ function AutocompleteSearch() {
     const search = autocomplete({
       container: containerRef.current,
       placeholder: 'Search',
+      openOnFocus: true,
       insights: true,
       plugins: [recentSearchesPlugin, querySuggestionsPlugin, algoliaInsightsPlugin],
       getSources({ query }) {
