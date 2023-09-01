@@ -14,7 +14,7 @@ import {
   useInstantSearch,
   Snippet,
   useRange
-} from 'react-instantsearch-hooks-web';
+} from 'react-instantsearch';
 import { CustomBreadcrumb } from '../../components/customBreadcrumb';
 
 const searchClient = algoliasearch(
@@ -38,10 +38,10 @@ function middleware({ instantSearchInstance }) {
 }
 
 function Middleware() {
-  const { use } = useInstantSearch();
+  const { addMiddlewares } = useInstantSearch();
 
   React.useLayoutEffect(() => {
-    return use(middleware);
+    return addMiddlewares(middleware);
   });
 }
 

@@ -18,7 +18,7 @@ import {
   useInstantSearch,
   Snippet,
   ToggleRefinement
-} from 'react-instantsearch-hooks-web';
+} from 'react-instantsearch';
 
 const searchClient = algoliasearch(
   'SGF0RZXAXL',
@@ -51,10 +51,10 @@ function middleware({ instantSearchInstance }) {
 }
 
 function Middleware() {
-  const { use } = useInstantSearch();
+  const { addMiddlewares } = useInstantSearch();
 
   React.useLayoutEffect(() => {
-    return use(middleware);
+    return addMiddlewares(middleware);
   });
 }
 

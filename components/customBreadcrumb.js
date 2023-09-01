@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
-import { useBreadcrumb } from 'react-instantsearch-hooks-web';
+import { useBreadcrumb } from 'react-instantsearch';
 
 export const CustomBreadcrumb = ({attributes, rootItems}) => {
   const { items, refine } = useBreadcrumb({attributes});

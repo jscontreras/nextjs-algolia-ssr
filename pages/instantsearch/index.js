@@ -1,10 +1,9 @@
 import React from 'react';
 import algoliasearch from 'algoliasearch/lite';
-import { getServerState } from 'react-instantsearch-hooks-server';
-import { InstantSearchSSRProvider } from 'react-instantsearch-hooks-web';
 import { InstantSearchBasicApp } from '../../components/instantSearchBasicApp';
 import { history } from 'instantsearch.js/es/lib/routers/index.js';
-
+import { InstantSearchSSRProvider, getServerState } from 'react-instantsearch';
+import { renderToString } from 'react-dom/server';
 const searchClient = algoliasearch(
   'latency',
   '6be0576ff61c053d5f9a3225e2a90f76',
@@ -31,7 +30,8 @@ export default function SearchPage({ serverState, serverUrl }) {
 export async function getServerSideProps({ req }) {
   const protocol = req.headers.referer?.split('://')[0] || 'https';
   const serverUrl = `${protocol}://${req.headers.host}${req.url}`;
-  const serverState = await getServerState(<SearchPage serverUrl={serverUrl} />);
+
+  const serverState = await getServerState(<SearchPage serverUrl={serverUrl} />, {renderToString});
 
   return {
     props: {

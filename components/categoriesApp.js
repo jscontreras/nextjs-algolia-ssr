@@ -15,7 +15,7 @@ import {
   RefinementList,
   useInstantSearch,
   DynamicWidgets
-} from 'react-instantsearch-hooks-web';
+} from 'react-instantsearch';
 import { BreadCrumbs } from './breadcrumbs';
 import Link from 'next/link';
 import Router from 'next/router';
@@ -24,15 +24,15 @@ import { SubCategoriesMenu } from './subCategoriesMenu';
 aa('setUserToken', 'ma-user-999');
 
 function InsightsMiddleware() {
-  const { use } = useInstantSearch();
+  const { addMiddlewares } = useInstantSearch();
 
   useEffect(() => {
     const middleware = createInsightsMiddleware({
       insightsClient: aa,
     });
 
-    return use(middleware);
-  }, [use]);
+    return addMiddlewares(middleware);
+  }, [addMiddlewares]);
 
   return null;
 }

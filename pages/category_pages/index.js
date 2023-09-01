@@ -1,11 +1,9 @@
 import React from 'react';
 import algoliasearch from 'algoliasearch/lite';
-import { getServerState } from 'react-instantsearch-hooks-server';
-import { InstantSearchSSRProvider } from 'react-instantsearch-hooks-web';
-
 import { CategoriesApp } from '../../components';
-import { history } from 'instantsearch.js/es/lib/routers/index.js';
 import Link from 'next/link';
+import { InstantSearchSSRProvider, getServerState } from 'react-instantsearch';
+import { renderToString } from 'react-dom/server';
 
 const searchClient = algoliasearch(
   'SGF0RZXAXL',
@@ -13,7 +11,6 @@ const searchClient = algoliasearch(
 );
 
 const indexName = "prod_ECOM_demo";
-
 
 export default function SearchPage({ serverState, serverUrl, navItems, initialUiState = {}, queryParamsOverrides = {} }) {
   return (
@@ -60,7 +57,7 @@ export async function getServerSideProps({ req }) {
     initialUiState,
     queryParamsOverrides
   };
-  const serverState = await getServerState(<SearchPage {...renderProps} />);
+  const serverState = await getServerState(<SearchPage {...renderProps} />, {renderToString});
   return {
     props: {
       serverState,

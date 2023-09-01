@@ -8,7 +8,8 @@ import {
   Highlight,
   Pagination,
   InstantSearch,
-} from 'react-instantsearch-hooks-web';
+} from 'react-instantsearch';
+
 import { CustomBreadcrumb } from './customBreadcrumb';
 
 const HitComponent = ({ hit }) => (

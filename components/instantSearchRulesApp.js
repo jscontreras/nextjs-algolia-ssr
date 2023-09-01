@@ -16,7 +16,7 @@ import {
   CurrentRefinements,
   ClearRefinements,
   useQueryRules
-} from 'react-instantsearch-hooks-web';
+} from 'react-instantsearch';
 import { CustomBreadcrumb } from './customBreadcrumb';
 
 const HierarchicalMenu = (props) => {

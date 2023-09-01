@@ -1,10 +1,9 @@
 import React from 'react';
 import algoliasearch from 'algoliasearch/lite';
-import { getServerState } from 'react-instantsearch-hooks-server';
-import { InstantSearchSSRProvider } from 'react-instantsearch-hooks-web';
 import { CategoriesApp } from '../../components';
-import { history } from 'instantsearch.js/es/lib/routers/index.js';
 import Link from 'next/link';
+import { InstantSearchSSRProvider, getServerState } from 'react-instantsearch';
+import { renderToString } from 'react-dom/server';
 
 const algoliaClient = algoliasearch(
   'SGF0RZXAXL',
@@ -139,7 +138,7 @@ export async function getServerSideProps({ req, query }) {
   }
 
   // Getting Server State for hydration.
-  const serverState = await getServerState(<SearchPage {...renderProps} />);
+  const serverState = await getServerState(<SearchPage {...renderProps} />, {renderToString});
 
   return {
     props: {

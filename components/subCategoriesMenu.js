@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import React, {useEffect, useRef} from 'react';
-import { useHierarchicalMenu, useInstantSearch } from 'react-instantsearch-hooks-web';
+import { useHierarchicalMenu, useInstantSearch } from 'react-instantsearch';
 
 function friendlyURL(value) {
   return value;

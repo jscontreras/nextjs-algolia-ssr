@@ -13,7 +13,7 @@ import {
   ClearRefinements,
   Snippet,
   useRange
-} from 'react-instantsearch-hooks-web';
+} from 'react-instantsearch';
 
 const searchClient = algoliasearch(
   'latency',
