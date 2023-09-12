@@ -1951,6 +1951,25 @@ ini@~1.3.0:
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.8.tgz#a29da425b48806f34767a4efce397269af28432c"
   integrity sha512-JV/yugV2uzW5iMRSiZAyDtQd+nxtUnjeLt0acNdw98kKLrvuRVyB80tsREOE7yvGVgalhZ6RNXCmEHkUKBKxew==
 
+instantsearch.js@4.56.10:
+  version "4.56.10"
+  resolved "https://registry.yarnpkg.com/instantsearch.js/-/instantsearch.js-4.56.10.tgz#19c50986f7553383feedb51f0a69349e3d4c345c"
+  integrity sha512-ViW2JGUgxcDaQ9/3CRBPrw0fK63XalsZnZhohYgdVZLAdacgGUPO8txWLJ5g2477XHtMS1T4sTYlyCyDIcCQ8A==
+  dependencies:
+    "@algolia/events" "^4.0.1"
+    "@algolia/ui-components-highlight-vdom" "^1.2.1"
+    "@algolia/ui-components-shared" "^1.2.1"
+    "@types/dom-speech-recognition" "^0.0.1"
+    "@types/google.maps" "^3.45.3"
+    "@types/hogan.js" "^3.0.0"
+    "@types/qs" "^6.5.3"
+    algoliasearch-helper "3.14.0"
+    hogan.js "^3.0.2"
+    htm "^3.0.0"
+    preact "^10.10.0"
+    qs "^6.5.1 < 6.10"
+    search-insights "^2.6.0"
+
 instantsearch.js@4.56.9:
   version "4.56.9"
   resolved "https://registry.yarnpkg.com/instantsearch.js/-/instantsearch.js-4.56.9.tgz#ef0e4103192357289f35219079ccc4db260345d1"
@@ -2889,6 +2908,24 @@ react-instantsearch-core@7.0.1:
     algoliasearch-helper "3.14.0"
     instantsearch.js "4.56.9"
     use-sync-external-store "^1.0.0"
+
+react-instantsearch-core@7.0.2:
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/react-instantsearch-core/-/react-instantsearch-core-7.0.2.tgz#c2f5785843c13751ea2bff47744dbed9a011f047"
+  integrity sha512-g1yDcEiKTKs6U8VbiqmM0tcBLWvi7lPLIWgOSGfWe5hqh62Z8U0WEhtdQwVxiNf5W0I1DGxWzgBJ/V8m9MBtaA==
+  dependencies:
+    "@babel/runtime" "^7.1.2"
+    algoliasearch-helper "3.14.0"
+    instantsearch.js "4.56.10"
+    use-sync-external-store "^1.0.0"
+
+react-instantsearch-router-nextjs@^7.0.2:
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/react-instantsearch-router-nextjs/-/react-instantsearch-router-nextjs-7.0.2.tgz#4f3e6f141526ffb75c5b6e626d5fe418da36a90d"
+  integrity sha512-j06vqcSmehRIXP8WsA9QGy7cL+DDD3I1yeRFno0fQFhcTer8Ga0Ip1GOwwtycM7+qEY84B9uSlaXExi55ALEiQ==
+  dependencies:
+    instantsearch.js "4.56.10"
+    react-instantsearch-core "7.0.2"
 
 react-instantsearch@^7.0.1:
   version "7.0.1"

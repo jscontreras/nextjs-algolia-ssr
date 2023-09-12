@@ -4,6 +4,8 @@ import { CategoriesApp } from '../../components';
 import Link from 'next/link';
 import { InstantSearchSSRProvider, getServerState } from 'react-instantsearch';
 import { renderToString } from 'react-dom/server';
+import singletonRouter from 'next/router';
+import { createInstantSearchRouterNext } from 'react-instantsearch-router-nextjs';
 
 const algoliaClient = algoliasearch(
   'SGF0RZXAXL',
@@ -26,6 +28,7 @@ export default function SearchPage(
     initialUiState = {},
     serverState, navItems,
     queryParamsOverrides = {},
+    serverUrl,
     title, rootPath = '',
     extraFilters = {} }) {
   return (
@@ -40,6 +43,7 @@ export default function SearchPage(
         initialUiState={initialUiState}
         queryParamsOverrides={queryParamsOverrides}
         extraFilters={extraFilters}
+        routing={{ router: createInstantSearchRouterNext({ singletonRouter, serverUrl: serverUrl }) }}
       />
     </InstantSearchSSRProvider>
   );
@@ -142,7 +146,7 @@ export async function getServerSideProps({ req, query }) {
 
   return {
     props: {
-      ...renderProps, serverState
+      ...renderProps, serverState, serverUrl
     }
   };
 }
