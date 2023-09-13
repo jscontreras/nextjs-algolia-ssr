@@ -1,20 +1,10 @@
 import React from 'react';
-import algoliasearch from 'algoliasearch/lite';
 import { CategoriesApp } from '../../components';
 import Link from 'next/link';
 import { InstantSearchSSRProvider, getServerState } from 'react-instantsearch';
 import { renderToString } from 'react-dom/server';
 import singletonRouter from 'next/router';
 import { createInstantSearchRouterNext } from 'react-instantsearch-router-nextjs';
-
-const algoliaClient = algoliasearch(
-  'SGF0RZXAXL',
-  '0ac0c3b165eb3773097eca1ac25d8fdd',
-);
-
-const searchClient = {
-  ...algoliaClient,
-};
 
 const indexName = "prod_ECOM_demo";
 

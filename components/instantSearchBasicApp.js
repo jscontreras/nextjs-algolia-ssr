@@ -11,6 +11,7 @@ import {
 } from 'react-instantsearch';
 
 import { CustomBreadcrumb } from './customBreadcrumb';
+import { InsightsMiddleware } from '../lib/common';
 
 const HitComponent = ({ hit }) => (
   <div className="hit">
@@ -34,10 +35,16 @@ const HitComponent = ({ hit }) => (
   </div>
 );
 
+/**
+ * Main InstantSearch App.
+ * @param {*} props
+ * @returns
+ */
 export function InstantSearchBasicApp(props) {
   return (
     <InstantSearch {...props}>
       <Configure hitsPerPage={12} />
+      <InsightsMiddleware />
       <CustomBreadcrumb attributes={[
         'hierarchicalCategories.lvl0',
         'hierarchicalCategories.lvl1',

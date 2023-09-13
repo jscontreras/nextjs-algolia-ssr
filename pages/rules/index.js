@@ -5,17 +5,12 @@ import { getServerState,  InstantSearchSSRProvider } from 'react-instantsearch';
 import { InstantSearchRulesApp } from '../../components/instantSearchRulesApp';
 import singletonRouter from 'next/router';
 import { createInstantSearchRouterNext } from 'react-instantsearch-router-nextjs';
+import { searchClient } from '../../lib/common';
 
 // const searchClient = algoliasearch(
 //   'latency',
 //   '6be0576ff61c053d5f9a3225e2a90f76',
 // );
-
-const searchClient = algoliasearch(
-  'SGF0RZXAXL',
-  '0ac0c3b165eb3773097eca1ac25d8fdd',
-);
-
 
 const indexName = "instant_search";
 export default function SearchPage({ serverState, serverUrl }) {

@@ -1,7 +1,4 @@
-import React, { useEffect, useState, useLayoutEffect } from 'react';
-import aa from 'search-insights';
-import { createInsightsMiddleware } from 'instantsearch.js/es/middlewares';
-
+import React, { useEffect, useState } from 'react';
 import Image from 'next/future/image';
 import {
   HierarchicalMenu,
@@ -20,22 +17,8 @@ import { BreadCrumbs } from './breadcrumbs';
 import Link from 'next/link';
 import Router from 'next/router';
 import { SubCategoriesMenu } from './subCategoriesMenu';
+import { InsightsMiddleware } from '../lib/common';
 
-aa('setUserToken', 'ma-user-999');
-
-function InsightsMiddleware() {
-  const { addMiddlewares } = useInstantSearch();
-
-  useEffect(() => {
-    const middleware = createInsightsMiddleware({
-      insightsClient: aa,
-    });
-
-    return addMiddlewares(middleware);
-  }, [addMiddlewares]);
-
-  return null;
-}
 
 const Instructions = ({ categoryPage, url, filterName }) => (
   <>{categoryPage ? (<div className='mb-4 mt-2 text-sm'>
@@ -227,7 +210,6 @@ export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, in
     <div>
       <InstantSearch indexName={indexName} searchClient={searchClient} initialUiState={initialUiState} routing={routing} >
         <Configure {...queryParams} clickAnalytics />
-        <InsightsMiddleware />
         <header>
           <BreadCrumbs items={navItems || []} />
 
@@ -275,6 +257,7 @@ export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, in
             on GitHub
           </div>
         </footer>
+        <InsightsMiddleware />
       </InstantSearch>
     </div>
   );

@@ -6,11 +6,7 @@ import { InstantSearchSSRProvider, getServerState } from 'react-instantsearch';
 import { renderToString } from 'react-dom/server';
 import singletonRouter from 'next/router';
 import { createInstantSearchRouterNext } from 'react-instantsearch-router-nextjs';
-
-const searchClient = algoliasearch(
-  'SGF0RZXAXL',
-  '0ac0c3b165eb3773097eca1ac25d8fdd',
-);
+import { searchClient } from '../../lib/common';
 
 const indexName = "prod_ECOM_demo";
 

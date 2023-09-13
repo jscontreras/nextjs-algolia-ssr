@@ -40,7 +40,7 @@ function middleware({ instantSearchInstance }) {
 function Middleware() {
   const { addMiddlewares } = useInstantSearch();
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     return addMiddlewares(middleware);
   });
 }

@@ -18,6 +18,7 @@ import {
   useQueryRules
 } from 'react-instantsearch';
 import { CustomBreadcrumb } from './customBreadcrumb';
+import { InsightsMiddleware } from '../lib/common';
 
 const HierarchicalMenu = (props) => {
   const topProps = {...props};
@@ -139,9 +140,11 @@ export function InstantSearchRulesApp(props) {
       </div>
     );
   }
+
   return (
     <InstantSearch {...props}>
       <Configure hitsPerPage={12} clickAnalytics={true} ruleContexts={contexts} />
+      <InsightsMiddleware />
       <CustomBreadcrumb attributes={[
         'hierarchicalCategories.lvl0',
         'hierarchicalCategories.lvl1',
