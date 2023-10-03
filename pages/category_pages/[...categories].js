@@ -5,6 +5,7 @@ import { InstantSearchSSRProvider, getServerState } from 'react-instantsearch';
 import { renderToString } from 'react-dom/server';
 import singletonRouter from 'next/router';
 import { createInstantSearchRouterNext } from 'react-instantsearch-router-nextjs';
+import { searchClient } from '../../lib/common';
 
 const indexName = "prod_ECOM_demo";
 
