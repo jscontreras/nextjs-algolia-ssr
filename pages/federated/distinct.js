@@ -12,7 +12,6 @@ import {
   CurrentRefinements,
   ClearRefinements,
   Snippet,
-  useRange
 } from 'react-instantsearch';
 
 const searchClient = algoliasearch(

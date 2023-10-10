@@ -10,14 +10,13 @@ import {
   InstantSearch,
   Snippet,
   RefinementList,
-  useInstantSearch,
   DynamicWidgets
 } from 'react-instantsearch';
 import { BreadCrumbs } from './breadcrumbs';
 import Link from 'next/link';
 import Router from 'next/router';
 import { SubCategoriesMenu } from './subCategoriesMenu';
-import { InsightsMiddleware } from '../lib/common';
+import { insightsConfig } from '../lib/common';
 
 
 const Instructions = ({ categoryPage, url, filterName }) => (
@@ -208,7 +207,7 @@ export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, in
   // If want to use router use routing={routing}
   return (
     <div>
-      <InstantSearch indexName={indexName} searchClient={searchClient} initialUiState={initialUiState} routing={routing} >
+      <InstantSearch indexName={indexName} searchClient={searchClient} initialUiState={initialUiState} routing={routing} insights={insightsConfig}>
         <Configure {...queryParams} clickAnalytics />
         <header>
           <BreadCrumbs items={navItems || []} />
@@ -257,7 +256,6 @@ export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, in
             on GitHub
           </div>
         </footer>
-        <InsightsMiddleware />
       </InstantSearch>
     </div>
   );
