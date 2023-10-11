@@ -98,6 +98,7 @@ const HitComponent = ({ hit }) => (
 
 export function InstantSearchRulesApp(props) {
   const [contexts, setContexts] = useState([]); // initial array of tags
+  const { clientUserToken } = props;
   const ContextTags = () => {
 
     const handleAddTag = (event) => {
@@ -117,6 +118,11 @@ export function InstantSearchRulesApp(props) {
 
     const handleRemoveTag = (tagToRemove) => {
       setContexts((prevTags) => prevTags.filter((tag) => tag !== tagToRemove));
+    }
+
+    // Set userToken if available (this travels via cookie)
+    if (clientUserToken) {
+      insightsConfig.insightsClient('setUserToken', clientUserToken);
     }
 
     return (

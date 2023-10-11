@@ -41,6 +41,12 @@ const HitComponent = ({ hit }) => (
  * @returns
  */
 export function InstantSearchBasicApp(props) {
+  const { clientUserToken } = props;
+  // Set userToken if available (this travels via cookie)
+  if (clientUserToken) {
+    insightsConfig.insightsClient('setUserToken', clientUserToken);
+  }
+
   return (
     <InstantSearch {...props} insights={insightsConfig}>
       <Configure hitsPerPage={12} />

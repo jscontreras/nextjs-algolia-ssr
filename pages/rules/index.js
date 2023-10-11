@@ -1,6 +1,5 @@
 import React from 'react';
 import { renderToString } from 'react-dom/server';
-import algoliasearch from 'algoliasearch/lite';
 import { getServerState,  InstantSearchSSRProvider } from 'react-instantsearch';
 import { InstantSearchRulesApp } from '../../components/instantSearchRulesApp';
 import singletonRouter from 'next/router';
@@ -13,13 +12,14 @@ import { searchClient } from '../../lib/common';
 // );
 
 const indexName = "instant_search";
-export default function SearchPage({ serverState, serverUrl }) {
+export default function SearchPage({ serverState, serverUrl, clientUserToken = null }) {
   return (
     <InstantSearchSSRProvider {...serverState}>
       <InstantSearchRulesApp
         searchClient={searchClient}
         indexName={indexName}
         routing={{ router: createInstantSearchRouterNext({ singletonRouter, serverUrl: serverUrl }) }}
+        clientUserToken={clientUserToken}
       />
     </InstantSearchSSRProvider>
   );
@@ -34,6 +34,7 @@ export async function getServerSideProps({ req }) {
     props: {
       serverState,
       serverUrl,
+      clientUserToken: req.cookies._ALGOLIA || null
     },
   };
 }
