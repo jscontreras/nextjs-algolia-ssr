@@ -10,7 +10,7 @@ import { searchClient } from '../../lib/common';
 
 const indexName = "prod_ECOM_demo";
 
-export default function SearchPage({ serverState, serverUrl, navItems, initialUiState = {}, queryParamsOverrides = {} }) {
+export default function SearchPage({ serverState, serverUrl, navItems, initialUiState = {}, queryParamsOverrides = {}, clientUserToken = null}) {
   return (
     <InstantSearchSSRProvider {...serverState}>
       <Link href={'/'}><a className="text-blue-700">&larr; Home</a></Link>
@@ -23,6 +23,7 @@ export default function SearchPage({ serverState, serverUrl, navItems, initialUi
         navItems={navItems}
         routing={{ router: createInstantSearchRouterNext({ singletonRouter, serverUrl: serverUrl }) }}
         queryParamsOverrides={queryParamsOverrides}
+        clientUserToken={clientUserToken}
       />
     </InstantSearchSSRProvider>
   );
@@ -55,7 +56,8 @@ export async function getServerSideProps({ req }) {
     props: {
       serverState,
       ...renderProps,
-      serverUrl
+      serverUrl,
+      clientUserToken: req.cookies._ALGOLIA || null
     },
   };
 }

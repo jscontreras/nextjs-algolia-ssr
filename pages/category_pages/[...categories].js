@@ -21,7 +21,9 @@ export default function SearchPage(
     queryParamsOverrides = {},
     serverUrl,
     title, rootPath = '',
-    extraFilters = {} }) {
+    extraFilters = {},
+    clientUserToken = null
+   }) {
   return (
     <InstantSearchSSRProvider {...serverState}>
       <Link href={'/'}><a className="text-blue-700">&larr; Home</a></Link>
@@ -35,6 +37,7 @@ export default function SearchPage(
         queryParamsOverrides={queryParamsOverrides}
         extraFilters={extraFilters}
         routing={{ router: createInstantSearchRouterNext({ singletonRouter, serverUrl: serverUrl }) }}
+        clientUserToken={clientUserToken}
       />
     </InstantSearchSSRProvider>
   );
@@ -137,7 +140,8 @@ export async function getServerSideProps({ req, query }) {
 
   return {
     props: {
-      ...renderProps, serverState, serverUrl
+      ...renderProps, serverState, serverUrl,
+      clientUserToken: req.cookies._ALGOLIA || null
     }
   };
 }

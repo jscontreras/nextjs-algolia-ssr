@@ -165,7 +165,7 @@ function getBackgroundColor(cat) {
   return colors[randomIndex];
 }
 
-export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, indexName, title, navItems, initialUiState, routing, extraFilters = {} }) {
+export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, indexName, title, navItems, initialUiState, routing, extraFilters = {}, clientUserToken = null }) {
 
   const defaultFilterLabel = 'category_page_id';
   const alternateFilterLabel = extraFilters.label ? extraFilters.label : 'list_categories';
@@ -183,6 +183,11 @@ export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, in
       setFilterLabel(defaultFilterLabel);
     }
   };
+
+  // Set userToken if available (this travels via cookie)
+  if (clientUserToken) {
+    insightsConfig.insightsClient('setUserToken', clientUserToken);
+  }
 
   useEffect(() => {
     // checking if server filters were updated
