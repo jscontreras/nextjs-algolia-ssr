@@ -52,6 +52,8 @@ export async function getServerSideProps({ req, res }) {
     queryParamsOverrides
   };
   const serverState = await getServerState(<SearchPage {...renderProps} />, {renderToString});
+
+  // Calculate user-token via server
   let clientUserToken = req.cookies._ALGOLIA || null;
   // Set cookie if not found
   if (clientUserToken === null) {
