@@ -6,8 +6,10 @@ import { renderToString } from 'react-dom/server';
 import singletonRouter from 'next/router';
 import { createInstantSearchRouterNext } from 'react-instantsearch-router-nextjs';
 import { searchClient } from '../../lib/common';
+import crypto from 'crypto';
 
 const indexName = "prod_ECOM_demo";
+
 
 /**
  * Server side rendering of a particular Category.
@@ -43,7 +45,7 @@ export default function SearchPage(
   );
 }
 
-export async function getServerSideProps({ req, query }) {
+export async function getServerSideProps({ req, query, res }) {
   const defaultFilter = 'category_page_id';
   const filterMode = defaultFilter;
   const filtersDefinitions = {};
@@ -137,11 +139,18 @@ export async function getServerSideProps({ req, query }) {
 
   // Getting Server State for hydration.
   const serverState = await getServerState(<SearchPage {...renderProps} />, {renderToString});
+  let clientUserToken = req.cookies._ALGOLIA || null;
+
+  // Set cookie if not found
+  if (clientUserToken === null) {
+    clientUserToken = 's__'+ crypto.randomUUID();
+    res.setHeader('Set-Cookie', `_ALGOLIA=${clientUserToken}; Path=/;`)
+  }
 
   return {
     props: {
       ...renderProps, serverState, serverUrl,
-      clientUserToken: req.cookies._ALGOLIA || null
+      clientUserToken
     }
   };
 }

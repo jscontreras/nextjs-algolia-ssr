@@ -184,11 +184,6 @@ export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, in
     }
   };
 
-  // Set userToken if available (this travels via cookie)
-  if (clientUserToken) {
-    insightsConfig.insightsClient('setUserToken', clientUserToken);
-  }
-
   useEffect(() => {
     // checking if server filters were updated
     if (filterLabel == defaultFilterLabel && queryParams.filters != queryParamsOverrides.filters) {
