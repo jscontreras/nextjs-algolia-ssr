@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Image from 'next/future/image';
+import Image from 'next/image';
 import {
   HierarchicalMenu,
   SearchBox,
@@ -24,7 +24,7 @@ const Instructions = ({ categoryPage, url, filterName }) => (
     <p>
       The categories facet uses the <span className='font-bold'>HierarchicalMenu InstantSearch widget</span> with the &ldquo;lvl.*&rdquo; format (<span className='bg-lime-100'>hierarchical_categories</span> attribute).</p>
     <p className='mt-2'> Alternatively, the <span className='font-bold'>Subcategories&apos; section</span> provides catalog pages navigation links to the corresponding categories landing pages (<span className='bg-lime-100'>category_page_id</span> attribute).</p>
-    <p className='mt-2'>Visit the <Link href='https://www.algolia.com/doc/guides/solutions/ecommerce/browse/tutorials/category-pages/'><a target="_blank" className="text-blue-600 underline" >Algolia Categories</a></Link> documentation to get more information.</p>
+    <p className='mt-2'>Visit the <Link href='https://www.algolia.com/doc/guides/solutions/ecommerce/browse/tutorials/category-pages/'><span target="_blank" className="text-blue-600 underline" >Algolia Categories</span></Link> documentation to get more information.</p>
   </div>) : (
     <div className='mb-4 mt-2 text-sm'>
       <p>Filter attributes are obtained by parsing the URL path
@@ -34,7 +34,7 @@ const Instructions = ({ categoryPage, url, filterName }) => (
         <a className="text-blue-600 underline" href="https://academy.algolia.com/collections/bbcde9a8-c1b5-11ed-8f15-06cf503dca07" target='_blank' rel="noreferrer"> Merchandizing Studio</a>,
         <a className="text-blue-600 underline" href="https://www.algolia.com/doc/guides/personalization/what-is-personalization" target='_blank' rel="noreferrer"> AI Personalization</a>,
         <a className="text-blue-600 underline" href="https://www.algolia.com/doc/guides/algolia-ai/query-categorization/" target='_blank' rel="noreferrer"> Query Categorization</a>, etc. </p>
-      <p className='mt-2'>Visit the <Link href='https://www.algolia.com/doc/guides/algolia-ai/query-categorization/'><a target="_blank" className="text-blue-600 underline" >Algolia Categories Guideline</a></Link> to get more information.</p>
+      <p className='mt-2'>Visit the <Link href='https://www.algolia.com/doc/guides/algolia-ai/query-categorization/'><span target="_blank" className="text-blue-600 underline" >Algolia Categories Guideline</span></Link> to get more information.</p>
     </div>
   )}
   </>
@@ -69,7 +69,7 @@ const FilterToggle = ({ setEnabled, filters, customFilterLabel }) => {
 const ProductImage = ({ src, alt }) => {
   const placeholderImg = '/ef3-placeholder-image.jpg';
   const [srcVal, setSrc] = useState(() => (src || placeholderImg));
-  return <Image src={srcVal} alt={alt} layout='fill' width={120} height={120} onError={() => { setSrc(placeholderImg) }} />
+  return <Image src={srcVal} alt={alt} width={120} height={120} onError={() => { setSrc(placeholderImg) }} />
 }
 
 const HitComponent = ({ hit, sendEvent }) => (

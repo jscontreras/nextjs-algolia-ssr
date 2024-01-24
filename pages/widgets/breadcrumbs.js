@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react';
-import Image from 'next/future/image';
+import Image from 'next/image';
 import algoliasearch from 'algoliasearch/lite';
 
 import {
@@ -69,7 +69,7 @@ const HitComponent = ({ hit }) => (
   <div className="hit">
     <div className="hit-picture">
       {/* <img src={`${hit.image}`} alt={hit.name}/> */}
-      <Image src={`${hit.image}`} alt={hit.name} layout='fill' width={150} height={150} />
+      <Image src={`${hit.image}`} alt={hit.name} width={150} height={150} />
     </div>
     <div className="hit-content">
       <div>

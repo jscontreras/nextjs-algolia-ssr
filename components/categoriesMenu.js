@@ -11,14 +11,14 @@ function renderItem(item, path, key, level=2) {
     return (
       <li key={key} className="ais-HierarchicalMenu-item">
         <Link href={friendlyURL(`${path}/${item.label}`)}>
-          <a className={item.isRefined ? 'font-bold text-blue-600 underline' : 'text-red-600 underline'}>{item.label}</a>
+          <span className={item.isRefined ? 'font-bold text-blue-600 underline' : 'text-red-600 underline'}>{item.label}</span>
         </Link>
       </li>
     )
   } else {
     return (<li key={key}>
       <Link href={friendlyURL(`${path}/${item.label}`)}>
-        <a className={item.isRefined ? 'font-bold text-blue-600 underline' : 'text-red-600 underline'}>{item.label}</a>
+        <span className={item.isRefined ? 'font-bold text-blue-600 underline' : 'text-red-600 underline'}>{item.label}</span>
       </Link>
       <ul className={`ml-${level}`}>
         {item.data.map((child, keyChild) => (

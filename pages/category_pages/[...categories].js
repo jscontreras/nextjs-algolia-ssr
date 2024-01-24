@@ -28,7 +28,7 @@ export default function SearchPage(
    }) {
   return (
     <InstantSearchSSRProvider {...serverState}>
-      <Link href={'/'}><a className="text-blue-700">&larr; Home</a></Link>
+      <Link href={'/'}><span className="text-blue-700">&larr; Home</span></Link>
       <CategoriesApp
         searchClient={searchClient}
         indexName={indexName}

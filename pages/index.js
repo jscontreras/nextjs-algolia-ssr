@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import styles from '../styles/Home.module.css'
-import Image from 'next/future/image'
+import Image from 'next/image'
 
 export default function Home() {
   return (
@@ -23,48 +23,48 @@ export default function Home() {
 
 
         <div className={styles.grid}>
-          <Link href={'/instantsearch'} >
-            <a className={styles.card}>
+          <Link href={'/instantsearch'} className={styles.card}>
+            <span >
               <h2>InstantSearch &rarr;</h2>
               <p>Server Side rendering using <span className='font-bold'>Algolia Hooks InstantSearch</span> Lib.</p>
-            </a>
+            </span>
           </Link>
 
-          <Link href={'/autocomplete-core'}>
-              <a className={styles.card}>
+          <Link href={'/autocomplete-core'} className={styles.card}>
+              <span >
                 <h2>Autocomplete Core &rarr;</h2>
               <p>Isomprohic Server Side Rendering using Algolia <span className='font-bold'>autocomplete-core</span> Lib.</p>
-              </a>
+              </span>
           </Link>
-          <Link href={'/autocomplete-js'}>
-            <a className={styles.card}>
+          <Link href={'/autocomplete-js'} className={styles.card}>
+            <span >
               <h2>Autocomplete JS &rarr;</h2>
               <p>Server Side conditional rendering using Algolia <span className='font-bold'>autocomplete-js</span> Lib.</p>
-            </a>
+            </span>
           </Link>
-          <Link href={'/category_pages'}>
-            <a className={styles.card}>
+          <Link href={'/category_pages'} className={styles.card}>
+            <span>
               <h2>Category Pages &rarr;</h2>
               <p>Hierarchycal Facets and Category landing Pages + Isomorphic Server Side Rendering.</p>
-            </a>
+            </span>
           </Link>
-          <Link href={'/rules'}>
-            <a className={styles.card}>
+          <Link href={'/rules'} className={styles.card}>
+            <span >
               <h2>Rules &rarr;</h2>
               <p>InstantSearch Rules demo (latency app).</p>
-            </a>
+            </span>
           </Link>
-          <Link href={'/widgets/sortFacetValues'}>
-            <a className={styles.card}>
+          <Link href={'/widgets/sortFacetValues'} className={styles.card}>
+            <span>
               <h2>Facet Sorting &rarr;</h2>
               <p>InstantSearch Dynamic Widgets + Custom Breadcrumbs.</p>
-            </a>
+            </span>
           </Link>
-          <Link href={'/widgets/priceRange'}>
-            <a className={styles.card}>
+          <Link href={'/widgets/priceRange'} className={styles.card}>
+            <span>
               <h2>Price Range &rarr;</h2>
               <p>InstantSearch React hooks useRange + initial range values.</p>
-            </a>
+            </span>
           </Link>
         </div>
       </main>

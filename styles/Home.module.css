@@ -20,14 +20,14 @@
   align-items: center;
 }
 
-.footer a {
+.footer a, .footer span {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-grow: 1;
 }
 
-.title a {
+.title a, .title span {
   color: #0070f3;
   text-decoration: none;
 }

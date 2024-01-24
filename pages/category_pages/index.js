@@ -13,7 +13,7 @@ const indexName = "prod_ECOM_demo";
 export default function SearchPage({ serverState, serverUrl, navItems, initialUiState = {}, queryParamsOverrides = {}, clientUserToken = null}) {
   return (
     <InstantSearchSSRProvider {...serverState}>
-      <Link href={'/'}><a className="text-blue-700">&larr; Home</a></Link>
+      <Link href={'/'}><span className="text-blue-700">&larr; Home</span></Link>
       <CategoriesApp
         hideMenu={false}
         filters={false}

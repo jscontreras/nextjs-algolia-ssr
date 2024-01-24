@@ -14,7 +14,7 @@ export const CustomBreadcrumb = ({attributes, rootItems}) => {
               key={item.label}
               aria-current={item.isLast ? 'page' : ''}
             >
-              {item.label !== 'Home' ? <a onClick={() => refine(item.value)}>{item.label}</a> : <Link href={item.value}><a>&larr; {item.label}</a></Link> }
+              {item.label !== 'Home' ? <span onClick={() => refine(item.value)}>{item.label}</span> : <Link href={item.value}>&larr; {item.label}</Link> }
               {(index < rootItems.length -1 || items.length > 0)&& <span className="mx-2">
                 <svg
                   className="fill-current w-3 h-3 inline-block"
@@ -39,7 +39,7 @@ export const CustomBreadcrumb = ({attributes, rootItems}) => {
             {item.isLast ? (
               item.label
             ) : (
-              <a onClick={() => refine(item.value)}>{item.label}</a>
+              <span onClick={() => refine(item.value)}>{item.label}</span>
             )}
             {!item.isLast && (
               <span className="mx-2">

@@ -334,7 +334,7 @@ function Autocomplete() {
 function AutocompletePage() {
   return <>
 
-    <Link href={'/'}><a className="text-blue-700">&larr; Home</a></Link>
+    <Link href={'/'}><span className="text-blue-700">&larr; Home</span></Link>
     <h1 className="mt-4 text-2xl font-bold mb-4">
       Autocomplete Server Rendering using <span className='text-amber-600'>autocomplete-core</span>
     </h1>
