@@ -7,6 +7,8 @@ import singletonRouter from 'next/router';
 import { createInstantSearchRouterNext } from 'react-instantsearch-router-nextjs';
 import { searchClient } from '../../lib/common';
 import crypto from 'crypto';
+import { singleIndex } from 'instantsearch.js/es/lib/stateMappings';
+
 
 const indexName = "prod_ECOM_demo";
 
@@ -26,6 +28,14 @@ export default function SearchPage(
     extraFilters = {},
     clientUserToken = null
    }) {
+
+  const routing = {
+    stateMapping: singleIndex(indexName),
+    router: createInstantSearchRouterNext({ singletonRouter, serverUrl: serverUrl }),
+  };
+
+
+
   return (
     <InstantSearchSSRProvider {...serverState}>
       <Link href={'/'}><span className="text-blue-700">&larr; Home</span></Link>
@@ -38,7 +48,7 @@ export default function SearchPage(
         initialUiState={initialUiState}
         queryParamsOverrides={queryParamsOverrides}
         extraFilters={extraFilters}
-        routing={{ router: createInstantSearchRouterNext({ singletonRouter, serverUrl: serverUrl }) }}
+        routing={routing}
         clientUserToken={clientUserToken}
       />
     </InstantSearchSSRProvider>
@@ -46,6 +56,7 @@ export default function SearchPage(
 }
 
 export async function getServerSideProps({ req, query, res }) {
+  console.log(query);
   const defaultFilter = 'category_page_id';
   const filterMode = defaultFilter;
   const filtersDefinitions = {};

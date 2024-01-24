@@ -1,12 +1,10 @@
 import Link from 'next/link';
-import React, {useEffect, useRef} from 'react';
-import { useHierarchicalMenu, useInstantSearch } from 'react-instantsearch';
 
 function friendlyURL(value) {
   return value;
 }
 
-function renderItem(item, path, key, level=2) {
+function renderItem(item, path, key, level = 2) {
   if (!item.data) {
     return (
       <li key={key} className="ais-HierarchicalMenu-item mr-4">
@@ -30,21 +28,24 @@ function renderItem(item, path, key, level=2) {
 
 }
 
-export function SubCategoriesMenu(props) {
-  const {
-    items,
-  } = useHierarchicalMenu(props);
+function PrintLinks({url}) {
+  let acc = '/category_pages/';
+  let acc2 = ''
 
-  const { uiState, setUiState } = useInstantSearch();
-  const uiStateRef = useRef(uiState);
-  const rootPathUrl = props.rootPath ? '/' + props.rootPath.replace(/\s>\s/g, '/') : '';
-  // Keep up to date uiState in a reference
-  useEffect(() => {
-    uiStateRef.current = uiState;
-  },[uiState]);
+  return <ul className='mr-4'>
+    <Link href={acc}><span className={'text-red-600'}>{'Catalog > '}</span></Link>
+   {url.split('/').map(element => {
+    acc2 = `[${element}]`;
+    acc = `${acc}/${element}`;
+    return <Link key={element} href={acc}><span className={'text-red-600'}>{acc2}</span></Link>
+  })}</ul>
+}
 
-  return <ul className="ais-HierarchicalMenu ais-HierarchicalMenuLinks text-base flex p-4 flex-wrap">
-    {items.length > 0 && <li className='ml-2 mr-4 font-bold'>Subcategories:</li>}
-    {items.map((item, key) => (renderItem(item, `/category_pages${rootPathUrl}`, key)))}
-    </ul>;
+export function SubCategoriesMenu() {
+  return (<ul className="ais-HierarchicalMenu ais-HierarchicalMenuLinks text-base flex p-4 flex-wrap">
+    <li className='ml-2 mr-4 font-bold'>Example Subcategories:</li>
+    <PrintLinks url="Women/Clothing/Jackets" />
+    <PrintLinks url="Men/Shoes/Sneakers" />
+
+  </ul>);
 }

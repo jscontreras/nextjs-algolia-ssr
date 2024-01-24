@@ -7,10 +7,16 @@ import { renderToString } from 'react-dom/server';
 import singletonRouter from 'next/router';
 import { createInstantSearchRouterNext } from 'react-instantsearch-router-nextjs';
 import { searchClient } from '../../lib/common';
+import { singleIndex } from 'instantsearch.js/es/lib/stateMappings';
 
 const indexName = "prod_ECOM_demo";
 
 export default function SearchPage({ serverState, serverUrl, navItems, initialUiState = {}, queryParamsOverrides = {}, clientUserToken = null}) {
+  const routing = {
+    stateMapping: singleIndex(indexName),
+    router: createInstantSearchRouterNext({ singletonRouter, serverUrl: serverUrl }),
+  };
+
   return (
     <InstantSearchSSRProvider {...serverState}>
       <Link href={'/'}><span className="text-blue-700">&larr; Home</span></Link>
@@ -21,7 +27,7 @@ export default function SearchPage({ serverState, serverUrl, navItems, initialUi
         indexName={indexName}
         initialUiState={initialUiState}
         navItems={navItems}
-        routing={{ router: createInstantSearchRouterNext({ singletonRouter, serverUrl: serverUrl }) }}
+        routing={routing}
         queryParamsOverrides={queryParamsOverrides}
         clientUserToken={clientUserToken}
       />
