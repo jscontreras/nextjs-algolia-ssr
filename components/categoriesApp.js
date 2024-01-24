@@ -10,13 +10,17 @@ import {
   InstantSearch,
   Snippet,
   RefinementList,
-  DynamicWidgets
+  DynamicWidgets,
+  RangeInput
 } from 'react-instantsearch';
 import { BreadCrumbs } from './breadcrumbs';
 import Link from 'next/link';
 import Router from 'next/router';
 import { SubCategoriesMenu } from './subCategoriesMenu';
 import { insightsConfig } from '../lib/common';
+import { FacetWidgetPanel } from "./DynamicFacetsWidgets";
+import { RatingMenu } from './RatingMenu';
+import { FallbackFacetWidget } from './DynamicFacetsWidgets';
 
 
 const Instructions = ({ categoryPage, url, filterName }) => (
@@ -238,8 +242,20 @@ export function CategoriesApp({ queryParamsOverrides, rootPath, searchClient, in
                 'hierarchical_categories.lvl2',
                 'hierarchical_categories.lvl3',
               ]}/>
+
               <RefinementList attribute="brand" classNames={{ root: 'bg-sky-100 p-2 mr-2 mt-4' }} searchable={true}
                 searchablePlaceholder="Brands" />
+
+              <FacetWidgetPanel attribute={"price.value"}>
+                <RangeInput attribute="price.value" />
+              </FacetWidgetPanel>
+
+              <FallbackFacetWidget attribute={"color.original_name"} />
+
+              <FacetWidgetPanel attribute={"reviews.rating"}>
+                <RatingMenu attribute="reviews.rating" />
+              </FacetWidgetPanel>
+
             </DynamicWidgets>
           </div>
           <div className="results">

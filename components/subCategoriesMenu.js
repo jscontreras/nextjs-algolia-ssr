@@ -29,7 +29,7 @@ function renderItem(item, path, key, level = 2) {
 }
 
 function PrintLinks({url}) {
-  let acc = '/category_pages/';
+  let acc = '/category_pages';
   let acc2 = ''
 
   return <ul className='mr-4'>
